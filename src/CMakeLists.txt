@@ -1,3 +1,4 @@
+add_subdirectory(crypto)
 add_subdirectory(exception)
 add_subdirectory(socket)
 add_subdirectory(utils)
