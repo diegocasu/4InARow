@@ -3,8 +3,10 @@ add_library(crypto)
 target_sources(crypto
         PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/DiffieHellman.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/SHA256.cpp
         PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/DiffieHellman.h
+        ${CMAKE_CURRENT_LIST_DIR}/SHA256.h
         )
 
 target_include_directories(crypto
