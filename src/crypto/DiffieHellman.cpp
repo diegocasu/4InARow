@@ -1,4 +1,5 @@
 #include <CryptoException.h>
+#include <SerializationException.h>
 #include <Utils.h>
 #include "DiffieHellman.h"
 
@@ -67,7 +68,7 @@ DiffieHellman::~DiffieHellman() {
 std::vector<unsigned char> DiffieHellman::getSerializedPublicKey() const {
     int length = i2d_PublicKey(privateKey, 0);
     if (length < 0) {
-        throw CryptoException(getOpenSslError());
+        throw SerializationException(getOpenSslError());
     }
 
     std::vector<unsigned char> publicKey(length);
@@ -75,13 +76,13 @@ std::vector<unsigned char> DiffieHellman::getSerializedPublicKey() const {
 
     length = i2d_PublicKey(privateKey, &publicKeyPointer);
     if (length < 0) {
-        throw CryptoException(getOpenSslError());
+        throw SerializationException(getOpenSslError());
     }
 
     return publicKey;
 }
 
-EVP_PKEY* DiffieHellman::parsePublicKey(const std::vector<unsigned char> &serializedPeerPublicKey) const {
+EVP_PKEY* DiffieHellman::deserializePublicKey(const std::vector<unsigned char> &serializedPeerPublicKey) const {
     EC_KEY *ecKey = EC_KEY_new_by_curve_name(curve);
     if (!ecKey) {
         throw CryptoException(getOpenSslError());
@@ -104,7 +105,7 @@ EVP_PKEY* DiffieHellman::parsePublicKey(const std::vector<unsigned char> &serial
     if (!success) {
         EC_KEY_free(ecKey);
         EVP_PKEY_free(publicKey);
-        throw CryptoException(getOpenSslError());
+        throw SerializationException(getOpenSslError());
     }
 
     EC_KEY_free(ecKey);
@@ -117,7 +118,7 @@ std::vector<unsigned char> DiffieHellman::deriveSharedSecret(const std::vector<u
     }
 
     // Deserialize the peer public key into an EVP_PKEY.
-    EVP_PKEY *peerPublicKey = parsePublicKey(serializedPeerPublicKey);
+    EVP_PKEY *peerPublicKey = deserializePublicKey(serializedPeerPublicKey);
 
     // Derive the shared secret.
     EVP_PKEY_CTX *context = EVP_PKEY_CTX_new(privateKey, nullptr);

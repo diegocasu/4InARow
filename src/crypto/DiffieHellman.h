@@ -9,11 +9,11 @@
 namespace fourinarow {
 
 /**
- * Class implementing the operations needed to perform a key exchange
- * with Elliptic Curve Diffie-Hellman. It allows to generate private-public
- * key pairs using the standardized prime256v1 curve and to generate a shared secret
- * using the public key of another party. The private key is held in memory for the
- * entire lifetime of an object, and securely destroyed when the destructor is called.
+ * Class used to perform a key exchange exploiting Elliptic Curve Diffie-Hellman.
+ * It allows to generate private-public key pairs using the standardized prime256v1 curve
+ * and to generate a shared secret using the public key of another party.
+ * The private key is held in memory for the entire lifetime of an object,
+ * and securely destroyed when the destructor is called.
  */
 class DiffieHellman {
     private:
@@ -24,14 +24,14 @@ class DiffieHellman {
          * Generates the parameters needed to create the private-public
          * key pair using the prime256v1 curve.
          * @param parameters  the pointer to the pointer that will hold the parameters.
-         * @throws  CryptoException  if an error occurred while generating the parameters.
+         * @throws CryptoException  if an error occurred while generating the parameters.
          */
         void generateParameters(EVP_PKEY **parameters);
 
         /**
          * Generates the private-public key pair starting from the given parameters.
          * @param parameters  the parameters used to generate the key pair.
-         * @throws  CryptoException  if an error occurred while generating the pair.
+         * @throws CryptoException  if an error occurred while generating the pair.
          */
         void generateKeyPair(EVP_PKEY *parameters);
 
@@ -40,14 +40,15 @@ class DiffieHellman {
          * usable by the OpenSSL API.
          * @param serializedPeerPublicKey  the public key, in binary format.
          * @return                         the public key, in OpenSSL format.
-         * @throws  CryptoException  if an error occurred while converting the public key.
+         * @throws CryptoException         if an error occurred while initializing the OpenSSL API.
+         * @throws SerializationException  if the public key is not represented in a correct binary format.
          */
-        EVP_PKEY* parsePublicKey(const std::vector<unsigned char> &serializedPeerPublicKey) const;
+        EVP_PKEY* deserializePublicKey(const std::vector<unsigned char> &serializedPeerPublicKey) const;
     public:
         /**
          * Creates a private-public key pair using Elliptic Curve Diffie-Hellman
          * and the standardized prime256v1 curve.
-         * @throws  CryptoException  if an error occurred while generating the pair.
+         * @throws CryptoException  if an error occurred while generating the pair.
          */
         DiffieHellman();
 
@@ -65,7 +66,7 @@ class DiffieHellman {
          * Returns the public key in binary format, ready to be
          * sent through a socket.
          * @return  the public key, in binary format.
-         * @throws  CryptoException  if an error occurred while serializing the public key.
+         * @throws SerializationException  if an error occurred while serializing the public key.
          */
         std::vector<unsigned char> getSerializedPublicKey() const;
 
@@ -74,8 +75,9 @@ class DiffieHellman {
          * and the given public key.
          * @param serializedPeerPublicKey  the public key of the peer, in binary format.
          * @return                         the shared secret, in binary format.
-         * @throws  CryptoException  if the given public key is empty, or an error occurred
-         *                           while deriving the shared secret.
+         * @throws CryptoException         if the given public key is empty, or an error occurred
+         *                                 while deriving the shared secret.
+         * @throws SerializationException  if the public key is not represented in a correct binary format.
          */
         std::vector<unsigned char> deriveSharedSecret(const std::vector<unsigned char> &serializedPeerPublicKey) const;
 };
