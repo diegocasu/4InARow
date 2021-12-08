@@ -4,9 +4,11 @@ target_sources(crypto
         PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/DiffieHellman.cpp
         ${CMAKE_CURRENT_LIST_DIR}/SHA256.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/DigitalSignature.cpp
         PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/DiffieHellman.h
         ${CMAKE_CURRENT_LIST_DIR}/SHA256.h
+        ${CMAKE_CURRENT_LIST_DIR}/DigitalSignature.h
         )
 
 target_include_directories(crypto
