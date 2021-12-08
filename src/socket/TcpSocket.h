@@ -18,7 +18,6 @@ class TcpSocket {
         unsigned short port;
         int descriptor;
         sockaddr_in rawAddress;
-        const size_t MAX_MSG_SIZE = (1 << 16) - 1;
 
         /**
          * Creates a TCP socket representing a socket already connected at system level.

@@ -5,6 +5,7 @@
 #include <string.h>
 #include <iostream>
 #include <SocketException.h>
+#include <Constants.h>
 #include "TcpSocket.h"
 
 namespace fourinarow {

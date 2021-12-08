@@ -29,18 +29,6 @@ std::string dumpVector(const std::vector<unsigned char> &vector) {
     return dump;
 }
 
-std::string dumpEvpKey(const EVP_PKEY *key) {
-    BIO *bio = BIO_new(BIO_s_mem());
-    BIO_dump(bio, (const char*) key, EVP_PKEY_size(key));
-
-    char *buffer;
-    size_t length = BIO_get_mem_data(bio, &buffer);
-    std::string dump(buffer, length);
-
-    BIO_free(bio);
-    return dump;
-}
-
 void cleanse(std::vector<unsigned char> &vector) {
     OPENSSL_cleanse(vector.data(), vector.size());
 }
@@ -48,7 +36,8 @@ void cleanse(std::vector<unsigned char> &vector) {
 std::string convertMessageType(uint8_t messageType) {
     if (messageType == CLIENT_HELLO)         return "CLIENT_HELLO";
     if (messageType == SERVER_HELLO)         return "SERVER_HELLO";
-    if (messageType == PLAYER_HELLO)         return "PLAYER_HELLO";
+    if (messageType == PLAYER1_HELLO)        return "PLAYER1_HELLO";
+    if (messageType == PLAYER2_HELLO)        return "PLAYER2_HELLO";
     if (messageType == END_HANDSHAKE)        return "END_HANDSHAKE";
     if (messageType == REQ_PLAYER_LIST)      return "REQ_PLAYER_LIST";
     if (messageType == PLAYER_LIST)          return "PLAYER_LIST";

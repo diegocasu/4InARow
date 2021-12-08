@@ -44,7 +44,7 @@ std::vector<unsigned char> AuthenticatedEncryption::encrypt(const std::vector<un
     }
 
     EVP_CIPHER_CTX *context = EVP_CIPHER_CTX_new();
-    std::vector<unsigned char> result(plaintext.size() + AES_GCM_TAG_SIZE);
+    std::vector<unsigned char> result(plaintext.size() + TAG_SIZE);
     auto ciphertextLength = 0;
     auto encryptOutputLength = 0;
 
@@ -80,7 +80,7 @@ std::vector<unsigned char> AuthenticatedEncryption::encrypt(const std::vector<un
     ciphertextLength += encryptOutputLength;
 
     // Retrieve the tag.
-    if (1 != EVP_CIPHER_CTX_ctrl(context, EVP_CTRL_AEAD_GET_TAG, AES_GCM_TAG_SIZE, result.data() + ciphertextLength)) {
+    if (1 != EVP_CIPHER_CTX_ctrl(context, EVP_CTRL_AEAD_GET_TAG, TAG_SIZE, result.data() + ciphertextLength)) {
         EVP_CIPHER_CTX_free(context);
         throw CryptoException(getOpenSslError());
     }
@@ -95,12 +95,12 @@ std::vector<unsigned char> AuthenticatedEncryption::decrypt(const std::vector<un
         throw CryptoException("Empty ciphertext and tag");
     }
 
-    if (ciphertextAndTag.size() <= AES_GCM_TAG_SIZE) {
+    if (ciphertextAndTag.size() <= TAG_SIZE) {
         throw CryptoException("Malformed ciphertext and tag");
     }
 
     EVP_CIPHER_CTX *context = EVP_CIPHER_CTX_new();
-    size_t ciphertextLength = ciphertextAndTag.size() - AES_GCM_TAG_SIZE;
+    size_t ciphertextLength = ciphertextAndTag.size() - TAG_SIZE;
     std::vector<unsigned char> plaintext(ciphertextLength);
     auto decryptOutputLength = 0;
 
@@ -129,7 +129,7 @@ std::vector<unsigned char> AuthenticatedEncryption::decrypt(const std::vector<un
     }
 
     // Provide the expected tag.
-    if (1 != EVP_CIPHER_CTX_ctrl(context, EVP_CTRL_AEAD_SET_TAG, AES_GCM_TAG_SIZE,
+    if (1 != EVP_CIPHER_CTX_ctrl(context, EVP_CTRL_AEAD_SET_TAG, TAG_SIZE,
                                  (unsigned char*) ciphertextAndTag.data() + ciphertextLength)) {
         EVP_CIPHER_CTX_free(context);
         throw CryptoException(getOpenSslError());

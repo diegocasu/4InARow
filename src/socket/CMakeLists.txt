@@ -13,3 +13,4 @@ target_include_directories(socket
         )
 
 target_link_libraries(socket PRIVATE exception)
+target_link_libraries(socket PRIVATE utils)

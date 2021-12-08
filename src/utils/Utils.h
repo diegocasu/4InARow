@@ -23,14 +23,6 @@ std::string getOpenSslError();
 std::string dumpVector(const std::vector<unsigned char> &vector);
 
 /**
- * Returns an indented string containing the hexadecimal representation of the
- * bytes forming a private or public key.
- * @param key  the private or public key.
- * @return  the string containing the hexadecimal representation of the key.
- */
-std::string dumpEvpKey(const EVP_PKEY *key);
-
-/**
  * Fills the given array with zeros destroying its content, so that
  * the compiler does not remove the operations when optimizing.
  * It relies on <code>OPENSSL_cleanse()</code>.
