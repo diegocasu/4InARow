@@ -4,9 +4,11 @@ target_sources(message
         PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/Message.cpp
         ${CMAKE_CURRENT_LIST_DIR}/ClientHello.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/ServerHello.cpp
         PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/Message.h
         ${CMAKE_CURRENT_LIST_DIR}/ClientHello.h
+        ${CMAKE_CURRENT_LIST_DIR}/ServerHello.h
         )
 
 target_include_directories(message

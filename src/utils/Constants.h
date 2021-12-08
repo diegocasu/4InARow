@@ -31,6 +31,7 @@ extern const uint8_t NONCE_SIZE;
 extern const uint8_t MAX_USERNAME_SIZE;
 extern const uint8_t PUBLIC_KEY_SIZE;
 extern const uint16_t DIGITAL_SIGNATURE_SIZE;
+extern const uint16_t MAX_CERTIFICATE_SIZE;
 extern const uint8_t KEY_SIZE;
 extern const uint8_t IV_SIZE;
 extern const uint8_t TAG_SIZE;

@@ -24,10 +24,15 @@ const uint8_t MALFORMED_MESSAGE       = 18;
 const uint16_t MAX_MSG_SIZE           = 65535;
 const uint8_t NONCE_SIZE              = 4;
 const uint8_t MAX_USERNAME_SIZE       = 255;
-const uint8_t PUBLIC_KEY_SIZE         = 65;     // Elliptic-curve Diffie-Hellman with prime256v1 curve.
-const uint16_t DIGITAL_SIGNATURE_SIZE = 256;    // RSA-2048 digital signatures.
-const uint8_t KEY_SIZE                = 16;     // AES-128 GCM
-const uint8_t IV_SIZE                 = 12;     // AES-128 GCM
-const uint8_t TAG_SIZE                = 16;     // AES-128 GCM
+const uint8_t PUBLIC_KEY_SIZE         = 65;                       // Elliptic-curve Diffie-Hellman with prime256v1 curve.
+const uint16_t DIGITAL_SIGNATURE_SIZE = 256;                      // RSA-2048 digital signatures.
+const uint8_t KEY_SIZE                = 16;                       // AES-128 GCM
+const uint8_t IV_SIZE                 = 12;                       // AES-128 GCM
+const uint8_t TAG_SIZE                = 16;                       // AES-128 GCM
 
+const uint16_t MAX_CERTIFICATE_SIZE   = MAX_MSG_SIZE -
+                                        NONCE_SIZE -
+                                        PUBLIC_KEY_SIZE -
+                                        DIGITAL_SIGNATURE_SIZE -
+                                        sizeof(uint16_t);         // Size derived from the composition of SERVER_HELLO.
 }
