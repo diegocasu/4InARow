@@ -25,20 +25,8 @@ const std::vector<unsigned char>& ClientHello::getPublicKey() const {
 }
 
 void ClientHello::checkIfSerializable() {
-    if (username.empty()) {
-        throw SerializationException("Empty username");
-    }
-
-    if (nonce.empty()) {
-        throw SerializationException("Empty nonce");
-    }
-
-    if (publicKey.empty()) {
-        throw SerializationException("Empty public key");
-    }
-
-    if (username.size() > MAX_USERNAME_SIZE) {
-        std::string errorMessage("The username size must be less than or equal to ");
+    if (username.empty() || username.size() > MAX_USERNAME_SIZE) {
+        std::string errorMessage("The username size must be greater than zero, and less than or equal to ");
         errorMessage.append(std::to_string(MAX_USERNAME_SIZE));
         errorMessage.append(" bytes. Username size: ");
         errorMessage.append(std::to_string(username.size()));

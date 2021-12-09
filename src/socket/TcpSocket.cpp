@@ -29,10 +29,6 @@ TcpSocket::TcpSocket(int descriptor, const sockaddr_in &rawAddress) : descriptor
 }
 
 TcpSocket::TcpSocket(std::string address, unsigned short port) : address(std::move(address)), port(port) {
-    if (this->address.empty() || this->address.size() > MAX_IPV4_ADDRESS_SIZE) {
-        throw SocketException("Invalid network address");
-    }
-
     memset(&rawAddress, 0, sizeof(rawAddress));
     rawAddress.sin_family = AF_INET;
     rawAddress.sin_port = htons(this->port);

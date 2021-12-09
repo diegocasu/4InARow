@@ -16,24 +16,8 @@ ServerHello::ServerHello(std::vector<unsigned char> certificate,
       digitalSignature(std::move(digitalSignature)) {}
 
 void ServerHello::checkIfSerializable() {
-    if (certificate.empty()) {
-        throw SerializationException("Empty certificate");
-    }
-
-    if (nonce.empty()) {
-        throw SerializationException("Empty nonce");
-    }
-
-    if (publicKey.empty()) {
-        throw SerializationException("Empty public key");
-    }
-
-    if (digitalSignature.empty()) {
-        throw SerializationException("Empty digital signature");
-    }
-
-    if (certificate.size() > MAX_CERTIFICATE_SIZE) {
-        std::string errorMessage("The certificate size must be less than or equal to ");
+    if (certificate.empty() || certificate.size() > MAX_CERTIFICATE_SIZE) {
+        std::string errorMessage("The certificate size must be greater than zero, and less than or equal to ");
         errorMessage.append(std::to_string(MAX_CERTIFICATE_SIZE));
         errorMessage.append(" bytes. Certificate size: ");
         errorMessage.append(std::to_string(certificate.size()));

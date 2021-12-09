@@ -6,7 +6,6 @@
 
 namespace fourinarow {
 
-
 EndHandshake::EndHandshake(std::vector<unsigned char> digitalSignature)
 : digitalSignature(std::move(digitalSignature)) {}
 
@@ -19,10 +18,6 @@ const std::vector<unsigned char>& EndHandshake::getDigitalSignature() const {
 }
 
 void EndHandshake::checkIfSerializable() {
-    if (digitalSignature.empty()) {
-        throw SerializationException("Empty digital signature");
-    }
-
     if (digitalSignature.size() != DIGITAL_SIGNATURE_SIZE) {
         std::string errorMessage("The digital signature size must be exactly ");
         errorMessage.append(std::to_string(DIGITAL_SIGNATURE_SIZE));

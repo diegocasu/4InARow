@@ -17,12 +17,8 @@ const std::string& Challenge::getUsername() const {
 }
 
 void Challenge::checkIfSerializable() {
-    if(username.empty()) {
-        throw SerializationException("Empty username");
-    }
-
-    if (username.size() > MAX_USERNAME_SIZE) {
-        std::string errorMessage("The username size must be less than or equal to ");
+    if (username.empty() || username.size() > MAX_USERNAME_SIZE) {
+        std::string errorMessage("The username size must be greater than zero, and less than or equal to ");
         errorMessage.append(std::to_string(MAX_USERNAME_SIZE));
         errorMessage.append(" bytes. Username size: ");
         errorMessage.append(std::to_string(username.size()));
@@ -51,7 +47,6 @@ std::vector<unsigned char> Challenge::serialize() {
 
     return message;
 }
-
 
 void Challenge::deserialize(const std::vector<unsigned char> &message) {
     size_t processedBytes = 0;
