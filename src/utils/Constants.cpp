@@ -30,9 +30,10 @@ const uint8_t KEY_SIZE                = 16;                       // AES-128 GCM
 const uint8_t IV_SIZE                 = 12;                       // AES-128 GCM
 const uint8_t TAG_SIZE                = 16;                       // AES-128 GCM
 
-const uint16_t MAX_CERTIFICATE_SIZE   = MAX_MSG_SIZE -
-                                        NONCE_SIZE -
-                                        PUBLIC_KEY_SIZE -
+const uint16_t MAX_CERTIFICATE_SIZE   = MAX_MSG_SIZE -            // Size derived from the composition of SERVER_HELLO.
+                                        sizeof(uint8_t) -         // sizeof(uint8_t) refers to the "type" field size,
+                                        NONCE_SIZE -              // while sizeof(uint16_t) refers to the certificate
+                                        PUBLIC_KEY_SIZE -         // length sent in the serialized message.
                                         DIGITAL_SIGNATURE_SIZE -
-                                        sizeof(uint16_t);         // Size derived from the composition of SERVER_HELLO.
+                                        sizeof(uint16_t);
 }
