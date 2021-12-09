@@ -2,6 +2,7 @@
 #define INC_4INAROW_PLAYERLIST_H
 
 #include <ostream>
+#include <string>
 #include <Constants.h>
 #include "Message.h"
 

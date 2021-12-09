@@ -3,6 +3,7 @@
 
 #include <arpa/inet.h>
 #include <ostream>
+#include <string>
 #include <vector>
 
 namespace fourinarow {

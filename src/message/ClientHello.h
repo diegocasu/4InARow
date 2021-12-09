@@ -2,6 +2,7 @@
 #define INC_4INAROW_CLIENTHELLO_H
 
 #include <ostream>
+#include <string>
 #include <Constants.h>
 #include "Message.h"
 
