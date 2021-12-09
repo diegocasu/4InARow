@@ -17,7 +17,7 @@ DigitalSignature::~DigitalSignature() {
 void DigitalSignature::loadPrivateKey(const std::string &path) {
     FILE *file = fopen(path.data(), "r");
     if (!file) {
-        throw CryptoException("Impossible to open the certificate file");
+        throw CryptoException("Impossible to open the private key file");
     }
 
     privateKey = PEM_read_PrivateKey(file, nullptr, nullptr, nullptr);

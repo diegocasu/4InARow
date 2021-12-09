@@ -73,7 +73,7 @@ std::vector<unsigned char> ServerHello::serialize() {
     checkIfSerializable();
 
     size_t processedBytes = 0;
-    size_t outputSize = sizeof(type) + sizeof(uint16_t) + certificate.size() +
+    size_t outputSize = sizeof(type) + sizeof(MAX_CERTIFICATE_SIZE) + certificate.size() +
                         nonce.size() + publicKey.size() + digitalSignature.size();
     std::vector<unsigned char> message(outputSize);
 

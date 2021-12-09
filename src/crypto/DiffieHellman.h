@@ -9,7 +9,7 @@
 namespace fourinarow {
 
 /**
- * Class used to perform a key exchange exploiting Elliptic Curve Diffie-Hellman.
+ * Class used to perform a key exchange exploiting Elliptic-curve Diffie-Hellman.
  * It allows to generate private-public key pairs using the standardized prime256v1 curve
  * and to generate a shared secret using the public key of another party.
  * The private key is held in memory for the entire lifetime of an object,
@@ -46,7 +46,7 @@ class DiffieHellman {
         EVP_PKEY* deserializePublicKey(const std::vector<unsigned char> &serializedPeerPublicKey) const;
     public:
         /**
-         * Creates a private-public key pair using Elliptic Curve Diffie-Hellman
+         * Creates a private-public key pair using Elliptic-curve Diffie-Hellman
          * and the standardized prime256v1 curve.
          * @throws CryptoException  if an error occurred while generating the pair.
          */

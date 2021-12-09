@@ -36,7 +36,7 @@ std::vector<unsigned char> PlayerList::serialize() {
     checkIfSerializable();
 
     size_t processedBytes = 0;
-    size_t outputSize = sizeof(type) + sizeof(uint16_t) + playerList.size();
+    size_t outputSize = sizeof(type) + sizeof(MAX_PLAYER_LIST_SIZE) + playerList.size();
     std::vector<unsigned char> message(outputSize);
 
     // Serialize the type.
