@@ -9,6 +9,7 @@ target_sources(message
         ${CMAKE_CURRENT_LIST_DIR}/InfoMessage.cpp
         ${CMAKE_CURRENT_LIST_DIR}/PlayerList.cpp
         ${CMAKE_CURRENT_LIST_DIR}/Challenge.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/Player.cpp
         PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/Message.h
         ${CMAKE_CURRENT_LIST_DIR}/ClientHello.h
@@ -17,6 +18,7 @@ target_sources(message
         ${CMAKE_CURRENT_LIST_DIR}/InfoMessage.h
         ${CMAKE_CURRENT_LIST_DIR}/PlayerList.h
         ${CMAKE_CURRENT_LIST_DIR}/Challenge.h
+        ${CMAKE_CURRENT_LIST_DIR}/Player.h
         )
 
 target_include_directories(message
