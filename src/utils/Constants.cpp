@@ -22,6 +22,7 @@ const uint8_t PROTOCOL_VIOLATION      = 17;
 const uint8_t MALFORMED_MESSAGE       = 18;
 
 const uint16_t MAX_MSG_SIZE           = 65535;
+const uint8_t MAX_IPV4_ADDRESS_SIZE   = 15;
 const uint8_t NONCE_SIZE              = 4;
 const uint8_t MAX_USERNAME_SIZE       = 255;
 const uint8_t PUBLIC_KEY_SIZE         = 65;                       // Elliptic-curve Diffie-Hellman with prime256v1 curve.
@@ -40,4 +41,5 @@ const uint16_t MAX_CERTIFICATE_SIZE   = MAX_MSG_SIZE -            // Size derive
 const uint16_t MAX_PLAYER_LIST_SIZE   = MAX_MSG_SIZE -            // Size derived from the composition of PLAYER_LIST.
                                         sizeof(uint8_t) -         // sizeof(uint8_t) refers to the "type" field size,
                                         sizeof(uint16_t);         // while sizeof(uint16_t) refers to the list length
-}                                                                 // sent in the serialized message.
+                                                                  // sent in the serialized message.
+}

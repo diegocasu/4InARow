@@ -29,7 +29,7 @@ TcpSocket::TcpSocket(int descriptor, const sockaddr_in &rawAddress) : descriptor
 }
 
 TcpSocket::TcpSocket(std::string address, unsigned short port) : address(std::move(address)), port(port) {
-    if (this->address.empty()) {
+    if (this->address.empty() || this->address.size() > MAX_IPV4_ADDRESS_SIZE) {
         throw SocketException("Invalid network address");
     }
 

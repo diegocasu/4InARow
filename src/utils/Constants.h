@@ -27,6 +27,7 @@ extern const uint8_t MALFORMED_MESSAGE;
 
 // Size of message fields and cryptographic quantities, expressed in number of bytes.
 extern const uint16_t MAX_MSG_SIZE;
+extern const uint8_t MAX_IPV4_ADDRESS_SIZE;
 extern const uint8_t NONCE_SIZE;
 extern const uint8_t MAX_USERNAME_SIZE;
 extern const uint8_t PUBLIC_KEY_SIZE;
