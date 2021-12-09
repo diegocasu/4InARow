@@ -27,6 +27,13 @@ class DigitalSignature {
          * @throws CryptoException  if the file cannot be opened or the key cannot be loaded.
          */
         void loadPrivateKey(const std::string &path);
+
+        /**
+         * Loads a public key in PEM format from a file.
+         * @param path  the file path.
+         * @throws CryptoException  if the file cannot be opened or the key cannot be loaded.
+         */
+        static EVP_PKEY* loadPublicKey(const std::string &path);
     public:
         /**
          * Creates a digital signature object that will use the private key saved in the
@@ -69,6 +76,21 @@ class DigitalSignature {
         static bool verify(const std::vector<unsigned char> &message,
                            const std::vector<unsigned char> &signature,
                            const EVP_PKEY *publicKey);
+
+        /**
+         * Verifies a digital signature of a message using a public key parsed from a file.
+         * The verification is done using the SHA256 digest of the message.
+         * @param message    the message.
+         * @param signature  the digital signature to verify.
+         * @param path       the path of the file containing the public key.
+         * @return           true if the signature is valid, false otherwise.
+         * @throws CryptoException  if the message or the signature are empty;
+         *                          if the file cannot be opened or the public key cannot be loaded;
+         *                          if an error occurred while verifying the signature.
+         */
+        static bool verify(const std::vector<unsigned char> &message,
+                           const std::vector<unsigned char> &signature,
+                           const std::string &path);
 };
 
 }

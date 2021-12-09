@@ -27,6 +27,21 @@ void DigitalSignature::loadPrivateKey(const std::string &path) {
     }
 }
 
+EVP_PKEY* DigitalSignature::loadPublicKey(const std::string &path) {
+    FILE *file = fopen(path.data(), "r");
+    if (!file) {
+        throw CryptoException("Impossible to open the public key file");
+    }
+
+    EVP_PKEY *publicKey = PEM_read_PUBKEY(file, nullptr, nullptr, nullptr);
+    fclose(file);
+    if (!publicKey) {
+        throw CryptoException(getOpenSslError());
+    }
+
+    return publicKey;
+}
+
 std::vector<unsigned char> DigitalSignature::sign(const std::vector<unsigned char> &message) {
     if (message.empty()) {
         throw CryptoException("Empty message");
@@ -101,6 +116,13 @@ bool DigitalSignature::verify(const std::vector<unsigned char> &message,
         return false;
     }
     return true;
+}
+
+bool DigitalSignature::verify(const std::vector<unsigned char> &message,
+                              const std::vector<unsigned char> &signature,
+                              const std::string &path) {
+    EVP_PKEY *publicKey = loadPublicKey(path);
+    return verify(message, signature, publicKey);
 }
 
 }
