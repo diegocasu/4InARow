@@ -36,4 +36,8 @@ const uint16_t MAX_CERTIFICATE_SIZE   = MAX_MSG_SIZE -            // Size derive
                                         PUBLIC_KEY_SIZE -         // length sent in the serialized message.
                                         DIGITAL_SIGNATURE_SIZE -
                                         sizeof(uint16_t);
-}
+
+const uint16_t MAX_PLAYER_LIST_SIZE   = MAX_MSG_SIZE -            // Size derived from the composition of PLAYER_LIST.
+                                        sizeof(uint8_t) -         // sizeof(uint8_t) refers to the "type" field size,
+                                        sizeof(uint16_t);         // while sizeof(uint16_t) refers to the list length
+}                                                                 // sent in the serialized message.
