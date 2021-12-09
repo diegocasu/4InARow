@@ -6,11 +6,13 @@ target_sources(message
         ${CMAKE_CURRENT_LIST_DIR}/ClientHello.cpp
         ${CMAKE_CURRENT_LIST_DIR}/ServerHello.cpp
         ${CMAKE_CURRENT_LIST_DIR}/EndHandshake.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/InfoMessage.cpp
         PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/Message.h
         ${CMAKE_CURRENT_LIST_DIR}/ClientHello.h
         ${CMAKE_CURRENT_LIST_DIR}/ServerHello.h
         ${CMAKE_CURRENT_LIST_DIR}/EndHandshake.h
+        ${CMAKE_CURRENT_LIST_DIR}/InfoMessage.h
         )
 
 target_include_directories(message
