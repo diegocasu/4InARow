@@ -1,5 +1,4 @@
 #include <string.h>
-#include <arpa/inet.h>
 #include <ostream>
 #include <Utils.h>
 #include <SerializationException.h>

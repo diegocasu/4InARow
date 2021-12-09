@@ -1,6 +1,4 @@
 #include <string.h>
-#include <arpa/inet.h>
-#include <openssl/bio.h>
 #include <SerializationException.h>
 #include <Utils.h>
 #include "ClientHello.h"
