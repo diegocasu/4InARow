@@ -42,4 +42,8 @@ const uint16_t MAX_PLAYER_LIST_SIZE   = MAX_MSG_SIZE -            // Size derive
                                         sizeof(uint8_t) -         // sizeof(uint8_t) refers to the "type" field size,
                                         sizeof(uint16_t);         // while sizeof(uint16_t) refers to the list length
                                                                   // sent in the serialized message.
+
+const uint8_t ROWS                    = 6;
+const uint8_t COLUMNS                 = 7;
+
 }

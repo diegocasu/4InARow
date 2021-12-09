@@ -38,6 +38,10 @@ extern const uint8_t KEY_SIZE;
 extern const uint8_t IV_SIZE;
 extern const uint8_t TAG_SIZE;
 
+// Game quantities.
+extern const uint8_t ROWS;
+extern const uint8_t COLUMNS;
+
 }
 
 #endif //INC_4INAROW_CONSTANTS_H
