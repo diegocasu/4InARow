@@ -8,6 +8,11 @@ namespace fourinarow {
 
 PlayerList::PlayerList(std::string playerList) : playerList(std::move(playerList)) {}
 
+PlayerList::~PlayerList() {
+    cleanse(type);
+    cleanse(playerList);
+}
+
 uint8_t PlayerList::getType() const {
     return type;
 }

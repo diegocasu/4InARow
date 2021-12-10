@@ -31,6 +31,30 @@ std::string dumpVector(const std::vector<unsigned char> &vector);
 void cleanse(std::vector<unsigned char> &vector);
 
 /**
+ * Fills the given string with zeros destroying its content, so that
+ * the compiler does not remove the operations when optimizing.
+ * It relies on <code>OPENSSL_cleanse()</code>.
+ * @param string  the string whose content must be destroyed.
+ */
+void cleanse(std::string &string);
+
+/**
+ * Fills the given 8-bit unsigned integer with zeros destroying its content,
+ * so that the compiler does not remove the operations when optimizing.
+ * It relies on <code>OPENSSL_cleanse()</code>.
+ * @param integer  the 8-bit unsigned integer whose content must be destroyed.
+ */
+void cleanse(uint8_t &integer);
+
+/**
+ * Fills the given boolean with zeros destroying its content, so that
+ * the compiler does not remove the operations when optimizing.
+ * It relies on <code>OPENSSL_cleanse()</code>.
+ * @param boolean  the boolean whose content must be destroyed.
+ */
+void cleanse(bool &boolean);
+
+/**
  * Translates a message type code into a human readable string
  * containing the type itself.
  * @param messageType  the message type code.

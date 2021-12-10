@@ -8,6 +8,11 @@ namespace fourinarow {
 
 Challenge::Challenge(std::string username) : username(std::move(username)) {}
 
+Challenge::~Challenge() {
+    cleanse(type);
+    cleanse(username);
+}
+
 uint8_t fourinarow::Challenge::getType() const {
     return type;
 }

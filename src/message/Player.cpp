@@ -9,6 +9,13 @@ namespace fourinarow {
 Player::Player(std::string ipAddress, std::vector<unsigned char> publicKey, bool firstToPlay)
 : ipAddress(std::move(ipAddress)), publicKey(std::move(publicKey)), firstToPlay(firstToPlay) {}
 
+Player::~Player() {
+    cleanse(type);
+    cleanse(ipAddress);
+    cleanse(publicKey);
+    cleanse(firstToPlay);
+}
+
 uint8_t fourinarow::Player::getType() const {
     return type;
 }

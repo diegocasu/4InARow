@@ -33,6 +33,18 @@ void cleanse(std::vector<unsigned char> &vector) {
     OPENSSL_cleanse(vector.data(), vector.size());
 }
 
+void cleanse(std::string &string) {
+    OPENSSL_cleanse(&string[0], string.size());
+}
+
+void cleanse(uint8_t &integer) {
+    OPENSSL_cleanse(&integer, sizeof(integer));
+}
+
+void cleanse(bool &boolean) {
+    OPENSSL_cleanse(&boolean, sizeof(boolean));
+}
+
 std::string convertMessageType(uint8_t messageType) {
     if (messageType == CLIENT_HELLO)         return "CLIENT_HELLO";
     if (messageType == SERVER_HELLO)         return "SERVER_HELLO";

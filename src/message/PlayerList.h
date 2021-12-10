@@ -24,7 +24,11 @@ class PlayerList : public Message {
     public:
         PlayerList() = default;
         explicit PlayerList(std::string playerList);
-        ~PlayerList() override = default;
+
+        /**
+         * Destroys the message and securely wipes its content from memory.
+         */
+        ~PlayerList() override;
 
         PlayerList(PlayerList &&) = default;
         PlayerList(const PlayerList&) = default;

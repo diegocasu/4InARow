@@ -38,7 +38,11 @@ class Move : public Message {
     public:
         Move() = default;
         Move(uint8_t row, uint8_t column);
-        ~Move() override = default;
+
+        /**
+         * Destroys the message and securely wipes its content from memory.
+         */
+        ~Move() override;
 
         Move(Move &&) = default;
         Move(const Move&) = default;

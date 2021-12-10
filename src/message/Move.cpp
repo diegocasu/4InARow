@@ -7,6 +7,12 @@ namespace fourinarow {
 
 Move::Move(uint8_t row, uint8_t column) : row(row), column(column) {}
 
+Move::~Move() {
+    cleanse(type);
+    cleanse(row);
+    cleanse(column);
+}
+
 uint8_t fourinarow::Move::getType() const {
     return type;
 }

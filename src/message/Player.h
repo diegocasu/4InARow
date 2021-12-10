@@ -26,7 +26,11 @@ class Player : public Message {
     public:
         Player() = default;
         Player(std::string ipAddress, std::vector<unsigned char> publicKey, bool firstToPlay);
-        ~Player() override = default;
+
+        /**
+         * Destroys the message and securely wipes its content from memory.
+         */
+        ~Player() override;
 
         Player(Player &&) = default;
         Player(const Player&) = default;

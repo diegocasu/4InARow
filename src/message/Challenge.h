@@ -24,7 +24,11 @@ class Challenge : public Message {
     public:
         Challenge() = default;
         explicit Challenge(std::string username);
-        ~Challenge() override = default;
+
+        /**
+         * Destroys the message and securely wipes its content from memory.
+         */
+        ~Challenge() override;
 
         Challenge(Challenge &&) = default;
         Challenge(const Challenge&) = default;
