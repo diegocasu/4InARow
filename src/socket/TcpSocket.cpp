@@ -14,37 +14,24 @@ char *TcpSocket::parseError() {
     return strerror(errno);
 }
 
-TcpSocket::TcpSocket(int descriptor, const sockaddr_in &rawAddress) : descriptor(descriptor), rawAddress(rawAddress) {
+TcpSocket::TcpSocket(int descriptor, const sockaddr_in &rawDestinationAddress)
+: sourceAddress("unspecified"), sourcePort(0), rawDestinationAddress(rawDestinationAddress), descriptor(descriptor) {
     char addressBuffer[INET_ADDRSTRLEN];
 
     /*
      * This constructor is called only after a successful accept(), so there is no need
-     * to check the result of inet_ntop(): "descriptor" and "rawAddress" always represent
+     * to check the result of inet_ntop(): "descriptor" and "rawDestinationAddress" always represent
      * a correctly opened socket.
      */
-    inet_ntop(AF_INET, &(this->rawAddress.sin_addr), addressBuffer, INET_ADDRSTRLEN);
+    inet_ntop(AF_INET, &(this->rawDestinationAddress.sin_addr), addressBuffer, INET_ADDRSTRLEN);
 
-    this->address = std::string(addressBuffer);
-    this->port = ntohs(this->rawAddress.sin_port);
+    this->destinationAddress = std::string(addressBuffer);
+    this->destinationPort = ntohs(this->rawDestinationAddress.sin_port);
 }
 
-TcpSocket::TcpSocket(std::string address, unsigned short port) : address(std::move(address)), port(port) {
-    memset(&rawAddress, 0, sizeof(rawAddress));
-    rawAddress.sin_family = AF_INET;
-    rawAddress.sin_port = htons(this->port);
-
-    auto success = inet_pton(AF_INET, this->address.data(), &rawAddress.sin_addr);
-    if (success == 0) {
-        throw SocketException("Invalid network address");
-    }
-
-    /*
-     * The socket descriptor must be initialized at the end, otherwise throwing a SocketException results
-     * in a socket not properly closed. Indeed, throwing an exception prevents the constructor to correctly
-     * end, so the object will not be fully constructed and the destructor, which contains a call to close(),
-     * will not be invoked.
-     */
-    this->descriptor = socket(AF_INET, SOCK_STREAM, 0);
+TcpSocket::TcpSocket()
+: sourceAddress("unspecified"), sourcePort(0), destinationAddress("unspecified"), destinationPort(0) {
+    descriptor = socket(AF_INET, SOCK_STREAM, 0);
     if (descriptor == -1) {
         throw SocketException(parseError());
     }
@@ -62,24 +49,50 @@ TcpSocket::~TcpSocket() {
 }
 
 TcpSocket::TcpSocket(TcpSocket&& that) noexcept
-: address(std::move(that.address)), port(that.port), descriptor(that.descriptor), rawAddress(that.rawAddress) {
+    : sourceAddress(std::move(that.sourceAddress)),
+      sourcePort(that.sourcePort),
+      rawSourceAddress(that.rawSourceAddress),
+      destinationAddress(std::move(that.destinationAddress)),
+      destinationPort(that.destinationPort),
+      rawDestinationAddress(that.rawDestinationAddress),
+      descriptor(that.descriptor) {
     that.descriptor = -1; // Avoid a call to close() when destructing "that".
 }
 
-const std::string& TcpSocket::getAddress() const {
-    return address;
+const std::string &TcpSocket::getSourceAddress() const {
+    return sourceAddress;
 }
 
-unsigned short TcpSocket::getPort() const {
-    return port;
+unsigned short TcpSocket::getSourcePort() const {
+    return sourcePort;
+}
+
+const std::string &TcpSocket::getDestinationAddress() const {
+    return destinationAddress;
+}
+
+unsigned short TcpSocket::getDestinationPort() const {
+    return destinationPort;
 }
 
 int TcpSocket::getDescriptor() const {
     return descriptor;
 }
 
-void TcpSocket::bind() {
-    auto success = ::bind(descriptor, (sockaddr*) &rawAddress, sizeof(rawAddress));
+void TcpSocket::bind(std::string address, unsigned short port) {
+    sourceAddress = std::move(address);
+    sourcePort = port;
+
+    memset(&rawSourceAddress, 0, sizeof(rawSourceAddress));
+    rawSourceAddress.sin_family = AF_INET;
+    rawSourceAddress.sin_port = htons(sourcePort);
+
+    auto success = inet_pton(AF_INET, sourceAddress.data(), &rawSourceAddress.sin_addr);
+    if (success == 0) {
+        throw SocketException("Invalid network address");
+    }
+
+    success = ::bind(descriptor, (sockaddr*) &rawSourceAddress, sizeof(rawSourceAddress));
     if (success == -1) {
         throw SocketException(parseError());
     }
@@ -104,8 +117,20 @@ TcpSocket TcpSocket::accept() {
     return TcpSocket(newSocketDescriptor, clientAddress);
 }
 
-void TcpSocket::connect() {
-    auto success = ::connect(descriptor, (sockaddr*) &rawAddress, sizeof(rawAddress));
+void TcpSocket::connect(std::string address, unsigned short port) {
+    destinationAddress = std::move(address);
+    destinationPort = port;
+
+    memset(&rawDestinationAddress, 0, sizeof(rawDestinationAddress));
+    rawDestinationAddress.sin_family = AF_INET;
+    rawDestinationAddress.sin_port = htons(destinationPort);
+
+    auto success = inet_pton(AF_INET, destinationAddress.data(), &rawDestinationAddress.sin_addr);
+    if (success == 0) {
+        throw SocketException("Invalid network address");
+    }
+
+    success = ::connect(descriptor, (sockaddr*) &rawDestinationAddress, sizeof(rawDestinationAddress));
     if (success == -1) {
         throw SocketException(parseError());
     }
@@ -183,7 +208,10 @@ std::vector<unsigned char> TcpSocket::receive() {
 std::ostream& operator<<(std::ostream &ostream, const fourinarow::TcpSocket &socket) {
     ostream << "TcpSocket{";
     ostream << "descriptor=" << socket.getDescriptor();
-    ostream << ", address=" << socket.getAddress() << ", port=" << socket.getPort();
+    ostream << ", sourceAddress=" << socket.getSourceAddress();
+    ostream << ", sourcePort=" << socket.getSourcePort();
+    ostream << ", destinationAddress=" << socket.getDestinationAddress();
+    ostream << ", destinationPort=" << socket.getDestinationPort();
     ostream << '}';
     return ostream;
 }
