@@ -70,6 +70,9 @@ class TcpSocket {
         /**
          * Move constructs a TCP socket, automatically transferring the ownership of
          * the system socket, so that the moved object cannot access it anymore.
+         * Calling <code>bind(), listen(), accept(), connect(), send()</code> or
+         * <code>receive()</code> on a moved socket fails and
+         * results in a <code>SocketException</code>.
          * @param that  the socket to move.
          */
         TcpSocket(TcpSocket && that) noexcept;

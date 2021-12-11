@@ -56,6 +56,8 @@ TcpSocket::TcpSocket(TcpSocket&& that) noexcept
       destinationPort(that.destinationPort),
       rawDestinationAddress(that.rawDestinationAddress),
       descriptor(that.descriptor) {
+    that.sourceAddress = "unspecified";
+    that.destinationAddress = "unspecified";
     that.descriptor = -1; // Avoid a call to close() when destructing "that".
 }
 
