@@ -17,7 +17,14 @@ CertificateStore::CertificateStore() {
 }
 
 CertificateStore::~CertificateStore() {
-    X509_STORE_free(store);
+    if (store != nullptr) {
+        X509_STORE_free(store);
+    }
+}
+
+CertificateStore::CertificateStore(CertificateStore &&that) noexcept : store(that.store), empty(that.empty) {
+    that.store = nullptr; // Avoid a call to X509_STORE_free() when destructing "that".
+    that.empty = true;
 }
 
 X509* CertificateStore::loadCertificate(const std::string &path) {

@@ -11,7 +11,13 @@ DigitalSignature::DigitalSignature(const std::string &path) {
 }
 
 DigitalSignature::~DigitalSignature() {
-    EVP_PKEY_free(privateKey);
+    if (privateKey != nullptr) {
+        EVP_PKEY_free(privateKey);
+    }
+}
+
+DigitalSignature::DigitalSignature(DigitalSignature&& that) noexcept : privateKey(that.privateKey) {
+    that.privateKey = nullptr; // Avoid a call to EVP_PKEY_free() when destructing "that".
 }
 
 void DigitalSignature::loadPrivateKey(const std::string &path) {

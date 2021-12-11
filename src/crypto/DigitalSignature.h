@@ -49,8 +49,15 @@ class DigitalSignature {
          */
         ~DigitalSignature();
 
+        /**
+         * Move constructs a digital signature, automatically transferring the ownership of
+         * the private key, so that the moved object cannot access it anymore.
+         * Calling <code>sign()</code> on the moved object results in undefined behaviour.
+         * @param that  the digital signature to move.
+         */
+        DigitalSignature(DigitalSignature&& that) noexcept;
+
         DigitalSignature(const DigitalSignature&) = delete;
-        DigitalSignature(DigitalSignature&&) = delete;
         DigitalSignature& operator=(const DigitalSignature&) = delete;
         DigitalSignature& operator=(DigitalSignature&&) = delete;
 

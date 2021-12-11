@@ -62,7 +62,13 @@ DiffieHellman::DiffieHellman() {
 }
 
 DiffieHellman::~DiffieHellman() {
-    EVP_PKEY_free(privateKey);
+    if (privateKey != nullptr) {
+        EVP_PKEY_free(privateKey);
+    }
+}
+
+DiffieHellman::DiffieHellman(DiffieHellman &&that) noexcept : curve(that.curve), privateKey(that.privateKey) {
+    that.privateKey = nullptr; // Avoid a call to EVP_PKEY_free() when destructing "that".
 }
 
 std::vector<unsigned char> DiffieHellman::getSerializedPublicKey() const {

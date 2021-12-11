@@ -34,8 +34,17 @@ class AuthenticatedEncryption {
          */
         ~AuthenticatedEncryption();
 
+        /**
+         * Move constructs an authenticated encryption object, automatically transferring
+         * the ownership of the private key and the initialization vector, so that
+         * the moved object cannot access them anymore.
+         * Calling <code>encrypt()</code> or <code>decrypt()</code> on the moved object
+         * results in undefined behaviour.
+         * @param that  the authenticated encryption object to move.
+         */
+        AuthenticatedEncryption(AuthenticatedEncryption&& that) noexcept;
+
         AuthenticatedEncryption(const AuthenticatedEncryption&) = delete;
-        AuthenticatedEncryption(AuthenticatedEncryption&&) = delete;
         AuthenticatedEncryption& operator=(const AuthenticatedEncryption&) = delete;
         AuthenticatedEncryption& operator=(AuthenticatedEncryption&&) = delete;
 
