@@ -38,13 +38,11 @@ TcpSocket::TcpSocket()
 }
 
 TcpSocket::~TcpSocket() {
-    if (descriptor == -1) {
-        return;
-    }
-
-    auto success = close(descriptor);
-    if (success == -1) {
-        std::cerr << "Impossible to close the socket: " << parseError() << std::endl;
+    if (descriptor != -1) {
+        auto success = close(descriptor);
+        if (success == -1) {
+            std::cerr << "Impossible to close the socket: " << parseError() << std::endl;
+        }
     }
 }
 
