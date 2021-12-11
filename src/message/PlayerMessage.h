@@ -1,5 +1,5 @@
-#ifndef INC_4INAROW_PLAYER_H
-#define INC_4INAROW_PLAYER_H
+#ifndef INC_4INAROW_PLAYERMESSAGE_H
+#define INC_4INAROW_PLAYERMESSAGE_H
 
 #include <ostream>
 #include <string>
@@ -11,7 +11,7 @@ namespace fourinarow {
 /**
  * Class representing a PLAYER message.
  */
-class Player : public Message {
+class PlayerMessage : public Message {
     private:
         uint8_t type = PLAYER;
         std::string ipAddress;
@@ -24,18 +24,18 @@ class Player : public Message {
          */
         void checkIfSerializable();
     public:
-        Player() = default;
-        Player(std::string ipAddress, std::vector<unsigned char> publicKey, bool firstToPlay);
+        PlayerMessage() = default;
+        PlayerMessage(std::string ipAddress, std::vector<unsigned char> publicKey, bool firstToPlay);
 
         /**
          * Destroys the message and securely wipes its content from memory.
          */
-        ~Player() override;
+        ~PlayerMessage() override;
 
-        Player(Player &&) = default;
-        Player(const Player&) = default;
-        Player& operator=(const Player&) = default;
-        Player& operator=(Player&&) = default;
+        PlayerMessage(PlayerMessage &&) = default;
+        PlayerMessage(const PlayerMessage&) = default;
+        PlayerMessage& operator=(const PlayerMessage&) = default;
+        PlayerMessage& operator=(PlayerMessage&&) = default;
 
         uint8_t getType() const;
         const std::string& getIpAddress() const;
@@ -48,6 +48,6 @@ class Player : public Message {
 
 }
 
-std::ostream& operator<<(std::ostream &ostream, const fourinarow::Player &player);
+std::ostream& operator<<(std::ostream &ostream, const fourinarow::PlayerMessage &playerMessage);
 
-#endif //INC_4INAROW_PLAYER_H
+#endif //INC_4INAROW_PLAYERMESSAGE_H

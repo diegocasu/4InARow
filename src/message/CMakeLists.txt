@@ -9,7 +9,7 @@ target_sources(message
         ${CMAKE_CURRENT_LIST_DIR}/InfoMessage.cpp
         ${CMAKE_CURRENT_LIST_DIR}/PlayerList.cpp
         ${CMAKE_CURRENT_LIST_DIR}/Challenge.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/Player.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/PlayerMessage.cpp
         ${CMAKE_CURRENT_LIST_DIR}/Player1Hello.cpp
         ${CMAKE_CURRENT_LIST_DIR}/Player2Hello.cpp
         ${CMAKE_CURRENT_LIST_DIR}/Move.cpp
@@ -21,7 +21,7 @@ target_sources(message
         ${CMAKE_CURRENT_LIST_DIR}/InfoMessage.h
         ${CMAKE_CURRENT_LIST_DIR}/PlayerList.h
         ${CMAKE_CURRENT_LIST_DIR}/Challenge.h
-        ${CMAKE_CURRENT_LIST_DIR}/Player.h
+        ${CMAKE_CURRENT_LIST_DIR}/PlayerMessage.h
         ${CMAKE_CURRENT_LIST_DIR}/Player1Hello.h
         ${CMAKE_CURRENT_LIST_DIR}/Player2Hello.h
         ${CMAKE_CURRENT_LIST_DIR}/Move.h

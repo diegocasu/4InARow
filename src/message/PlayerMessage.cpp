@@ -2,37 +2,37 @@
 #include <arpa/inet.h>
 #include <SerializationException.h>
 #include <Utils.h>
-#include "Player.h"
+#include "PlayerMessage.h"
 
 namespace fourinarow {
 
-Player::Player(std::string ipAddress, std::vector<unsigned char> publicKey, bool firstToPlay)
+PlayerMessage::PlayerMessage(std::string ipAddress, std::vector<unsigned char> publicKey, bool firstToPlay)
 : ipAddress(std::move(ipAddress)), publicKey(std::move(publicKey)), firstToPlay(firstToPlay) {}
 
-Player::~Player() {
+PlayerMessage::~PlayerMessage() {
     cleanse(type);
     cleanse(ipAddress);
     cleanse(publicKey);
     cleanse(firstToPlay);
 }
 
-uint8_t fourinarow::Player::getType() const {
+uint8_t fourinarow::PlayerMessage::getType() const {
     return type;
 }
 
-const std::string &fourinarow::Player::getIpAddress() const {
+const std::string &fourinarow::PlayerMessage::getIpAddress() const {
     return ipAddress;
 }
 
-const std::vector<unsigned char> &fourinarow::Player::getPublicKey() const {
+const std::vector<unsigned char> &fourinarow::PlayerMessage::getPublicKey() const {
     return publicKey;
 }
 
-bool fourinarow::Player::isFirstToPlay() const {
+bool fourinarow::PlayerMessage::isFirstToPlay() const {
     return firstToPlay;
 }
 
-void Player::checkIfSerializable() {
+void PlayerMessage::checkIfSerializable() {
     sockaddr_in dummySockaddr;
     auto result = inet_pton(AF_INET, ipAddress.data(), &dummySockaddr.sin_addr);
     if (result == 0) {
@@ -49,7 +49,7 @@ void Player::checkIfSerializable() {
     }
 }
 
-std::vector<unsigned char> Player::serialize() {
+std::vector<unsigned char> PlayerMessage::serialize() {
     checkIfSerializable();
 
     size_t processedBytes = 0;
@@ -80,7 +80,7 @@ std::vector<unsigned char> Player::serialize() {
     return message;
 }
 
-void Player::deserialize(const std::vector<unsigned char> &message) {
+void PlayerMessage::deserialize(const std::vector<unsigned char> &message) {
     size_t processedBytes = 0;
 
     // Check if the type matches the expected one.
@@ -123,12 +123,12 @@ void Player::deserialize(const std::vector<unsigned char> &message) {
 
 }
 
-std::ostream& operator<<(std::ostream &ostream, const fourinarow::Player &player) {
+std::ostream& operator<<(std::ostream &ostream, const fourinarow::PlayerMessage &playerMessage) {
     ostream << "Player{" << std::endl;
-    ostream << "type=" << fourinarow::convertMessageType(player.getType()) << ',' << std::endl;
-    ostream << "ipAddress=" << player.getIpAddress() << ',' << std::endl;
-    ostream << "publicKey=" << std::endl << fourinarow::dumpVector(player.getPublicKey());
-    ostream << "firstToPlay=" << std::boolalpha << player.isFirstToPlay() << std::noboolalpha << std::endl;
+    ostream << "type=" << fourinarow::convertMessageType(playerMessage.getType()) << ',' << std::endl;
+    ostream << "ipAddress=" << playerMessage.getIpAddress() << ',' << std::endl;
+    ostream << "publicKey=" << std::endl << fourinarow::dumpVector(playerMessage.getPublicKey());
+    ostream << "firstToPlay=" << std::boolalpha << playerMessage.isFirstToPlay() << std::noboolalpha << std::endl;
     ostream << '}';
     return ostream;
 }
