@@ -55,11 +55,18 @@ class DigitalSignature {
          * Calling <code>sign()</code> on the moved object results in undefined behaviour.
          * @param that  the digital signature to move.
          */
-        DigitalSignature(DigitalSignature&& that) noexcept;
+        DigitalSignature(DigitalSignature &&that) noexcept;
+
+        /**
+         * Move assigns a digital signature, automatically transferring the ownership of
+         * the private key, so that the moved object cannot access it anymore.
+         * Calling <code>sign()</code> on the moved object results in undefined behaviour.
+         * @param that  the digital signature to move.
+         */
+        DigitalSignature& operator=(DigitalSignature &&that) noexcept;
 
         DigitalSignature(const DigitalSignature&) = delete;
         DigitalSignature& operator=(const DigitalSignature&) = delete;
-        DigitalSignature& operator=(DigitalSignature&&) = delete;
 
         /**
          * Signs the SHA256 digest of a message.

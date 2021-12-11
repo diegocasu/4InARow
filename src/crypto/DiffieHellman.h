@@ -64,11 +64,19 @@ class DiffieHellman {
          * moved object results in undefined behaviour.
          * @param that  the Elliptic-curve Diffie-Hellman key pair to move.
          */
-        DiffieHellman(DiffieHellman&& that) noexcept;
+        DiffieHellman(DiffieHellman &&that) noexcept;
+
+        /**
+         * Move assigns an Elliptic-curve Diffie-Hellman key pair, automatically
+         * transferring the ownership of the keys, so that the moved object cannot access them anymore.
+         * Calling <code>getSerializedPublicKey()</code> or <code>deriveSharedSecret()</code> on the
+         * moved object results in undefined behaviour.
+         * @param that  the Elliptic-curve Diffie-Hellman key pair to move.
+         */
+        DiffieHellman& operator=(DiffieHellman &&that) noexcept;
 
         DiffieHellman(const DiffieHellman&) = delete;
         DiffieHellman& operator=(const DiffieHellman&) = delete;
-        DiffieHellman& operator=(DiffieHellman&&) = delete;
 
         /**
          * Returns the public key in binary format, ready to be

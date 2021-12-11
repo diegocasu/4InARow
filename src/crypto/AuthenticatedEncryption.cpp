@@ -48,6 +48,25 @@ AuthenticatedEncryption::AuthenticatedEncryption(AuthenticatedEncryption &&that)
     that.iv = std::vector<unsigned char>();
 }
 
+
+AuthenticatedEncryption &AuthenticatedEncryption::operator=(AuthenticatedEncryption &&that) noexcept {
+    if (!key.empty()) {
+        cleanse(key);
+    }
+    if (!iv.empty()) {
+        cleanse(iv);
+    }
+
+    cipher = that.cipher;
+    key = std::move(that.key);
+    iv = std::move(that.iv);
+    that.cipher = nullptr;
+    that.key = std::vector<unsigned char>();
+    that.iv = std::vector<unsigned char>();
+
+    return *this;
+}
+
 std::vector<unsigned char> AuthenticatedEncryption::encrypt(const std::vector<unsigned char> &plaintext,
                                                             const std::vector<unsigned char> &aad) {
     if (plaintext.empty()) {

@@ -54,11 +54,19 @@ class CertificateStore {
          * <code>verifyCertificate()</code> on the moved object results in undefined behaviour.
          * @param that  the certificate store to move.
          */
-        CertificateStore(CertificateStore&& that) noexcept;
+        CertificateStore(CertificateStore &&that) noexcept;
+
+        /**
+         * Move assigns a certificate store, automatically transferring the ownership of
+         * the certificates, so that the moved object cannot access them anymore.
+         * Calling <code>addCertificate(), addCertificateRevocationList()</code> or
+         * <code>verifyCertificate()</code> on the moved object results in undefined behaviour.
+         * @param that  the certificate store to move.
+         */
+        CertificateStore& operator=(CertificateStore &&that) noexcept;
 
         CertificateStore(const CertificateStore&) = delete;
         CertificateStore& operator=(const CertificateStore&) = delete;
-        CertificateStore& operator=(CertificateStore&&) = delete;
 
         /**
          * Adds a trusted certificate to the store, loading it from a file.

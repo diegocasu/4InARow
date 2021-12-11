@@ -71,6 +71,17 @@ DiffieHellman::DiffieHellman(DiffieHellman &&that) noexcept : curve(that.curve),
     that.privateKey = nullptr; // Avoid a call to EVP_PKEY_free() when destructing "that".
 }
 
+DiffieHellman& DiffieHellman::operator=(DiffieHellman &&that) noexcept {
+    if (privateKey != nullptr) {
+        EVP_PKEY_free(privateKey);
+    }
+
+    privateKey = that.privateKey;
+    that.privateKey = nullptr; // Avoid a call to EVP_PKEY_free() when destructing "that".
+    return *this;
+}
+
+
 std::vector<unsigned char> DiffieHellman::getSerializedPublicKey() const {
     int length = i2d_PublicKey(privateKey, 0);
     if (length < 0) {

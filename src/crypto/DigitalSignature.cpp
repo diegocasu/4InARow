@@ -16,8 +16,18 @@ DigitalSignature::~DigitalSignature() {
     }
 }
 
-DigitalSignature::DigitalSignature(DigitalSignature&& that) noexcept : privateKey(that.privateKey) {
+DigitalSignature::DigitalSignature(DigitalSignature &&that) noexcept : privateKey(that.privateKey) {
     that.privateKey = nullptr; // Avoid a call to EVP_PKEY_free() when destructing "that".
+}
+
+DigitalSignature& DigitalSignature::operator=(DigitalSignature &&that) noexcept {
+    if (privateKey != nullptr) {
+        EVP_PKEY_free(privateKey);
+    }
+
+    privateKey = that.privateKey;
+    that.privateKey = nullptr; // Avoid a call to EVP_PKEY_free() when destructing "that".
+    return *this;
 }
 
 void DigitalSignature::loadPrivateKey(const std::string &path) {

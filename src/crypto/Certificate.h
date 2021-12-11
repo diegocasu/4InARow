@@ -32,13 +32,23 @@ class Certificate {
         /**
          * Move constructs a certificate, automatically transferring the ownership of
          * the memory allocated by OpenSSL, so that the moved object cannot access it anymore.
+         * Calling <code>getDistinguishedName()</code> or <code>getPublicKey()</code>
+         * on the moved object results in undefined behaviour.
          * @param that  the certificate to move.
          */
-        Certificate(Certificate&& that) noexcept;
+        Certificate(Certificate &&that) noexcept;
+
+        /**
+         * Move assigns a certificate, automatically transferring the ownership of
+         * the memory allocated by OpenSSL, so that the moved object cannot access it anymore.
+         * Calling <code>getDistinguishedName()</code> or <code>getPublicKey()</code>
+         * on the moved object results in undefined behaviour.
+         * @param that  the certificate to move.
+         */
+        Certificate& operator=(Certificate &&that) noexcept;
 
         Certificate(const Certificate&) = delete;
         Certificate& operator=(const Certificate&) = delete;
-        Certificate& operator=(Certificate&&) = delete;
 
         const X509* getRawCertificate() const;
 

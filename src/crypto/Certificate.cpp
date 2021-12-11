@@ -20,6 +20,16 @@ Certificate::Certificate(Certificate&& that) noexcept : rawCertificate(that.rawC
     that.rawCertificate = nullptr; // Avoid to call X509_free() multiple times.
 }
 
+Certificate& Certificate::operator=(Certificate &&that) noexcept {
+    if (rawCertificate != nullptr) {
+        X509_free((X509*) rawCertificate);
+    }
+
+    rawCertificate = that.rawCertificate;
+    that.rawCertificate = nullptr;
+    return *this;
+}
+
 const X509* Certificate::getRawCertificate() const {
     return rawCertificate;
 }

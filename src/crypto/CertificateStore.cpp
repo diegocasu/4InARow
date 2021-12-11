@@ -27,6 +27,18 @@ CertificateStore::CertificateStore(CertificateStore &&that) noexcept : store(tha
     that.empty = true;
 }
 
+CertificateStore& CertificateStore::operator=(CertificateStore &&that) noexcept {
+    if (store != nullptr) {
+        X509_STORE_free(store);
+    }
+
+    store = that.store;
+    empty = that.empty;
+    that.store = nullptr; // Avoid a call to X509_STORE_free() when destructing "that".
+    that.empty = true;
+    return *this;
+}
+
 X509* CertificateStore::loadCertificate(const std::string &path) {
     FILE *file = fopen(path.data(), "r");
     if (!file) {
