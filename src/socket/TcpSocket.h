@@ -75,11 +75,20 @@ class TcpSocket {
          * results in a <code>SocketException</code>.
          * @param that  the socket to move.
          */
-        TcpSocket(TcpSocket && that) noexcept;
+        TcpSocket(TcpSocket &&that) noexcept;
+
+        /**
+         * Move assigns a TCP socket, automatically transferring the ownership of
+         * the system socket, so that the moved object cannot access it anymore.
+         * Calling <code>bind(), listen(), accept(), connect(), send()</code> or
+         * <code>receive()</code> on a moved socket fails and
+         * results in a <code>SocketException</code>.
+         * @param that  the socket to move.
+         */
+        TcpSocket& operator=(TcpSocket &&that) noexcept;
 
         TcpSocket(const TcpSocket&) = delete;
         TcpSocket& operator=(const TcpSocket&) = delete;
-        TcpSocket& operator=(TcpSocket&&) = delete;
 
         const std::string &getSourceAddress() const;
         unsigned short getSourcePort() const;

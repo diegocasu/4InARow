@@ -48,7 +48,7 @@ TcpSocket::~TcpSocket() {
     }
 }
 
-TcpSocket::TcpSocket(TcpSocket&& that) noexcept
+TcpSocket::TcpSocket(TcpSocket &&that) noexcept
     : sourceAddress(std::move(that.sourceAddress)),
       sourcePort(that.sourcePort),
       rawSourceAddress(that.rawSourceAddress),
@@ -59,6 +59,29 @@ TcpSocket::TcpSocket(TcpSocket&& that) noexcept
     that.sourceAddress = "unspecified";
     that.destinationAddress = "unspecified";
     that.descriptor = -1; // Avoid a call to close() when destructing "that".
+}
+
+TcpSocket& TcpSocket::operator=(TcpSocket &&that) noexcept {
+    if (descriptor != -1) {
+        auto success = close(descriptor);
+        if (success == -1) {
+            std::cerr << "Impossible to close the socket: " << parseError() << std::endl;
+        }
+    }
+
+    sourceAddress = std::move(that.sourceAddress);
+    sourcePort = that.sourcePort;
+    rawSourceAddress = that.rawSourceAddress;
+    destinationAddress = std::move(that.destinationAddress);
+    destinationPort = that.destinationPort;
+    rawDestinationAddress = that.rawDestinationAddress;
+    descriptor = that.descriptor;
+
+    that.sourceAddress = "unspecified";
+    that.destinationAddress = "unspecified";
+    that.descriptor = -1; // Avoid a call to close() when destructing "that".
+
+    return *this;
 }
 
 const std::string &TcpSocket::getSourceAddress() const {
