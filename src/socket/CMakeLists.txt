@@ -3,9 +3,11 @@ add_library(socket)
 target_sources(socket
         PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/TcpSocket.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/TcpSocketHasher.cpp
         ${CMAKE_CURRENT_LIST_DIR}/InputMultiplexing.cpp
         PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/TcpSocket.h
+        ${CMAKE_CURRENT_LIST_DIR}/TcpSocketHasher.h
         ${CMAKE_CURRENT_LIST_DIR}/InputMultiplexing.h
         )
 

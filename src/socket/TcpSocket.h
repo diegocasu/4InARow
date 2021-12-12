@@ -148,6 +148,9 @@ class TcpSocket {
          *                          or an error occurred while performing the receive.
          */
         std::vector<unsigned char> receive();
+
+        bool operator==(const TcpSocket &rhs) const;
+        bool operator!=(const TcpSocket &rhs) const;
 };
 
 }

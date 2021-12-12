@@ -227,6 +227,18 @@ std::vector<unsigned char> TcpSocket::receive() {
     return message;
 }
 
+bool TcpSocket::operator==(const TcpSocket &rhs) const {
+    return sourceAddress == rhs.sourceAddress &&
+           sourcePort == rhs.sourcePort &&
+           destinationAddress == rhs.destinationAddress &&
+           destinationPort == rhs.destinationPort &&
+           descriptor == rhs.descriptor;
+}
+
+bool TcpSocket::operator!=(const TcpSocket &rhs) const {
+    return !(rhs == *this);
+}
+
 }
 
 std::ostream& operator<<(std::ostream &ostream, const fourinarow::TcpSocket &socket) {
