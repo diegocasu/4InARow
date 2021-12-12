@@ -68,7 +68,7 @@ class AuthenticatedEncryption {
          *                          and generating the tag.
          */
         std::vector<unsigned char> encrypt(const std::vector<unsigned char> &plaintext,
-                                           const std::vector<unsigned char> &aad);
+                                           const std::vector<unsigned char> &aad) const;
 
         /**
          * Decrypts a ciphertext verifying that the associated tag is valid.
@@ -79,7 +79,7 @@ class AuthenticatedEncryption {
          *                          while decrypting and generating the tag, or the tag is not valid.
          */
         std::vector<unsigned char> decrypt(const std::vector<unsigned char> &ciphertextAndTag,
-                                           const std::vector<unsigned char> &aad);
+                                           const std::vector<unsigned char> &aad) const;
 };
 
 }

@@ -58,7 +58,7 @@ EVP_PKEY* DigitalSignature::loadPublicKey(const std::string &path) {
     return publicKey;
 }
 
-std::vector<unsigned char> DigitalSignature::sign(const std::vector<unsigned char> &message) {
+std::vector<unsigned char> DigitalSignature::sign(const std::vector<unsigned char> &message) const {
     if (message.empty()) {
         throw CryptoException("Empty message");
     }

@@ -20,7 +20,7 @@ class Player1Hello : public Message {
          * Checks if the message has the expected format for serialization.
          * @throws SerializationException  if the message has not the expected format.
          */
-        void checkIfSerializable();
+        void checkIfSerializable() const;
     public:
         Player1Hello() = default;
         Player1Hello(std::vector<unsigned char> nonce, std::vector<unsigned char> publicKey);
@@ -35,7 +35,7 @@ class Player1Hello : public Message {
         const std::vector<unsigned char> &getNonce() const;
         const std::vector<unsigned char> &getPublicKey() const;
 
-        std::vector<unsigned char> serialize() override;
+        std::vector<unsigned char> serialize() const override;
         void deserialize(const std::vector<unsigned char> &message) override;
 };
 

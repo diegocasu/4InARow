@@ -25,15 +25,15 @@ uint8_t fourinarow::Move::getColumn() const {
     return column;
 }
 
-bool Move::isRowValid(uint8_t candidateRow) {
+bool Move::isRowValid(uint8_t candidateRow) const {
     return candidateRow < ROWS;
 }
 
-bool Move::isColumnValid(uint8_t candidateColumn) {
+bool Move::isColumnValid(uint8_t candidateColumn) const {
     return candidateColumn < COLUMNS;
 }
 
-void Move::checkIfSerializable() {
+void Move::checkIfSerializable() const {
     if (!isRowValid(row)) {
         throw SerializationException("The row must be a number between 0 and " +
                                      std::to_string(ROWS - 1) +
@@ -49,7 +49,7 @@ void Move::checkIfSerializable() {
     }
 }
 
-std::vector<unsigned char> Move::serialize() {
+std::vector<unsigned char> Move::serialize() const {
     checkIfSerializable();
 
     size_t processedBytes = 0;

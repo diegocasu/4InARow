@@ -19,7 +19,9 @@ class Message {
          * @throws SerializationException  if the message does not contain at least
          *                                 <code>processedBytes + bytesToProcess</code> bytes.
          */
-        void checkIfEnoughSpace(const std::vector<unsigned char> &message, size_t processedBytes, size_t bytesToProcess);
+        void checkIfEnoughSpace(const std::vector<unsigned char> &message,
+                                size_t processedBytes,
+                                size_t bytesToProcess) const;
     public:
         virtual ~Message() = 0;
 
@@ -28,7 +30,7 @@ class Message {
          * @return  the message in binary format.
          * @throws SerializationException  if the message has not the expected format.
          */
-        virtual std::vector<unsigned char> serialize() = 0;
+        virtual std::vector<unsigned char> serialize() const = 0;
 
         /**
          * Deserializes a message in binary format.

@@ -5,7 +5,7 @@ namespace fourinarow {
 
 void Message::checkIfEnoughSpace(const std::vector<unsigned char> &message,
                                  size_t processedBytes,
-                                 size_t bytesToProcess) {
+                                 size_t bytesToProcess) const {
     /*
      * This check should not be necessary, since size_t is at least on 16 bits and
      * the messages are composed of at most 65535 bytes (cannot send more using TcpSocket).

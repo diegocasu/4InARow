@@ -20,7 +20,7 @@ const std::vector<unsigned char> &Player1Hello::getPublicKey() const {
     return publicKey;
 }
 
-void Player1Hello::checkIfSerializable() {
+void Player1Hello::checkIfSerializable() const {
     if (nonce.size() != NONCE_SIZE) {
         throw SerializationException("The nonce size must be exactly " +
                                      std::to_string(NONCE_SIZE) +
@@ -38,7 +38,7 @@ void Player1Hello::checkIfSerializable() {
     }
 }
 
-std::vector<unsigned char> Player1Hello::serialize() {
+std::vector<unsigned char> Player1Hello::serialize() const {
     checkIfSerializable();
 
     size_t processedBytes = 0;

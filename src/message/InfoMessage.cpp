@@ -12,7 +12,7 @@ uint8_t InfoMessage::getType() const {
     return type;
 }
 
-std::vector<unsigned char> InfoMessage::serialize() {
+std::vector<unsigned char> InfoMessage::serialize() const {
     std::vector<unsigned char> message(sizeof(type));
     memcpy(message.data(), &type, sizeof(type));
     return message;

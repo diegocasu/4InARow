@@ -34,7 +34,7 @@ const X509* Certificate::getRawCertificate() const {
     return rawCertificate;
 }
 
-std::string Certificate::getDistinguishedName() {
+std::string Certificate::getDistinguishedName() const {
     X509_NAME *subjectName = X509_get_subject_name(rawCertificate);
     if (!subjectName) {
         throw CryptoException(getOpenSslError());
@@ -50,7 +50,7 @@ std::string Certificate::getDistinguishedName() {
     return distinguishedName;
 }
 
-EVP_PKEY *Certificate::getPublicKey() {
+EVP_PKEY *Certificate::getPublicKey() const {
     EVP_PKEY *publicKey = X509_get_pubkey((X509*) rawCertificate);
     if (!publicKey) {
         throw CryptoException(getOpenSslError());

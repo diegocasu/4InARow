@@ -20,7 +20,7 @@ class Challenge : public Message {
          * Checks if the message has the expected format for serialization.
          * @throws SerializationException  if the message has not the expected format.
          */
-        void checkIfSerializable();
+        void checkIfSerializable() const;
     public:
         Challenge() = default;
         explicit Challenge(std::string username);
@@ -38,7 +38,7 @@ class Challenge : public Message {
         uint8_t getType() const;
         const std::string& getUsername() const;
 
-        std::vector<unsigned char> serialize() override;
+        std::vector<unsigned char> serialize() const override;
         void deserialize(const std::vector<unsigned char> &message) override;
 };
 

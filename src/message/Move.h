@@ -21,20 +21,20 @@ class Move : public Message {
          * @param candidateRow  the row number.
          * @return              true if the row number is valid, false otherwise.
          */
-        bool isRowValid(uint8_t candidateRow);
+        bool isRowValid(uint8_t candidateRow) const;
 
         /**
          * Checks if the given column number is a valid one.
          * @param candidateColumn  the column number.
          * @return                 true if the column number is valid, false otherwise.
          */
-        bool isColumnValid(uint8_t candidateColumn);
+        bool isColumnValid(uint8_t candidateColumn) const;
 
         /**
          * Checks if the message has the expected format for serialization.
          * @throws SerializationException  if the message has not the expected format.
          */
-        void checkIfSerializable();
+        void checkIfSerializable() const;
     public:
         Move() = default;
         Move(uint8_t row, uint8_t column);
@@ -53,7 +53,7 @@ class Move : public Message {
         uint8_t getRow() const;
         uint8_t getColumn() const;
 
-        std::vector<unsigned char> serialize() override;
+        std::vector<unsigned char> serialize() const override;
         void deserialize(const std::vector<unsigned char> &message) override;
 };
 

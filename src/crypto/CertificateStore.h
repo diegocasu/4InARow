@@ -91,7 +91,7 @@ class CertificateStore {
          * @throws CryptoException  if the store has no loaded certificates, or an error
          *                          occurred while verifying the certificate.
          */
-        bool verifyCertificate(const Certificate &certificate);
+        bool verifyCertificate(const Certificate &certificate) const;
 
         /**
          * Serializes a certificate in DER format. The certificate must be saved in PEM format in a file.

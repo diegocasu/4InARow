@@ -25,7 +25,7 @@ class InputMultiplexing {
          * that occurred while using <code>select()</code>.
          * @return  the string containing a readable description of the error.
          */
-        char* parseError();
+        char* parseError() const;
     public:
         InputMultiplexing();
 
@@ -68,7 +68,7 @@ class InputMultiplexing {
          * @return            true if the socket is ready, false otherwise.
          * @throws SocketException  if the descriptor is invalid.
          */
-        bool isReady(unsigned int descriptor);
+        bool isReady(unsigned int descriptor) const;
 
         /**
          * Waits until at least one of the sockets being monitored is ready.

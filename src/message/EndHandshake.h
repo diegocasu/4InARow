@@ -18,7 +18,7 @@ class EndHandshake : public Message {
          * Checks if the message has the expected format for serialization.
          * @throws SerializationException  if the message has not the expected format.
          */
-        void checkIfSerializable();
+        void checkIfSerializable() const;
     public:
         EndHandshake() = default;
         explicit EndHandshake(std::vector<unsigned char> digitalSignature);
@@ -32,7 +32,7 @@ class EndHandshake : public Message {
         uint8_t getType() const;
         const std::vector<unsigned char>& getDigitalSignature() const;
 
-        std::vector<unsigned char> serialize() override;
+        std::vector<unsigned char> serialize() const override;
         void deserialize(const std::vector<unsigned char> &message) override;
 };
 

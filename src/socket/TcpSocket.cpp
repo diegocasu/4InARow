@@ -10,7 +10,7 @@
 
 namespace fourinarow {
 
-char *TcpSocket::parseError() {
+char *TcpSocket::parseError() const {
     return strerror(errno);
 }
 

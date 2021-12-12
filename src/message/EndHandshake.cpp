@@ -17,7 +17,7 @@ const std::vector<unsigned char>& EndHandshake::getDigitalSignature() const {
     return digitalSignature;
 }
 
-void EndHandshake::checkIfSerializable() {
+void EndHandshake::checkIfSerializable() const {
     if (digitalSignature.size() != DIGITAL_SIGNATURE_SIZE) {
         throw SerializationException("The digital signature size must be exactly " +
                                      std::to_string(DIGITAL_SIGNATURE_SIZE) +
@@ -27,7 +27,7 @@ void EndHandshake::checkIfSerializable() {
     }
 }
 
-std::vector<unsigned char> EndHandshake::serialize() {
+std::vector<unsigned char> EndHandshake::serialize() const {
     checkIfSerializable();
 
     size_t processedBytes = 0;

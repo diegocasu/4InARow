@@ -57,14 +57,14 @@ class Certificate {
          * @return  the distinguished name.
          * @throws CryptoException  if an error occurred while retrieving the name.
          */
-        std::string getDistinguishedName();
+        std::string getDistinguishedName() const;
 
         /**
          * Returns the public key saved in the certificate, in a format suitable for the OpenSSL API.
          * @return  the public key.
          * @throws CryptoException  if an error occurred while retrieving the public key.
          */
-        EVP_PKEY* getPublicKey();
+        EVP_PKEY* getPublicKey() const;
 };
 
 }

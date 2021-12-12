@@ -20,7 +20,7 @@ class PlayerList : public Message {
          * Checks if the message has the expected format for serialization.
          * @throws SerializationException  if the message has not the expected format.
          */
-        void checkIfSerializable();
+        void checkIfSerializable() const;
     public:
         PlayerList() = default;
         explicit PlayerList(std::string playerList);
@@ -38,7 +38,7 @@ class PlayerList : public Message {
         uint8_t getType() const;
         const std::string& getPlayerList() const;
 
-        std::vector<unsigned char> serialize() override;
+        std::vector<unsigned char> serialize() const override;
         void deserialize(const std::vector<unsigned char> &message) override;
 };
 

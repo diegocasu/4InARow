@@ -22,7 +22,7 @@ class PlayerMessage : public Message {
          * Checks if the message has the expected format for serialization.
          * @throws SerializationException  if the message has not the expected format.
          */
-        void checkIfSerializable();
+        void checkIfSerializable() const;
     public:
         PlayerMessage() = default;
         PlayerMessage(std::string ipAddress, std::vector<unsigned char> publicKey, bool firstToPlay);
@@ -42,7 +42,7 @@ class PlayerMessage : public Message {
         const std::vector<unsigned char>& getPublicKey() const;
         bool isFirstToPlay() const;
 
-        std::vector<unsigned char> serialize() override;
+        std::vector<unsigned char> serialize() const override;
         void deserialize(const std::vector<unsigned char> &message) override;
 };
 

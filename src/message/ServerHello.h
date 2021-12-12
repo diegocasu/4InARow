@@ -22,7 +22,7 @@ class ServerHello : public Message {
          * Checks if the message has the expected format for serialization.
          * @throws SerializationException  if the message has not the expected format.
          */
-        void checkIfSerializable();
+        void checkIfSerializable() const;
     public:
         ServerHello() = default;
         ServerHello(std::vector<unsigned char> certificate,
@@ -42,7 +42,7 @@ class ServerHello : public Message {
         const std::vector<unsigned char>& getPublicKey() const;
         const std::vector<unsigned char>& getDigitalSignature() const;
 
-        std::vector<unsigned char> serialize() override;
+        std::vector<unsigned char> serialize() const override;
         void deserialize(const std::vector<unsigned char> &message) override;
 };
 

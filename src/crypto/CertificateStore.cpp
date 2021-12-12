@@ -92,7 +92,7 @@ void CertificateStore::addCertificateRevocationList(const std::string &path) {
     }
 }
 
-bool CertificateStore::verifyCertificate(const Certificate &certificate) {
+bool CertificateStore::verifyCertificate(const Certificate &certificate) const {
     if (empty) {
         throw CryptoException("No loaded certificates in the store");
     }

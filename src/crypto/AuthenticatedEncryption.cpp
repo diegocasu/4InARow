@@ -60,7 +60,7 @@ AuthenticatedEncryption &AuthenticatedEncryption::operator=(AuthenticatedEncrypt
 }
 
 std::vector<unsigned char> AuthenticatedEncryption::encrypt(const std::vector<unsigned char> &plaintext,
-                                                            const std::vector<unsigned char> &aad) {
+                                                            const std::vector<unsigned char> &aad) const {
     if (plaintext.empty()) {
         throw CryptoException("Empty plaintext");
     }
@@ -112,7 +112,7 @@ std::vector<unsigned char> AuthenticatedEncryption::encrypt(const std::vector<un
 }
 
 std::vector<unsigned char> AuthenticatedEncryption::decrypt(const std::vector<unsigned char> &ciphertextAndTag,
-                                                            const std::vector<unsigned char> &aad) {
+                                                            const std::vector<unsigned char> &aad) const {
     if (ciphertextAndTag.empty()) {
         throw CryptoException("Empty ciphertext and tag");
     }

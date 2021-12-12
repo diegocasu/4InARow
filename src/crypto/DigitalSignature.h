@@ -75,7 +75,7 @@ class DigitalSignature {
          * @throws CryptoException  if the message is empty, or an error occurred
          *                          while creating the signature.
          */
-        std::vector<unsigned char> sign(const std::vector<unsigned char> &message);
+        std::vector<unsigned char> sign(const std::vector<unsigned char> &message) const;
 
         /**
          * Verifies a digital signature of a message using a public key.

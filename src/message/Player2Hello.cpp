@@ -26,7 +26,7 @@ const std::vector<unsigned char>& Player2Hello::getDigitalSignature() const {
     return digitalSignature;
 }
 
-void Player2Hello::checkIfSerializable() {
+void Player2Hello::checkIfSerializable() const {
     if (nonce.size() != NONCE_SIZE) {
         throw SerializationException("The nonce size must be exactly " +
                                      std::to_string(NONCE_SIZE) +
@@ -52,7 +52,7 @@ void Player2Hello::checkIfSerializable() {
     }
 }
 
-std::vector<unsigned char> Player2Hello::serialize() {
+std::vector<unsigned char> Player2Hello::serialize() const {
     checkIfSerializable();
 
     size_t processedBytes = 0;

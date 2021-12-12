@@ -32,7 +32,7 @@ bool fourinarow::PlayerMessage::isFirstToPlay() const {
     return firstToPlay;
 }
 
-void PlayerMessage::checkIfSerializable() {
+void PlayerMessage::checkIfSerializable() const {
     sockaddr_in dummySockaddr;
     auto result = inet_pton(AF_INET, ipAddress.data(), &dummySockaddr.sin_addr);
     if (result == 0) {
@@ -48,7 +48,7 @@ void PlayerMessage::checkIfSerializable() {
     }
 }
 
-std::vector<unsigned char> PlayerMessage::serialize() {
+std::vector<unsigned char> PlayerMessage::serialize() const {
     checkIfSerializable();
 
     size_t processedBytes = 0;

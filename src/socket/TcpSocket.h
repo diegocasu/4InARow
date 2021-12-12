@@ -36,7 +36,7 @@ class TcpSocket {
          * that occurred while operating on the socket.
          * @return  the string containing a readable description of the error.
          */
-        char* parseError();
+        char* parseError() const;
 
         /**
          * Sends all the bytes composing a binary message through a connected socket.

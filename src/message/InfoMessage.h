@@ -25,7 +25,7 @@ class InfoMessage : public Message {
 
         uint8_t getType() const;
 
-        std::vector<unsigned char> serialize() override;
+        std::vector<unsigned char> serialize() const override;
         void deserialize(const std::vector<unsigned char> &message) override;
 };
 

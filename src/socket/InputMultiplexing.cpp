@@ -1,6 +1,5 @@
 #include <errno.h>
 #include <string.h>
-#include <climits>
 #include <SocketException.h>
 #include "InputMultiplexing.h"
 
@@ -40,7 +39,7 @@ void InputMultiplexing::removeDescriptor(unsigned int descriptor) {
     }
 }
 
-bool InputMultiplexing::isReady(unsigned int descriptor) {
+bool InputMultiplexing::isReady(unsigned int descriptor) const {
     if (descriptor >= FD_SETSIZE) {
         throw SocketException("Invalid descriptor");
     }
@@ -48,7 +47,7 @@ bool InputMultiplexing::isReady(unsigned int descriptor) {
     return FD_ISSET(descriptor, &readSet);
 }
 
-char* InputMultiplexing::parseError() {
+char* InputMultiplexing::parseError() const {
     return strerror(errno);
 }
 
