@@ -7,28 +7,20 @@ namespace fourinarow {
 
 AuthenticatedEncryption::AuthenticatedEncryption(std::vector<unsigned char> key, std::vector<unsigned char> iv)
 : key(std::move(key)), iv(std::move(iv)) {
-    if (this->key.empty()) {
-        throw CryptoException("Key is empty");
-    }
-
-    if (this->iv.empty()) {
-        throw CryptoException("IV is empty");
-    }
-
     if (this->key.size() != KEY_SIZE) {
-        std::string errorMessage("The key size must be exactly ");
-        errorMessage.append(std::to_string(KEY_SIZE));
-        errorMessage.append(". Key size: ");
-        errorMessage.append(std::to_string(this->key.size()));
-        throw CryptoException(errorMessage);
+        throw CryptoException("The key size must be exactly " +
+                              std::to_string(KEY_SIZE) +
+                              " bytes. Key size: " +
+                              std::to_string(this->key.size()) +
+                              " bytes");
     }
 
     if (this->iv.size() != IV_SIZE) {
-        std::string errorMessage("The IV size must be exactly ");
-        errorMessage.append(std::to_string(IV_SIZE));
-        errorMessage.append(". IV size: ");
-        errorMessage.append(std::to_string(this->iv.size()));
-        throw CryptoException(errorMessage);
+        throw CryptoException("The IV size must be exactly " +
+                              std::to_string(IV_SIZE) +
+                              " bytes. IV size: " +
+                              std::to_string(this->iv.size()) +
+                              " bytes");
     }
 }
 

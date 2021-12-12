@@ -40,12 +40,11 @@ void PlayerMessage::checkIfSerializable() {
     }
 
     if (publicKey.size() != PUBLIC_KEY_SIZE) {
-        std::string errorMessage("The public key size must be exactly ");
-        errorMessage.append(std::to_string(PUBLIC_KEY_SIZE));
-        errorMessage.append(" bytes. Public key size: ");
-        errorMessage.append(std::to_string(publicKey.size()));
-        errorMessage.append(" bytes");
-        throw SerializationException(errorMessage);
+        throw SerializationException("The public key size must be exactly " +
+                                     std::to_string(PUBLIC_KEY_SIZE) +
+                                     " bytes. Public key size: " +
+                                     std::to_string(publicKey.size()) +
+                                     " bytes");
     }
 }
 

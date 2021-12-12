@@ -35,19 +35,17 @@ bool Move::isColumnValid(uint8_t candidateColumn) {
 
 void Move::checkIfSerializable() {
     if (!isRowValid(row)) {
-        std::string errorMessage("The row must be a number between 0 and ");
-        errorMessage.append(std::to_string(ROWS - 1));
-        errorMessage.append(". Row: ");
-        errorMessage.append(std::to_string(unsigned(row)));
-        throw SerializationException(errorMessage);
+        throw SerializationException("The row must be a number between 0 and " +
+                                     std::to_string(ROWS - 1) +
+                                     ". Row: " +
+                                     std::to_string(unsigned(row)));
     }
 
     if (!isColumnValid(column)) {
-        std::string errorMessage("The column must be a number between 0 and ");
-        errorMessage.append(std::to_string(COLUMNS - 1));
-        errorMessage.append(". Column: ");
-        errorMessage.append(std::to_string(unsigned(column)));
-        throw SerializationException(errorMessage);
+        throw SerializationException("The column must be a number between 0 and " +
+                                     std::to_string(COLUMNS - 1) +
+                                     ". Column: " +
+                                     std::to_string(unsigned(column)));
     }
 }
 

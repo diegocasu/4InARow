@@ -28,30 +28,27 @@ const std::vector<unsigned char>& Player2Hello::getDigitalSignature() const {
 
 void Player2Hello::checkIfSerializable() {
     if (nonce.size() != NONCE_SIZE) {
-        std::string errorMessage("The nonce size must be exactly ");
-        errorMessage.append(std::to_string(NONCE_SIZE));
-        errorMessage.append(" bytes. Nonce size: ");
-        errorMessage.append(std::to_string(nonce.size()));
-        errorMessage.append(" bytes");
-        throw SerializationException(errorMessage);
+        throw SerializationException("The nonce size must be exactly " +
+                                     std::to_string(NONCE_SIZE) +
+                                     " bytes. Nonce size: " +
+                                     std::to_string(nonce.size()) +
+                                     " bytes");
     }
 
     if (publicKey.size() != PUBLIC_KEY_SIZE) {
-        std::string errorMessage("The public key size must be exactly ");
-        errorMessage.append(std::to_string(PUBLIC_KEY_SIZE));
-        errorMessage.append(" bytes. Public key size: ");
-        errorMessage.append(std::to_string(publicKey.size()));
-        errorMessage.append(" bytes");
-        throw SerializationException(errorMessage);
+        throw SerializationException("The public key size must be exactly " +
+                                     std::to_string(PUBLIC_KEY_SIZE) +
+                                     " bytes. Public key size: " +
+                                     std::to_string(publicKey.size()) +
+                                     " bytes");
     }
 
     if (digitalSignature.size() != DIGITAL_SIGNATURE_SIZE) {
-        std::string errorMessage("The digital signature size must be exactly ");
-        errorMessage.append(std::to_string(DIGITAL_SIGNATURE_SIZE));
-        errorMessage.append(" bytes. Digital signature size: ");
-        errorMessage.append(std::to_string(digitalSignature.size()));
-        errorMessage.append(" bytes");
-        throw SerializationException(errorMessage);
+        throw SerializationException("The digital signature size must be exactly " +
+                                     std::to_string(DIGITAL_SIGNATURE_SIZE) +
+                                     " bytes. Digital signature size: " +
+                                     std::to_string(digitalSignature.size()) +
+                                     " bytes");
     }
 }
 

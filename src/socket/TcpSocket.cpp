@@ -175,12 +175,13 @@ void TcpSocket::send(const std::vector<unsigned char> &message) {
     if (message.empty()) {
         throw SocketException("Empty message");
     }
+
     if (message.size() > MAX_MSG_SIZE) {
-        std::string errorMessage("Message size is too big. Message size: ");
-        errorMessage.append(std::to_string(message.size()));
-        errorMessage.append(". Max size: ");
-        errorMessage.append(std::to_string(MAX_MSG_SIZE));
-        throw SocketException(errorMessage);
+        throw SocketException("The message size is too big. Message size: " +
+                              std::to_string(message.size()) +
+                              " bytes. Max message size: " +
+                              std::to_string(MAX_MSG_SIZE) +
+                              " bytes");
     }
 
     // Send the length of the message on 16 bits.

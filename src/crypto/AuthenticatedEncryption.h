@@ -24,7 +24,7 @@ class AuthenticatedEncryption {
          * of the caller to destroy the original ones.
          * @param key  the key.
          * @param iv   the initialization vector.
-         * @throws CryptoException  if the key and the initialization vector are empty or wrongly sized.
+         * @throws CryptoException  if the key and the initialization vector are wrongly sized.
          */
         AuthenticatedEncryption(std::vector<unsigned char> key, std::vector<unsigned char> iv);
 

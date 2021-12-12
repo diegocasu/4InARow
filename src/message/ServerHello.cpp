@@ -17,39 +17,35 @@ ServerHello::ServerHello(std::vector<unsigned char> certificate,
 
 void ServerHello::checkIfSerializable() {
     if (certificate.empty() || certificate.size() > MAX_CERTIFICATE_SIZE) {
-        std::string errorMessage("The certificate size must be greater than zero, and less than or equal to ");
-        errorMessage.append(std::to_string(MAX_CERTIFICATE_SIZE));
-        errorMessage.append(" bytes. Certificate size: ");
-        errorMessage.append(std::to_string(certificate.size()));
-        errorMessage.append(" bytes");
-        throw SerializationException(errorMessage);
+        throw SerializationException("The certificate size must be greater than zero, and less than or equal to " +
+                                     std::to_string(MAX_CERTIFICATE_SIZE) +
+                                     " bytes. Certificate size: " +
+                                     std::to_string(certificate.size()) +
+                                     " bytes");
     }
 
     if (nonce.size() != NONCE_SIZE) {
-        std::string errorMessage("The nonce size must be exactly ");
-        errorMessage.append(std::to_string(NONCE_SIZE));
-        errorMessage.append(" bytes. Nonce size: ");
-        errorMessage.append(std::to_string(nonce.size()));
-        errorMessage.append(" bytes");
-        throw SerializationException(errorMessage);
+        throw SerializationException("The nonce size must be exactly " +
+                                     std::to_string(NONCE_SIZE) +
+                                     " bytes. Nonce size: " +
+                                     std::to_string(nonce.size()) +
+                                     " bytes");
     }
 
     if (publicKey.size() != PUBLIC_KEY_SIZE) {
-        std::string errorMessage("The public key size must be exactly ");
-        errorMessage.append(std::to_string(PUBLIC_KEY_SIZE));
-        errorMessage.append(" bytes. Public key size: ");
-        errorMessage.append(std::to_string(publicKey.size()));
-        errorMessage.append(" bytes");
-        throw SerializationException(errorMessage);
+        throw SerializationException("The public key size must be exactly " +
+                                     std::to_string(PUBLIC_KEY_SIZE) +
+                                     " bytes. Public key size: " +
+                                     std::to_string(publicKey.size()) +
+                                     " bytes");
     }
 
     if (digitalSignature.size() != DIGITAL_SIGNATURE_SIZE) {
-        std::string errorMessage("The digital signature size must be exactly ");
-        errorMessage.append(std::to_string(DIGITAL_SIGNATURE_SIZE));
-        errorMessage.append(" bytes. Digital signature size: ");
-        errorMessage.append(std::to_string(digitalSignature.size()));
-        errorMessage.append(" bytes");
-        throw SerializationException(errorMessage);
+        throw SerializationException("The digital signature size must be exactly " +
+                                     std::to_string(DIGITAL_SIGNATURE_SIZE) +
+                                     " bytes. Digital signature size: " +
+                                     std::to_string(digitalSignature.size()) +
+                                     " bytes");
     }
 }
 
