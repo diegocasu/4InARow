@@ -21,18 +21,8 @@ const std::string& PlayerList::getPlayerList() const {
     return playerList;
 }
 
-void PlayerList::checkIfSerializable() const {
-    if (playerList.empty() || playerList.size() > MAX_PLAYER_LIST_SIZE) {
-        throw SerializationException("The player list size must be greater than zero, and less than or equal to " +
-                                     std::to_string(MAX_PLAYER_LIST_SIZE) +
-                                     " bytes. Player list size: " +
-                                     std::to_string(playerList.size()) +
-                                     " bytes");
-    }
-}
-
 std::vector<unsigned char> PlayerList::serialize() const {
-    checkIfSerializable();
+    checkPlayerListSize<SerializationException>(playerList);
 
     size_t processedBytes = 0;
     size_t outputSize = sizeof(type) + sizeof(MAX_PLAYER_LIST_SIZE) + playerList.size();

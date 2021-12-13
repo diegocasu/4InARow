@@ -25,32 +25,9 @@ uint8_t fourinarow::Move::getColumn() const {
     return column;
 }
 
-bool Move::isRowValid(uint8_t candidateRow) const {
-    return candidateRow < ROWS;
-}
-
-bool Move::isColumnValid(uint8_t candidateColumn) const {
-    return candidateColumn < COLUMNS;
-}
-
-void Move::checkIfSerializable() const {
-    if (!isRowValid(row)) {
-        throw SerializationException("The row must be a number between 0 and " +
-                                     std::to_string(ROWS - 1) +
-                                     ". Row: " +
-                                     std::to_string(unsigned(row)));
-    }
-
-    if (!isColumnValid(column)) {
-        throw SerializationException("The column must be a number between 0 and " +
-                                     std::to_string(COLUMNS - 1) +
-                                     ". Column: " +
-                                     std::to_string(unsigned(column)));
-    }
-}
-
 std::vector<unsigned char> Move::serialize() const {
-    checkIfSerializable();
+    checkRowIndexValidity<SerializationException>(row);
+    checkColumnIndexValidity<SerializationException>(column);
 
     size_t processedBytes = 0;
     size_t outputSize = sizeof(type) + sizeof(ROWS) + sizeof(COLUMNS);
@@ -89,7 +66,7 @@ void Move::deserialize(const std::vector<unsigned char> &message) {
     memcpy(&receivedRow, message.data() + processedBytes, sizeof(receivedRow));
     processedBytes += sizeof(receivedRow);
 
-    if (!isRowValid(receivedRow)) {
+    if (receivedRow >= ROWS) {
         throw SerializationException("Malformed message");
     }
     row = receivedRow;
@@ -99,7 +76,7 @@ void Move::deserialize(const std::vector<unsigned char> &message) {
     checkIfEnoughSpace(message, processedBytes, sizeof(receivedColumn));
     memcpy(&receivedColumn, message.data() + processedBytes, sizeof(receivedColumn));
 
-    if (!isColumnValid(receivedColumn)) {
+    if (receivedColumn >= COLUMNS) {
         throw SerializationException("Malformed message");
     }
     column = receivedColumn;

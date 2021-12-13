@@ -15,12 +15,6 @@ class Challenge : public Message {
     private:
         uint8_t type = CHALLENGE;
         std::string username;
-
-        /**
-         * Checks if the message has the expected format for serialization.
-         * @throws SerializationException  if the message has not the expected format.
-         */
-        void checkIfSerializable() const;
     public:
         Challenge() = default;
         explicit Challenge(std::string username);

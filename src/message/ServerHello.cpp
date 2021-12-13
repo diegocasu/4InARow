@@ -15,42 +15,11 @@ ServerHello::ServerHello(std::vector<unsigned char> certificate,
       publicKey(std::move(publicKey)),
       digitalSignature(std::move(digitalSignature)) {}
 
-void ServerHello::checkIfSerializable() const {
-    if (certificate.empty() || certificate.size() > MAX_CERTIFICATE_SIZE) {
-        throw SerializationException("The certificate size must be greater than zero, and less than or equal to " +
-                                     std::to_string(MAX_CERTIFICATE_SIZE) +
-                                     " bytes. Certificate size: " +
-                                     std::to_string(certificate.size()) +
-                                     " bytes");
-    }
-
-    if (nonce.size() != NONCE_SIZE) {
-        throw SerializationException("The nonce size must be exactly " +
-                                     std::to_string(NONCE_SIZE) +
-                                     " bytes. Nonce size: " +
-                                     std::to_string(nonce.size()) +
-                                     " bytes");
-    }
-
-    if (publicKey.size() != PUBLIC_KEY_SIZE) {
-        throw SerializationException("The public key size must be exactly " +
-                                     std::to_string(PUBLIC_KEY_SIZE) +
-                                     " bytes. Public key size: " +
-                                     std::to_string(publicKey.size()) +
-                                     " bytes");
-    }
-
-    if (digitalSignature.size() != DIGITAL_SIGNATURE_SIZE) {
-        throw SerializationException("The digital signature size must be exactly " +
-                                     std::to_string(DIGITAL_SIGNATURE_SIZE) +
-                                     " bytes. Digital signature size: " +
-                                     std::to_string(digitalSignature.size()) +
-                                     " bytes");
-    }
-}
-
 std::vector<unsigned char> ServerHello::serialize() const {
-    checkIfSerializable();
+    checkCertificateSize<SerializationException>(certificate);
+    checkNonceSize<SerializationException>(nonce);
+    checkPublicKeySize<SerializationException>(publicKey);
+    checkDigitalSignatureSize<SerializationException>(digitalSignature);
 
     size_t processedBytes = 0;
     size_t outputSize = sizeof(type) + sizeof(MAX_CERTIFICATE_SIZE) + certificate.size() +

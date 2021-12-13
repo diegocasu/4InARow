@@ -15,12 +15,6 @@ class PlayerList : public Message {
     private:
         uint8_t type = PLAYER_LIST;
         std::string playerList;
-
-        /**
-         * Checks if the message has the expected format for serialization.
-         * @throws SerializationException  if the message has not the expected format.
-         */
-        void checkIfSerializable() const;
     public:
         PlayerList() = default;
         explicit PlayerList(std::string playerList);

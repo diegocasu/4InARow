@@ -32,24 +32,14 @@ bool fourinarow::PlayerMessage::isFirstToPlay() const {
     return firstToPlay;
 }
 
-void PlayerMessage::checkIfSerializable() const {
+std::vector<unsigned char> PlayerMessage::serialize() const {
     sockaddr_in dummySockaddr;
     auto result = inet_pton(AF_INET, ipAddress.data(), &dummySockaddr.sin_addr);
     if (result == 0) {
         throw SerializationException("Invalid network address");
     }
 
-    if (publicKey.size() != PUBLIC_KEY_SIZE) {
-        throw SerializationException("The public key size must be exactly " +
-                                     std::to_string(PUBLIC_KEY_SIZE) +
-                                     " bytes. Public key size: " +
-                                     std::to_string(publicKey.size()) +
-                                     " bytes");
-    }
-}
-
-std::vector<unsigned char> PlayerMessage::serialize() const {
-    checkIfSerializable();
+    checkPublicKeySize<SerializationException>(publicKey);
 
     size_t processedBytes = 0;
     size_t outputSize = sizeof(type) + sizeof(MAX_IPV4_ADDRESS_SIZE) + ipAddress.size() +

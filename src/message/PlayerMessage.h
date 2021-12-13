@@ -17,12 +17,6 @@ class PlayerMessage : public Message {
         std::string ipAddress;
         std::vector<unsigned char> publicKey;
         bool firstToPlay = false;
-
-        /**
-         * Checks if the message has the expected format for serialization.
-         * @throws SerializationException  if the message has not the expected format.
-         */
-        void checkIfSerializable() const;
     public:
         PlayerMessage() = default;
         PlayerMessage(std::string ipAddress, std::vector<unsigned char> publicKey, bool firstToPlay);

@@ -17,12 +17,6 @@ class ClientHello : public Message {
         std::string username;
         std::vector<unsigned char> nonce;
         std::vector<unsigned char> publicKey;
-
-        /**
-         * Checks if the message has the expected format for serialization.
-         * @throws SerializationException  if the message has not the expected format.
-         */
-        void checkIfSerializable() const;
     public:
         ClientHello() = default;
         ClientHello(std::string username, std::vector<unsigned char> nonce, std::vector<unsigned char> publicKey);

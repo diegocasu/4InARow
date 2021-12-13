@@ -15,26 +15,6 @@ class Move : public Message {
         uint8_t type = MOVE;
         uint8_t row = 0;
         uint8_t column = 0;
-
-        /**
-         * Checks if the given row number is a valid one.
-         * @param candidateRow  the row number.
-         * @return              true if the row number is valid, false otherwise.
-         */
-        bool isRowValid(uint8_t candidateRow) const;
-
-        /**
-         * Checks if the given column number is a valid one.
-         * @param candidateColumn  the column number.
-         * @return                 true if the column number is valid, false otherwise.
-         */
-        bool isColumnValid(uint8_t candidateColumn) const;
-
-        /**
-         * Checks if the message has the expected format for serialization.
-         * @throws SerializationException  if the message has not the expected format.
-         */
-        void checkIfSerializable() const;
     public:
         Move() = default;
         Move(uint8_t row, uint8_t column);

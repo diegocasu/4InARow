@@ -24,34 +24,10 @@ const std::vector<unsigned char>& ClientHello::getPublicKey() const {
     return publicKey;
 }
 
-void ClientHello::checkIfSerializable() const {
-    if (username.empty() || username.size() > MAX_USERNAME_SIZE) {
-        throw SerializationException("The username size must be greater than zero, and less than or equal to " +
-                                     std::to_string(MAX_USERNAME_SIZE) +
-                                     " bytes. Username size: " +
-                                     std::to_string(username.size()) +
-                                     " bytes");
-    }
-
-    if (nonce.size() != NONCE_SIZE) {
-        throw SerializationException("The nonce size must be exactly " +
-                                     std::to_string(NONCE_SIZE) +
-                                     " bytes. Nonce size: " +
-                                     std::to_string(nonce.size()) +
-                                     " bytes");
-    }
-
-    if (publicKey.size() != PUBLIC_KEY_SIZE) {
-        throw SerializationException("The public key size must be exactly " +
-                                     std::to_string(PUBLIC_KEY_SIZE) +
-                                     " bytes. Public key size: " +
-                                     std::to_string(publicKey.size()) +
-                                     " bytes");
-    }
-}
-
 std::vector<unsigned char> ClientHello::serialize() const {
-    checkIfSerializable();
+    checkUsernameValidity<SerializationException>(username);
+    checkNonceSize<SerializationException>(nonce);
+    checkPublicKeySize<SerializationException>(publicKey);
 
     size_t processedBytes = 0;
     size_t outputSize = sizeof(type) + sizeof(MAX_USERNAME_SIZE) + username.size() + nonce.size() + publicKey.size();

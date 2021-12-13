@@ -3,7 +3,9 @@
 
 #include <string>
 #include <vector>
+#include <regex>
 #include <openssl/pem.h>
+#include "Constants.h"
 
 namespace fourinarow {
 
@@ -61,6 +63,183 @@ void cleanse(bool &boolean);
  * @return  the string containing the human readable type.
  */
 std::string convertMessageType(uint8_t messageType);
+
+/**
+ * Checks if the given key is correctly sized.
+ * If the check fails, the function throws a user specified exception.
+ * @tparam Exception  the exception type.
+ * @param key         the key.
+ * @throws Exception  if the key is wrongly sized.
+ */
+template<typename Exception>
+void checkKeySize(const std::vector<unsigned char> &key) {
+    if (key.size() != KEY_SIZE) {
+        throw Exception("The key size must be exactly " +
+                        std::to_string(KEY_SIZE) +
+                        " bytes. Key size: " +
+                        std::to_string(key.size()) +
+                        " bytes");
+    }
+}
+
+/**
+ * Checks if the given initialization vector is correctly sized.
+ * If the check fails, the function throws a user specified exception.
+ * @tparam Exception  the exception type.
+ * @param iv          the initialization vector.
+ * @throws Exception  if the initialization vector is wrongly sized.
+ */
+template<typename Exception>
+void checkIvSize(const std::vector<unsigned char> &iv) {
+    if (iv.size() != IV_SIZE) {
+        throw Exception("The IV size must be exactly " +
+                        std::to_string(IV_SIZE) +
+                        " bytes. IV size: " +
+                        std::to_string(iv.size()) +
+                        " bytes");
+    }
+}
+
+/**
+ * Checks if the given username is valid.
+ * If the check fails, the function throws a user specified exception.
+ * @tparam Exception  the exception type.
+ * @param username    the username.
+ * @throws Exception  if the username is invalid.
+ */
+template<typename Exception>
+void checkUsernameValidity(const std::string &username) {
+    if (username.empty() || username.size() > MAX_USERNAME_SIZE || std::regex_search(username, std::regex("\\s+"))) {
+        throw Exception("The username must be composed of at least 1 character, at most " +
+                        std::to_string(MAX_USERNAME_SIZE) +
+                        " characters and cannot contain whitespaces. Username: " +
+                        username);
+    }
+}
+
+/**
+ * Checks if the given nonce is correctly sized.
+ * If the check fails, the function throws a user specified exception.
+ * @tparam Exception  the exception type.
+ * @param nonce       the nonce.
+ * @throws Exception  if the nonce is wrongly sized.
+ */
+template<typename Exception>
+void checkNonceSize(const std::vector<unsigned char> &nonce) {
+    if (nonce.size() != NONCE_SIZE) {
+        throw Exception("The nonce size must be exactly " +
+                        std::to_string(NONCE_SIZE) +
+                        " bytes. Nonce size: " +
+                        std::to_string(nonce.size()) +
+                        " bytes");
+    }
+}
+
+/**
+ * Checks if the given public key is correctly sized.
+ * If the check fails, the function throws a user specified exception.
+ * @tparam Exception  the exception type.
+ * @param publicKey   the public key.
+ * @throws Exception  if the public key is wrongly sized.
+ */
+template<typename Exception>
+void checkPublicKeySize(const std::vector<unsigned char> &publicKey) {
+    if (publicKey.size() != PUBLIC_KEY_SIZE) {
+        throw Exception("The public key size must be exactly " +
+                        std::to_string(PUBLIC_KEY_SIZE) +
+                        " bytes. Public key size: " +
+                        std::to_string(publicKey.size()) +
+                        " bytes");
+    }
+}
+
+/**
+ * Checks if the given digital signature is correctly sized.
+ * If the check fails, the function throws a user specified exception.
+ * @tparam Exception        the exception type.
+ * @param digitalSignature  the digital signature.
+ * @throws Exception  if the digital signature is wrongly sized.
+ */
+template<typename Exception>
+void checkDigitalSignatureSize(const std::vector<unsigned char> &digitalSignature) {
+    if (digitalSignature.size() != DIGITAL_SIGNATURE_SIZE) {
+        throw Exception("The digital signature size must be exactly " +
+                        std::to_string(DIGITAL_SIGNATURE_SIZE) +
+                        " bytes. Digital signature size: " +
+                        std::to_string(digitalSignature.size()) +
+                        " bytes");
+    }
+}
+
+/**
+ * Checks if the given row index is valid.
+ * If the check fails, the function throws a user specified exception.
+ * @tparam Exception  the exception type.
+ * @param rowIndex    the row index.
+ * @throws Exception  if the row index is invalid.
+ */
+template<typename Exception>
+void checkRowIndexValidity(uint8_t rowIndex) {
+    if (rowIndex >= ROWS) {
+        throw Exception("The row index must be a number between 0 and " +
+                        std::to_string(ROWS - 1) +
+                        ". Row index: " +
+                        std::to_string(unsigned(rowIndex)));
+    }
+}
+
+/**
+ * Checks if the given column index is valid.
+ * If the check fails, the function throws a user specified exception.
+ * @tparam Exception   the exception type.
+ * @param columnIndex  the column index.
+ * @throws Exception  if the column index is invalid.
+ */
+template<typename Exception>
+void checkColumnIndexValidity(uint8_t columnIndex) {
+    if (columnIndex >= COLUMNS) {
+        throw Exception("The column index must be a number between 0 and " +
+                        std::to_string(COLUMNS - 1) +
+                        ". Column index: " +
+                        std::to_string(unsigned(columnIndex)));
+    }
+}
+
+/**
+ * Checks if the given player list is correctly sized.
+ * If the check fails, the function throws a user specified exception.
+ * @tparam Exception  the exception type.
+ * @param playerList  the player list.
+ * @throws Exception  if the player list is wrongly sized.
+ */
+template<typename Exception>
+void checkPlayerListSize(const std::string &playerList) {
+    if (playerList.empty() || playerList.size() > MAX_PLAYER_LIST_SIZE) {
+        throw Exception("The player list size must be greater than zero, and less than or equal to " +
+                        std::to_string(MAX_PLAYER_LIST_SIZE) +
+                        " bytes. Player list size: " +
+                        std::to_string(playerList.size()) +
+                        " bytes");
+    }
+}
+
+/**
+ * Checks if the given certificate is correctly sized.
+ * If the check fails, the function throws a user specified exception.
+ * @tparam Exception   the exception type.
+ * @param certificate  the certificate.
+ * @throws Exception  if the certificate is wrongly sized.
+ */
+template<typename Exception>
+void checkCertificateSize(const std::vector<unsigned char> &certificate) {
+    if (certificate.empty() || certificate.size() > MAX_CERTIFICATE_SIZE) {
+        throw Exception("The certificate size must be greater than zero, and less than or equal to " +
+                        std::to_string(MAX_CERTIFICATE_SIZE) +
+                        " bytes. Certificate size: " +
+                        std::to_string(certificate.size()) +
+                        " bytes");
+    }
+}
 
 /**
  * Concatenate two vectors. The concatenation is obtained by copying the

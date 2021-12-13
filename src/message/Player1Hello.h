@@ -15,12 +15,6 @@ class Player1Hello : public Message {
         uint8_t type = PLAYER1_HELLO;
         std::vector<unsigned char> nonce;
         std::vector<unsigned char> publicKey;
-
-        /**
-         * Checks if the message has the expected format for serialization.
-         * @throws SerializationException  if the message has not the expected format.
-         */
-        void checkIfSerializable() const;
     public:
         Player1Hello() = default;
         Player1Hello(std::vector<unsigned char> nonce, std::vector<unsigned char> publicKey);

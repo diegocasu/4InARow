@@ -13,12 +13,6 @@ class EndHandshake : public Message {
     private:
         uint8_t type = END_HANDSHAKE;
         std::vector<unsigned char> digitalSignature;
-
-        /**
-         * Checks if the message has the expected format for serialization.
-         * @throws SerializationException  if the message has not the expected format.
-         */
-        void checkIfSerializable() const;
     public:
         EndHandshake() = default;
         explicit EndHandshake(std::vector<unsigned char> digitalSignature);

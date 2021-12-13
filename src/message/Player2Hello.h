@@ -16,12 +16,6 @@ class Player2Hello : public Message {
         std::vector<unsigned char> nonce;
         std::vector<unsigned char> publicKey;
         std::vector<unsigned char> digitalSignature;
-
-        /**
-         * Checks if the message has the expected format for serialization.
-         * @throws SerializationException  if the message has not the expected format.
-         */
-        void checkIfSerializable() const;
     public:
         Player2Hello() = default;
         Player2Hello(std::vector<unsigned char> nonce,
