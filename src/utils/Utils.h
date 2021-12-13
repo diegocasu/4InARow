@@ -62,6 +62,36 @@ void cleanse(bool &boolean);
  */
 std::string convertMessageType(uint8_t messageType);
 
+/**
+ * Concatenate two vectors. The concatenation is obtained by copying the
+ * elements of the source vector into the destination one.
+ * This function is used as the base case for the variadic <code>concatenate()</code>.
+ * @tparam T           the type of the vector's elements.
+ * @param destination  the destination vector. It will be automatically resized, if needed.
+ * @param vector       the vector to concatenate.
+ */
+template<typename T>
+void concatenate(std::vector<T> &destination, const std::vector<T> &vector) {
+    destination.insert(destination.end(), vector.begin(), vector.end());
+}
+
+/**
+ * Concatenate multiple vectors in the order they are passed.
+ * The concatenation is obtained by copying the elements of
+ * the source vectors into a destination vector.
+ * @tparam T           the type of the vector's elements.
+ * @tparam Args        the type of the elements to concatenate.
+ *                     It must be <code>std::vector\<T\></code>.
+ * @param destination  the destination vector. It will be automatically resized, if needed.
+ * @param vector       the vector to concatenate.
+ * @param args         one or more other vectors to concatenate.
+ */
+template<typename T, typename ...Args>
+void concatenate(std::vector<T> &destination, const std::vector<T> &vector, const Args&... args) {
+    destination.insert(destination.end(), vector.begin(), vector.end());
+    concatenate(destination, args...);
+}
+
 }
 
 #endif //INC_4INAROW_UTILS_H
