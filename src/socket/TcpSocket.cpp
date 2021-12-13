@@ -159,7 +159,7 @@ void TcpSocket::connect(std::string address, unsigned short port) {
     }
 }
 
-void TcpSocket::sendAllBytes(const unsigned char *buffer, size_t bufferLength) {
+void TcpSocket::sendAllBytes(const unsigned char *buffer, size_t bufferLength) const {
     ssize_t totalBytesSent = 0;
 
     while ((size_t) totalBytesSent < bufferLength) { // Safe cast, totalBytesSent is always non-negative.
@@ -171,7 +171,7 @@ void TcpSocket::sendAllBytes(const unsigned char *buffer, size_t bufferLength) {
     }
 }
 
-void TcpSocket::send(const std::vector<unsigned char> &message) {
+void TcpSocket::send(const std::vector<unsigned char> &message) const {
     if (message.empty()) {
         throw SocketException("Empty message");
     }
@@ -194,7 +194,7 @@ void TcpSocket::send(const std::vector<unsigned char> &message) {
     sendAllBytes(message.data(), message.size());
 }
 
-void TcpSocket::receiveAllBytes(unsigned char *buffer, size_t numberOfBytes) {
+void TcpSocket::receiveAllBytes(unsigned char *buffer, size_t numberOfBytes) const {
     ssize_t totalBytesReceived = 0;
 
     while ((size_t) totalBytesReceived < numberOfBytes) { // Safe cast, totalBytesReceived is always non-negative.
@@ -209,7 +209,7 @@ void TcpSocket::receiveAllBytes(unsigned char *buffer, size_t numberOfBytes) {
     }
 }
 
-std::vector<unsigned char> TcpSocket::receive() {
+std::vector<unsigned char> TcpSocket::receive() const {
     // Receive the length of the message on 16 bits.
     uint16_t msgLength;
     unsigned char msgLengthBytes[sizeof(msgLength)];

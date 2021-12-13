@@ -44,7 +44,7 @@ class TcpSocket {
          * @param bufferLength  the length of the buffer.
          * @throws SocketException  if the send operation fails.
          */
-        void sendAllBytes(const unsigned char *buffer, size_t bufferLength);
+        void sendAllBytes(const unsigned char *buffer, size_t bufferLength) const;
 
         /**
          * Retrieves all the bytes composing a binary message from a connected socket.
@@ -52,7 +52,7 @@ class TcpSocket {
          * @param numberOfBytes  the number of bytes composing the message.
          * @throws SocketException  if the receive operation fails, or the remote socket has been closed.
          */
-        void receiveAllBytes(unsigned char *buffer, size_t numberOfBytes);
+        void receiveAllBytes(unsigned char *buffer, size_t numberOfBytes) const;
     public:
         /**
          * Creates a TCP socket using IPv4 addresses. The method requests only the creation
@@ -137,7 +137,7 @@ class TcpSocket {
          * @throws SocketException  if the message is empty, exceeds the maximum size,
          *                          or an error occurred while performing the send.
          */
-        void send(const std::vector<unsigned char> &message);
+        void send(const std::vector<unsigned char> &message) const;
 
         /**
          * Retrieves a binary message from a connected socket. The method is blocking:
@@ -147,7 +147,7 @@ class TcpSocket {
          * @throws SocketException  if the message is empty, the remote socket has been closed,
          *                          or an error occurred while performing the receive.
          */
-        std::vector<unsigned char> receive();
+        std::vector<unsigned char> receive() const;
 
         bool operator==(const TcpSocket &rhs) const;
         bool operator!=(const TcpSocket &rhs) const;
