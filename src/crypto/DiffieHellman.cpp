@@ -81,52 +81,30 @@ DiffieHellman& DiffieHellman::operator=(DiffieHellman &&that) noexcept {
     return *this;
 }
 
-
 std::vector<unsigned char> DiffieHellman::getSerializedPublicKey() const {
-    int length = i2d_PublicKey(privateKey, 0);
-    if (length < 0) {
+    unsigned char *publicKeyBuffer = nullptr;
+
+    auto outputSize = i2d_PUBKEY(privateKey, &publicKeyBuffer);
+    if (outputSize < 0) {
         throw SerializationException(getOpenSslError());
     }
 
-    std::vector<unsigned char> publicKey(length);
-    unsigned char *publicKeyPointer = publicKey.data();
+    std::vector<unsigned char> publicKey(outputSize);
+    memcpy(publicKey.data(), publicKeyBuffer, outputSize);
 
-    length = i2d_PublicKey(privateKey, &publicKeyPointer);
-    if (length < 0) {
-        throw SerializationException(getOpenSslError());
-    }
-
+    OPENSSL_free(publicKeyBuffer);
     return publicKey;
 }
 
 EVP_PKEY* DiffieHellman::deserializePublicKey(const std::vector<unsigned char> &serializedPeerPublicKey) const {
-    EC_KEY *ecKey = EC_KEY_new_by_curve_name(curve);
-    if (!ecKey) {
+    const unsigned char *buffer = serializedPeerPublicKey.data();
+
+    EVP_PKEY *peerPublicKey = d2i_PUBKEY(nullptr, &buffer, serializedPeerPublicKey.size());
+    if (!peerPublicKey) {
         throw CryptoException(getOpenSslError());
     }
 
-    EVP_PKEY *publicKey = EVP_PKEY_new();
-    if (!publicKey) {
-        EC_KEY_free(ecKey);
-        throw CryptoException(getOpenSslError());
-    }
-
-    if (!EVP_PKEY_assign_EC_KEY(publicKey, ecKey)) {
-        EC_KEY_free(ecKey);
-        EVP_PKEY_free(publicKey);
-        throw CryptoException(getOpenSslError());
-    }
-
-    unsigned char const *binaryPublicKeyPointer = serializedPeerPublicKey.data();
-    EVP_PKEY *success = d2i_PublicKey(EVP_PKEY_EC, &publicKey, &binaryPublicKeyPointer, serializedPeerPublicKey.size());
-    if (!success) {
-        EC_KEY_free(ecKey);
-        EVP_PKEY_free(publicKey);
-        throw SerializationException(getOpenSslError());
-    }
-
-    EC_KEY_free(ecKey);
-    return publicKey;
+    return peerPublicKey;
 }
 
 std::vector<unsigned char> DiffieHellman::deriveSharedSecret(const std::vector<unsigned char> &serializedPeerPublicKey) const {
