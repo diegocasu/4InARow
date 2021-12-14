@@ -214,8 +214,8 @@ void checkColumnIndexValidity(uint8_t columnIndex) {
  */
 template<typename Exception>
 void checkPlayerListSize(const std::string &playerList) {
-    if (playerList.empty() || playerList.size() > MAX_PLAYER_LIST_SIZE) {
-        throw Exception("The player list size must be greater than zero, and less than or equal to " +
+    if (playerList.size() > MAX_PLAYER_LIST_SIZE) {
+        throw Exception("The player list size must be less than or equal to " +
                         std::to_string(MAX_PLAYER_LIST_SIZE) +
                         " bytes. Player list size: " +
                         std::to_string(playerList.size()) +

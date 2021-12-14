@@ -37,8 +37,10 @@ std::vector<unsigned char> PlayerList::serialize() const {
     memcpy(message.data() + processedBytes, &playerListLength, sizeof(playerListLength));
     processedBytes += sizeof(playerListLength);
 
-    memcpy(message.data() + processedBytes, playerList.data(), playerList.size());
+    if (playerList.empty())
+        return message;
 
+    memcpy(message.data() + processedBytes, playerList.data(), playerList.size());
     return message;
 }
 
@@ -63,7 +65,7 @@ void PlayerList::deserialize(const std::vector<unsigned char> &message) {
     processedBytes += sizeof(playerListLength);
 
     if (playerListLength == 0) {
-        throw SerializationException("Malformed message");
+        return;
     }
 
     checkIfEnoughSpace(message, processedBytes, playerListLength);
