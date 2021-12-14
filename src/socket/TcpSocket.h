@@ -97,6 +97,18 @@ class TcpSocket {
         int getDescriptor() const;
 
         /**
+         * Returns the source address in the form ADDRESS:PORT.
+         * @return  the full source address.
+         */
+        const std::string getFullSourceAddress() const;
+
+        /**
+         * Returns the destination address in the form ADDRESS:PORT.
+         * @return  the full destination address.
+         */
+        const std::string getFullDestinationAddress() const;
+
+        /**
          * Binds the socket to the specified address.
          * @param address  the IPv4 address.
          * @param port     the port.

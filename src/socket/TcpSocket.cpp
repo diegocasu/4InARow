@@ -102,6 +102,14 @@ int TcpSocket::getDescriptor() const {
     return descriptor;
 }
 
+const std::string TcpSocket::getFullSourceAddress() const {
+    return sourceAddress + ':' + std::to_string(sourcePort);
+}
+
+const std::string TcpSocket::getFullDestinationAddress() const {
+    return destinationAddress + ':' + std::to_string(destinationPort);
+}
+
 void TcpSocket::bind(std::string address, unsigned short port) {
     sourceAddress = std::move(address);
     sourcePort = port;
