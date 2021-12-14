@@ -7,7 +7,7 @@ target_sources(message
         ${CMAKE_CURRENT_LIST_DIR}/ServerHello.cpp
         ${CMAKE_CURRENT_LIST_DIR}/EndHandshake.cpp
         ${CMAKE_CURRENT_LIST_DIR}/InfoMessage.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/PlayerList.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/PlayerListMessage.cpp
         ${CMAKE_CURRENT_LIST_DIR}/Challenge.cpp
         ${CMAKE_CURRENT_LIST_DIR}/PlayerMessage.cpp
         ${CMAKE_CURRENT_LIST_DIR}/Player1Hello.cpp
@@ -19,7 +19,7 @@ target_sources(message
         ${CMAKE_CURRENT_LIST_DIR}/ServerHello.h
         ${CMAKE_CURRENT_LIST_DIR}/EndHandshake.h
         ${CMAKE_CURRENT_LIST_DIR}/InfoMessage.h
-        ${CMAKE_CURRENT_LIST_DIR}/PlayerList.h
+        ${CMAKE_CURRENT_LIST_DIR}/PlayerListMessage.h
         ${CMAKE_CURRENT_LIST_DIR}/Challenge.h
         ${CMAKE_CURRENT_LIST_DIR}/PlayerMessage.h
         ${CMAKE_CURRENT_LIST_DIR}/Player1Hello.h

@@ -2,26 +2,26 @@
 #include <arpa/inet.h>
 #include <SerializationException.h>
 #include <Utils.h>
-#include "PlayerList.h"
+#include "PlayerListMessage.h"
 
 namespace fourinarow {
 
-PlayerList::PlayerList(std::string playerList) : playerList(std::move(playerList)) {}
+PlayerListMessage::PlayerListMessage(std::string playerList) : playerList(std::move(playerList)) {}
 
-PlayerList::~PlayerList() {
+PlayerListMessage::~PlayerListMessage() {
     cleanse(type);
     cleanse(playerList);
 }
 
-uint8_t PlayerList::getType() const {
+uint8_t PlayerListMessage::getType() const {
     return type;
 }
 
-const std::string& PlayerList::getPlayerList() const {
+const std::string& PlayerListMessage::getPlayerList() const {
     return playerList;
 }
 
-std::vector<unsigned char> PlayerList::serialize() const {
+std::vector<unsigned char> PlayerListMessage::serialize() const {
     checkPlayerListSize<SerializationException>(playerList);
 
     size_t processedBytes = 0;
@@ -44,7 +44,7 @@ std::vector<unsigned char> PlayerList::serialize() const {
     return message;
 }
 
-void PlayerList::deserialize(const std::vector<unsigned char> &message) {
+void PlayerListMessage::deserialize(const std::vector<unsigned char> &message) {
     size_t processedBytes = 0;
 
     // Check if the type matches the expected one.
@@ -75,10 +75,10 @@ void PlayerList::deserialize(const std::vector<unsigned char> &message) {
 
 }
 
-std::ostream& operator<<(std::ostream &ostream, const fourinarow::PlayerList &playerList) {
+std::ostream& operator<<(std::ostream &ostream, const fourinarow::PlayerListMessage &playerListMessage) {
     ostream << "PlayerList{" << std::endl;
-    ostream << "type=" << fourinarow::convertMessageType(playerList.getType()) << ',' << std::endl;
-    ostream << "playerList=" << playerList.getPlayerList();
+    ostream << "type=" << fourinarow::convertMessageType(playerListMessage.getType()) << ',' << std::endl;
+    ostream << "playerList=" << playerListMessage.getPlayerList();
     ostream << '}';
     return ostream;
 }
