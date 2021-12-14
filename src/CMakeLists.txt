@@ -1,5 +1,6 @@
 add_subdirectory(crypto)
 add_subdirectory(exception)
+add_subdirectory(game)
 add_subdirectory(message)
 add_subdirectory(socket)
 add_subdirectory(utils)
