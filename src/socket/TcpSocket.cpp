@@ -171,7 +171,7 @@ void TcpSocket::sendAllBytes(const unsigned char *buffer, size_t bufferLength) c
     ssize_t totalBytesSent = 0;
 
     while ((size_t) totalBytesSent < bufferLength) { // Safe cast, totalBytesSent is always non-negative.
-        auto bytesSent = ::send(descriptor, buffer + totalBytesSent, bufferLength - totalBytesSent, 0);
+        auto bytesSent = ::send(descriptor, buffer + totalBytesSent, bufferLength - totalBytesSent, MSG_NOSIGNAL);
         if (bytesSent == -1) {
             throw SocketException(parseError());
         }
