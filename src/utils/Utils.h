@@ -109,10 +109,10 @@ void checkIvSize(const std::vector<unsigned char> &iv) {
  */
 template<typename Exception>
 void checkUsernameValidity(const std::string &username) {
-    if (username.empty() || username.size() > MAX_USERNAME_SIZE || std::regex_search(username, std::regex("\\s+"))) {
+    if (username.empty() || username.size() > MAX_USERNAME_SIZE || std::regex_search(username, std::regex("[^A-Za-z0-9]"))) {
         throw Exception("The username must be composed of at least 1 character, at most " +
                         std::to_string(MAX_USERNAME_SIZE) +
-                        " characters and cannot contain whitespaces. Username: " +
+                        " characters and cannot contain whitespaces or special characters. Username: " +
                         username);
     }
 }
