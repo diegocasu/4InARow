@@ -15,4 +15,4 @@ target_include_directories(utils
         )
 
 find_package(OpenSSL 1.1.1 REQUIRED)
-target_link_libraries(utils PRIVATE OpenSSL::Crypto)
+target_link_libraries(utils PUBLIC OpenSSL::Crypto)

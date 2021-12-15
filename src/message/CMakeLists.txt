@@ -32,5 +32,5 @@ target_include_directories(message
         ${CMAKE_CURRENT_LIST_DIR}
         )
 
+target_link_libraries(message PUBLIC utils)
 target_link_libraries(message PRIVATE exception)
-target_link_libraries(message PRIVATE utils)

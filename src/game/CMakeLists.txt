@@ -13,8 +13,8 @@ target_include_directories(game
         )
 
 find_package(OpenSSL 1.1.1 REQUIRED)
+target_link_libraries(game PUBLIC crypto)
+target_link_libraries(game PUBLIC socket)
 target_link_libraries(game PRIVATE OpenSSL::Crypto)
-target_link_libraries(game PRIVATE crypto)
 target_link_libraries(game PRIVATE exception)
-target_link_libraries(game PRIVATE socket)
 target_link_libraries(game PRIVATE utils)

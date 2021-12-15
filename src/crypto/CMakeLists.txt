@@ -23,6 +23,6 @@ target_include_directories(crypto
         )
 
 find_package(OpenSSL 1.1.1 REQUIRED)
-target_link_libraries(crypto PRIVATE OpenSSL::Crypto)
+target_link_libraries(crypto PUBLIC OpenSSL::Crypto)
 target_link_libraries(crypto PRIVATE exception)
 target_link_libraries(crypto PRIVATE utils)
