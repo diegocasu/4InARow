@@ -16,7 +16,7 @@ class Certificate {
     public:
         /**
          * Creates a certificate starting from a raw pointer given by the OpenSSL API.
-         * After a successful construction, the object assumes responsibility for freeing
+         * After a successful construction, the object becomes responsible for freeing
          * the memory allocated by OpenSSL.
          * @param rawCertificate  the certificate.
          * @throws CryptoException  if the given pointer is a <code>nullptr</code>.
@@ -60,11 +60,12 @@ class Certificate {
         std::string getDistinguishedName() const;
 
         /**
-         * Returns the public key saved in the certificate, in a format suitable for the OpenSSL API.
+         * Returns the public key saved in the certificate, in a format suitable
+         * for the OpenSSL API. The returned key must not be freed up after use.
          * @return  the public key.
          * @throws CryptoException  if an error occurred while retrieving the public key.
          */
-        EVP_PKEY* getPublicKey() const;
+        const EVP_PKEY* getPublicKey() const;
 };
 
 }

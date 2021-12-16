@@ -37,7 +37,8 @@ class DiffieHellman {
 
         /**
          * Parses a public key in binary format, returning a representation
-         * usable by the OpenSSL API.
+         * usable by the OpenSSL API. It is responsibility of the caller
+         * to free the memory allocated to hold the key.
          * @param serializedPeerPublicKey  the public key, in binary format.
          * @return                         the public key, in OpenSSL format.
          * @throws CryptoException         if an error occurred while initializing the OpenSSL API.

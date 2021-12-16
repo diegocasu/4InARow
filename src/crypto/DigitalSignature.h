@@ -29,7 +29,8 @@ class DigitalSignature {
         void loadPrivateKey(const std::string &path);
 
         /**
-         * Loads a public key in PEM format from a file.
+         * Loads a public key in PEM format from a file. It is responsibility
+         * of the caller to free the memory allocated to hold the key.
          * @param path  the file path.
          * @throws CryptoException  if the file cannot be opened or the key cannot be loaded.
          */

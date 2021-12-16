@@ -138,7 +138,15 @@ bool DigitalSignature::verify(const std::vector<unsigned char> &message,
                               const std::vector<unsigned char> &signature,
                               const std::string &path) {
     EVP_PKEY *publicKey = loadPublicKey(path);
-    return verify(message, signature, publicKey);
+
+    try {
+        auto result = verify(message, signature, publicKey);
+        EVP_PKEY_free(publicKey);
+        return result;
+    } catch (const CryptoException &exception) {
+        EVP_PKEY_free(publicKey);
+        throw;
+    }
 }
 
 }

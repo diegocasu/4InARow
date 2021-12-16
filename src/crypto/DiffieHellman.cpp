@@ -32,18 +32,15 @@ void DiffieHellman::generateParameters(EVP_PKEY **parameters) {
 void DiffieHellman::generateKeyPair(EVP_PKEY *parameters) {
     EVP_PKEY_CTX *context = EVP_PKEY_CTX_new(parameters, nullptr);
     if (!context) {
-        EVP_PKEY_free(parameters);
         throw CryptoException(getOpenSslError());
     }
 
     if (!EVP_PKEY_keygen_init(context)) {
-        EVP_PKEY_free(parameters);
         EVP_PKEY_CTX_free(context);
         throw CryptoException(getOpenSslError());
     }
 
     if (!EVP_PKEY_keygen(context, &(this->privateKey))) {
-        EVP_PKEY_free(parameters);
         EVP_PKEY_CTX_free(context);
         throw CryptoException(getOpenSslError());
     }
@@ -57,8 +54,14 @@ DiffieHellman::DiffieHellman() {
     privateKey = nullptr;
 
     generateParameters(&parameters);
-    generateKeyPair(parameters);
-    EVP_PKEY_free(parameters);
+
+    try {
+        generateKeyPair(parameters);
+        EVP_PKEY_free(parameters);
+    } catch (const CryptoException &exception) {
+        EVP_PKEY_free(parameters);
+        throw;
+    }
 }
 
 DiffieHellman::~DiffieHellman() {

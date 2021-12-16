@@ -61,6 +61,7 @@ void CertificateStore::addCertificate(const std::string &path) {
         throw CryptoException(getOpenSslError());
     }
 
+    X509_free(certificate);
     empty = false;
 }
 
@@ -86,6 +87,8 @@ void CertificateStore::addCertificateRevocationList(const std::string &path) {
         X509_CRL_free(certificateRevocationList);
         throw CryptoException(getOpenSslError());
     }
+
+    X509_CRL_free(certificateRevocationList);
 
     if (1 != X509_STORE_set_flags(store, X509_V_FLAG_CRL_CHECK)) {
         throw CryptoException(getOpenSslError());
@@ -127,12 +130,14 @@ std::vector<unsigned char> CertificateStore::serializeCertificate(const std::str
     unsigned char *certificateBuffer = nullptr;
     auto outputSize = i2d_X509(certificate, &certificateBuffer);
     if (outputSize < 0) {
+        X509_free(certificate);
         throw SerializationException(getOpenSslError());
     }
 
     std::vector<unsigned char> serializedCertificate(outputSize);
     memcpy(serializedCertificate.data(), certificateBuffer, outputSize);
 
+    X509_free(certificate);
     OPENSSL_free(certificateBuffer);
     return serializedCertificate;
 }

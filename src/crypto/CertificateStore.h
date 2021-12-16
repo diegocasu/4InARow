@@ -22,6 +22,7 @@ class CertificateStore {
 
         /**
          * Loads a certificate from a file. The certificate must be saved in PEM format.
+         * It is responsibility of the caller to free the memory allocated to hold the certificate.
          * @param path  the file path.
          * @return      the certificate.
          * @throws CryptoException  if the file cannot be opened or the certificate cannot be loaded.
@@ -30,6 +31,8 @@ class CertificateStore {
 
         /**
          * Loads a certificate revocation list from a file. The list must be saved in PEM format.
+         * It is responsibility of the caller to free the memory allocated to hold
+         * the certificate revocation list.
          * @param path  the file path.
          * @return      the certificate revocation list.
          * @throws CryptoException  if the file cannot be opened or the list cannot be loaded.
