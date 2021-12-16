@@ -149,15 +149,13 @@ class Player {
         void setServerPublicKey(std::vector<unsigned char> publicKey);
 
         /**
-         * Generates and stores a random nonce for the client
-         * exploiting <code>RAND_bytes()</code> of OpenSSL.
+         * Generates and stores a random nonce for the client.
          * @throws CryptoException  if an error occurred while generating the nonce.
          */
         void generateClientNonce();
 
         /**
-         * Generates and stores a random nonce for the server
-         * exploiting <code>RAND_bytes()</code> of OpenSSL.
+         * Generates and stores a random nonce for the server.
          * @throws CryptoException  if an error occurred while generating the nonce.
          */
         void generateServerNonce();

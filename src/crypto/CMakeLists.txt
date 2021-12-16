@@ -8,6 +8,7 @@ target_sources(crypto
         ${CMAKE_CURRENT_LIST_DIR}/Certificate.cpp
         ${CMAKE_CURRENT_LIST_DIR}/CertificateStore.cpp
         ${CMAKE_CURRENT_LIST_DIR}/AuthenticatedEncryption.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/CSPRNG.cpp
         PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/DiffieHellman.h
         ${CMAKE_CURRENT_LIST_DIR}/SHA256.h
@@ -15,6 +16,7 @@ target_sources(crypto
         ${CMAKE_CURRENT_LIST_DIR}/Certificate.h
         ${CMAKE_CURRENT_LIST_DIR}/CertificateStore.h
         ${CMAKE_CURRENT_LIST_DIR}/AuthenticatedEncryption.h
+        ${CMAKE_CURRENT_LIST_DIR}/CSPRNG.h
         )
 
 target_include_directories(crypto

@@ -1,10 +1,10 @@
 #include <climits>
 #include <string.h>
-#include <openssl/rand.h>
 #include <Constants.h>
 #include <Utils.h>
 #include <CryptoException.h>
 #include <SerializationException.h>
+#include <CSPRNG.h>
 #include <SHA256.h>
 #include "Player.h"
 
@@ -130,18 +130,12 @@ void Player::setServerPublicKey(std::vector<unsigned char> publicKey) {
 
 void Player::generateClientNonce() {
     clientNonce.resize(NONCE_SIZE);
-    auto success = RAND_bytes(clientNonce.data(), NONCE_SIZE); // RAND_poll() called automatically by OpenSSL.
-    if (success != 1) {
-        throw CryptoException(getOpenSslError());
-    }
+    CSPRNG::nextBytes(clientNonce, NONCE_SIZE);
 }
 
 void Player::generateServerNonce() {
     serverNonce.resize(NONCE_SIZE);
-    auto success = RAND_bytes(serverNonce.data(), NONCE_SIZE); // RAND_poll() called automatically by OpenSSL.
-    if (success != 1) {
-        throw CryptoException(getOpenSslError());
-    }
+    CSPRNG::nextBytes(serverNonce, NONCE_SIZE);
 }
 
 void Player::generateClientKeys() {
