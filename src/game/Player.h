@@ -39,6 +39,7 @@ class Player {
         std::unique_ptr<AuthenticatedEncryption> cipher;
         uint32_t sequenceNumber;
         std::string matchmakingPlayer;
+        bool matchmakingInitiator;
 
         /**
          * Checks if the nonces, the public key of the other party and
@@ -69,6 +70,7 @@ class Player {
         const std::string& getMatchmakingPlayer() const;
         const std::vector<unsigned char>& getFreshnessProof() const;
         uint32_t getSequenceNumber() const;
+        bool isMatchmakingInitiator() const;
 
         /**
          * Returns the public key of the client. If the key was part of a generated
@@ -101,6 +103,7 @@ class Player {
 
         void setStatus(Status newStatus);
         void setMatchmakingPlayer(std::string matchmakingPlayer);
+        void setAsMatchmakingInitiator(bool matchmakingInitiator);
 
         /**
          * Sets the username of the player.

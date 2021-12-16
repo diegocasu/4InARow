@@ -15,7 +15,8 @@ fourinarow::Player::Player()
       clientKeys(nullptr),
       serverKeys(nullptr),
       cipher(nullptr),
-      sequenceNumber(0) {}
+      sequenceNumber(0),
+      matchmakingInitiator(false) {}
 
 const std::string& Player::getUsername() const {
     return username;
@@ -66,12 +67,20 @@ uint32_t Player::getSequenceNumber() const {
     return sequenceNumber;
 }
 
+bool Player::isMatchmakingInitiator() const {
+    return matchmakingInitiator;
+}
+
 void Player::setStatus(Player::Status newStatus) {
     status = newStatus;
 }
 
 void Player::setMatchmakingPlayer(std::string newMatchmakingPlayer) {
     matchmakingPlayer = std::move(newMatchmakingPlayer);
+}
+
+void Player::setAsMatchmakingInitiator(bool initiator) {
+    matchmakingInitiator = initiator;
 }
 
 void Player::setUsername(std::string newUsername) {
