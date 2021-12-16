@@ -125,23 +125,23 @@ class Player {
 
         /**
          * Sets the public key of the client. The key can be set only if
-         * a key pair has not been already generated for the client and
-         * the public key of the server has not been already set.
+         * a key pair has not already been generated for the client and
+         * the public key of the server has not already been set.
          * @param publicKey  the public key of the client.
          * @throws SerializationException  if the public key is wrongly sized.
          * @throws CryptoException         if the key pair of the client has already been generated,
-         *                                 or the public key of the server has been already set.
+         *                                 or the public key of the server has already been set.
          */
         void setClientPublicKey(std::vector<unsigned char> publicKey);
 
         /**
          * Sets the public key of the server. The key can be set only if
-         * a key pair has not been already generated for the server and
-         * the public key of the client has not been already set.
+         * a key pair has not already been generated for the server and
+         * the public key of the client has not already been set.
          * @param publicKey  the public key of the server.
          * @throws SerializationException  if the public key is wrongly sized.
          * @throws CryptoException         if the key pair of the server has already been generated,
-         *                                 or the public key of the client has been already set.
+         *                                 or the public key of the client has already been set.
          */
         void setServerPublicKey(std::vector<unsigned char> publicKey);
 
@@ -162,8 +162,8 @@ class Player {
         /**
          * Generates and stores a private-public key pair for the client
          * using Elliptic-curve Diffie-Hellman. The pair can be generated only
-         * if the key pair of the server has not been already generated and
-         * the public key of the client has not been already set.
+         * if the key pair of the server has not already been generated and
+         * the public key of the client has not already been set.
          * @throws CryptoException  if the public key of the client has already been set,
          *                          or the server key pair has already been generated,
          *                          or an error occurred while generating the pair.
@@ -173,8 +173,8 @@ class Player {
         /**
          * Generates and stores a private-public key pair for the server
          * using Elliptic-curve Diffie-Hellman. The pair can be generated only
-         * if the key pair of the client has not been already generated and
-         * the public key of the server has not been already set.
+         * if the key pair of the client has not already been generated and
+         * the public key of the server has not already been set.
          * @throws CryptoException  if the public key of the server has already been set,
          *                          or the client key pair has already been generated,
          *                          or an error occurred while generating the pair.
