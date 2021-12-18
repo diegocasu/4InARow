@@ -235,6 +235,28 @@ std::vector<unsigned char> TcpSocket::receive() const {
     return message;
 }
 
+std::vector<unsigned char> TcpSocket::receiveWithTimeout(unsigned long seconds) const {
+    timeval timeout;
+    timeout.tv_sec = seconds;
+    timeout.tv_usec = 0;
+
+    // Set the timeout of recv(). This option persists across calls, so it must be disabled before returning.
+    setsockopt(descriptor, SOL_SOCKET, SO_RCVTIMEO, (const char*) &timeout, sizeof(timeout));
+
+    try {
+        auto message = receive();
+        timeout.tv_sec = 0;
+        timeout.tv_usec = 0;
+        setsockopt(descriptor, SOL_SOCKET, SO_RCVTIMEO, (const char*) &timeout, sizeof(timeout));
+        return message;
+    } catch (const std::exception &exception) {
+        timeout.tv_sec = 0;
+        timeout.tv_usec = 0;
+        setsockopt(descriptor, SOL_SOCKET, SO_RCVTIMEO, (const char*) &timeout, sizeof(timeout));
+        throw;
+    }
+}
+
 bool TcpSocket::operator==(const TcpSocket &rhs) const {
     return sourceAddress == rhs.sourceAddress &&
            sourcePort == rhs.sourcePort &&

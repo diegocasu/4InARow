@@ -161,6 +161,18 @@ class TcpSocket {
          */
         std::vector<unsigned char> receive() const;
 
+        /**
+         * Retrieves a binary message from a connected socket. The method is non-blocking:
+         * if no bytes have been received and the given number of seconds has passed,
+         * an exception is thrown. A received message is composed of at most <code>65535</code> bytes.
+         * @param seconds  the timeout expressed in seconds.
+         * @return         a binary message.
+         * @throws SocketException  if the message is empty, the remote socket has been closed,
+         *                          an error occurred while performing the receive,
+         *                          or the timeout has expired.
+         */
+        std::vector<unsigned char> receiveWithTimeout(unsigned long seconds) const;
+
         bool operator==(const TcpSocket &rhs) const;
         bool operator!=(const TcpSocket &rhs) const;
 };
