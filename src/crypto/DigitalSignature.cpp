@@ -1,4 +1,5 @@
 #include <CryptoException.h>
+#include <SerializationException.h>
 #include <Utils.h>
 #include "DigitalSignature.h"
 
@@ -147,6 +148,50 @@ bool DigitalSignature::verify(const std::vector<unsigned char> &message,
         EVP_PKEY_free(publicKey);
         throw;
     }
+}
+
+bool DigitalSignature::verify(const std::vector<unsigned char> &message,
+                              const std::vector<unsigned char> &signature,
+                              const std::vector<unsigned char> &serializedPublicKey) {
+    EVP_PKEY *publicKey = deserializePublicKey(serializedPublicKey);
+
+    try {
+        auto result = verify(message, signature, publicKey);
+        EVP_PKEY_free(publicKey);
+        return result;
+    } catch (const CryptoException &exception) {
+        EVP_PKEY_free(publicKey);
+        throw;
+    }
+}
+
+std::vector<unsigned char> DigitalSignature::serializePublicKey(const std::string &path) {
+    EVP_PKEY *publicKey = loadPublicKey(path);
+    unsigned char *buffer = nullptr;
+    auto outputSize = i2d_PUBKEY(publicKey, &buffer);
+
+    if (outputSize < 0) {
+        EVP_PKEY_free(publicKey);
+        throw SerializationException(getOpenSslError());
+    }
+
+    std::vector<unsigned char> serializedPublicKey(outputSize);
+    memcpy(serializedPublicKey.data(), buffer, outputSize);
+
+    EVP_PKEY_free(publicKey);
+    OPENSSL_free(buffer);
+    return serializedPublicKey;
+}
+
+EVP_PKEY *DigitalSignature::deserializePublicKey(const std::vector<unsigned char> &serializedPublicKey) {
+    const unsigned char *buffer = serializedPublicKey.data();
+
+    EVP_PKEY *publicKey = d2i_PUBKEY(nullptr, &buffer, serializedPublicKey.size());
+    if (!publicKey) {
+        throw CryptoException(getOpenSslError());
+    }
+
+    return publicKey;
 }
 
 }
