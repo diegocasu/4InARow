@@ -39,7 +39,7 @@ std::vector<unsigned char> PlayerMessage::serialize() const {
         throw SerializationException("Invalid network address");
     }
 
-    checkPublicKeySize<SerializationException>(publicKey);
+    checkRsaPublicKeySize<SerializationException>(publicKey);
 
     size_t processedBytes = 0;
     size_t outputSize = sizeof(type) + sizeof(MAX_IPV4_ADDRESS_SIZE) + ipAddress.size() +
@@ -98,10 +98,10 @@ void PlayerMessage::deserialize(const std::vector<unsigned char> &message) {
     processedBytes += addressLength;
 
     // Deserialize the public key.
-    checkIfEnoughSpace(message, processedBytes, PUBLIC_KEY_SIZE);
-    publicKey.resize(PUBLIC_KEY_SIZE);
-    memcpy(publicKey.data(), message.data() + processedBytes, PUBLIC_KEY_SIZE);
-    processedBytes += PUBLIC_KEY_SIZE;
+    checkIfEnoughSpace(message, processedBytes, RSA_PUBLIC_KEY_SIZE);
+    publicKey.resize(RSA_PUBLIC_KEY_SIZE);
+    memcpy(publicKey.data(), message.data() + processedBytes, RSA_PUBLIC_KEY_SIZE);
+    processedBytes += RSA_PUBLIC_KEY_SIZE;
 
     // Deserialize the boolean.
     uint8_t firstToPlayRepresentation;

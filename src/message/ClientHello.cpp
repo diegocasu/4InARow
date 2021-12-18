@@ -27,7 +27,7 @@ const std::vector<unsigned char>& ClientHello::getPublicKey() const {
 std::vector<unsigned char> ClientHello::serialize() const {
     checkUsernameValidity<SerializationException>(username);
     checkNonceSize<SerializationException>(nonce);
-    checkPublicKeySize<SerializationException>(publicKey);
+    checkEcdhPublicKeySize<SerializationException>(publicKey);
 
     size_t processedBytes = 0;
     size_t outputSize = sizeof(type) + sizeof(MAX_USERNAME_SIZE) + username.size() + nonce.size() + publicKey.size();
@@ -90,9 +90,9 @@ void ClientHello::deserialize(const std::vector<unsigned char> &message) {
     processedBytes += NONCE_SIZE;
 
     // Deserialize the public key.
-    checkIfEnoughSpace(message, processedBytes, PUBLIC_KEY_SIZE);
-    publicKey.resize(PUBLIC_KEY_SIZE);
-    memcpy(publicKey.data(), message.data() + processedBytes, PUBLIC_KEY_SIZE);
+    checkIfEnoughSpace(message, processedBytes, ECDH_PUBLIC_KEY_SIZE);
+    publicKey.resize(ECDH_PUBLIC_KEY_SIZE);
+    memcpy(publicKey.data(), message.data() + processedBytes, ECDH_PUBLIC_KEY_SIZE);
 }
 
 }

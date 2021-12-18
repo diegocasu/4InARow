@@ -18,7 +18,7 @@ ServerHello::ServerHello(std::vector<unsigned char> certificate,
 std::vector<unsigned char> ServerHello::serialize() const {
     checkCertificateSize<SerializationException>(certificate);
     checkNonceSize<SerializationException>(nonce);
-    checkPublicKeySize<SerializationException>(publicKey);
+    checkEcdhPublicKeySize<SerializationException>(publicKey);
     checkDigitalSignatureSize<SerializationException>(digitalSignature);
 
     size_t processedBytes = 0;
@@ -88,10 +88,10 @@ void ServerHello::deserialize(const std::vector<unsigned char> &message) {
     processedBytes += NONCE_SIZE;
 
     // Deserialize the public key.
-    checkIfEnoughSpace(message, processedBytes, PUBLIC_KEY_SIZE);
-    publicKey.resize(PUBLIC_KEY_SIZE);
-    memcpy(publicKey.data(), message.data() + processedBytes, PUBLIC_KEY_SIZE);
-    processedBytes += PUBLIC_KEY_SIZE;
+    checkIfEnoughSpace(message, processedBytes, ECDH_PUBLIC_KEY_SIZE);
+    publicKey.resize(ECDH_PUBLIC_KEY_SIZE);
+    memcpy(publicKey.data(), message.data() + processedBytes, ECDH_PUBLIC_KEY_SIZE);
+    processedBytes += ECDH_PUBLIC_KEY_SIZE;
 
     // Deserialize the digital signature.
     checkIfEnoughSpace(message, processedBytes, DIGITAL_SIGNATURE_SIZE);

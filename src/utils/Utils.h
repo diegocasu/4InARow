@@ -136,17 +136,36 @@ void checkNonceSize(const std::vector<unsigned char> &nonce) {
 }
 
 /**
- * Checks if the given public key is correctly sized.
+ * Checks if the given Elliptic-curve Diffie-Hellman public key
+ * is correctly sized. If the check fails, the function throws
+ * a user specified exception.
+ * @tparam Exception  the exception type.
+ * @param publicKey   the public key.
+ * @throws Exception  if the public key is wrongly sized.
+ */
+template<typename Exception>
+void checkEcdhPublicKeySize(const std::vector<unsigned char> &publicKey) {
+    if (publicKey.size() != ECDH_PUBLIC_KEY_SIZE) {
+        throw Exception("The ECDH public key size must be exactly " +
+                        std::to_string(ECDH_PUBLIC_KEY_SIZE) +
+                        " bytes. Public key size: " +
+                        std::to_string(publicKey.size()) +
+                        " bytes");
+    }
+}
+
+/**
+ * Checks if the given RSA public key is correctly sized.
  * If the check fails, the function throws a user specified exception.
  * @tparam Exception  the exception type.
  * @param publicKey   the public key.
  * @throws Exception  if the public key is wrongly sized.
  */
 template<typename Exception>
-void checkPublicKeySize(const std::vector<unsigned char> &publicKey) {
-    if (publicKey.size() != PUBLIC_KEY_SIZE) {
-        throw Exception("The public key size must be exactly " +
-                        std::to_string(PUBLIC_KEY_SIZE) +
+void checkRsaPublicKeySize(const std::vector<unsigned char> &publicKey) {
+    if (publicKey.size() != RSA_PUBLIC_KEY_SIZE) {
+        throw Exception("The RSA public key size must be exactly " +
+                        std::to_string(RSA_PUBLIC_KEY_SIZE) +
                         " bytes. Public key size: " +
                         std::to_string(publicKey.size()) +
                         " bytes");

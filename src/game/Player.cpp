@@ -99,7 +99,7 @@ void Player::setServerNonce(std::vector<unsigned char> nonce) {
 }
 
 void Player::setClientPublicKey(std::vector<unsigned char> publicKey) {
-    checkPublicKeySize<SerializationException>(publicKey);
+    checkEcdhPublicKeySize<SerializationException>(publicKey);
 
     if (clientKeys != nullptr) {
         throw CryptoException("The key pair of the client has already been generated, so the public key cannot be set");
@@ -114,7 +114,7 @@ void Player::setClientPublicKey(std::vector<unsigned char> publicKey) {
 }
 
 void Player::setServerPublicKey(std::vector<unsigned char> publicKey) {
-    checkPublicKeySize<SerializationException>(publicKey);
+    checkEcdhPublicKeySize<SerializationException>(publicKey);
 
     if (serverKeys != nullptr) {
         throw CryptoException("The key pair of the server has already been generated, so the public key cannot be set");
@@ -238,7 +238,7 @@ void Player::generateFreshnessProof(const std::vector<unsigned char> &certificat
     std::vector<unsigned char> usernameBytes(username.size());
     memcpy(usernameBytes.data(), username.data(), username.size());
 
-    freshnessProof.reserve(username.size() + 2*NONCE_SIZE + 2*PUBLIC_KEY_SIZE + certificate.size());
+    freshnessProof.reserve(username.size() + 2*NONCE_SIZE + 2*ECDH_PUBLIC_KEY_SIZE + certificate.size());
     concatenate(freshnessProof, usernameBytes, clientNonce, serverNonce,
                 getClientPublicKey(), getServerPublicKey(), certificate);
 }

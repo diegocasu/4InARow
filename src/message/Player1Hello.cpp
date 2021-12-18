@@ -22,7 +22,7 @@ const std::vector<unsigned char> &Player1Hello::getPublicKey() const {
 
 std::vector<unsigned char> Player1Hello::serialize() const {
     checkNonceSize<SerializationException>(nonce);
-    checkPublicKeySize<SerializationException>(publicKey);
+    checkEcdhPublicKeySize<SerializationException>(publicKey);
 
     size_t processedBytes = 0;
     size_t outputSize = sizeof(type) + nonce.size() + publicKey.size();
@@ -62,9 +62,9 @@ void Player1Hello::deserialize(const std::vector<unsigned char> &message) {
     processedBytes += NONCE_SIZE;
 
     // Deserialize the public key.
-    checkIfEnoughSpace(message, processedBytes, PUBLIC_KEY_SIZE);
-    publicKey.resize(PUBLIC_KEY_SIZE);
-    memcpy(publicKey.data(), message.data() + processedBytes, PUBLIC_KEY_SIZE);
+    checkIfEnoughSpace(message, processedBytes, ECDH_PUBLIC_KEY_SIZE);
+    publicKey.resize(ECDH_PUBLIC_KEY_SIZE);
+    memcpy(publicKey.data(), message.data() + processedBytes, ECDH_PUBLIC_KEY_SIZE);
 }
 
 }
