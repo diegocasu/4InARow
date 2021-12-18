@@ -13,19 +13,35 @@ namespace fourinarow {
 
 /**
  * Class representing a player. It holds the networking and cryptographic
- * quantities needed to communicate with another party. It can be used by:
- * 1) the server to represent a connecting player, i.e. a client;
- * 2) a player to represent another player in P2P communications;
- * 3) a player to represent herself when communicating with the server, i.e.
- *    to conveniently store quantities on the client side when connecting
- *    to the server.
+ * quantities needed to communicate with another party. It can be used:
+ * 1) by the server to represent a client;
+ * 2) by a player accepting connections to represent another player,
+ *    i.e. by a player acting as a server in P2P communications;
+ * 3) by a player to represent herself when communicating with the server or
+ *    when she is acting as a client in P2P communications. In this case,
+ *    the class allows to conveniently store quantities and the status variable
+ *    has no meaning.
  * Inside a single Player object, only one party, either the client or the server,
  * can own a generated key pair. Once a party owns a generated pair,
  * the other one is forced to store only a public key.
  */
 class Player {
     public:
-        enum class Status { OFFLINE, CONNECTED, HANDSHAKE, AVAILABLE, MATCHMAKING, PLAYING };
+        /*
+         * The status is significant only from the point of view of a server or
+         * a player acting as server in P2P communications. The server exploits all
+         * the possible status, while a player acting as server only the ones
+         * related to the handshake.
+         */
+        enum class Status {
+                OFFLINE,                  // The player is not connected to the server.
+                CONNECTED,                // The player is connected. A CLIENT_HELLO/PLAYER1_HELLO is expected.
+                HANDSHAKE,                // The player sent a CLIENT_HELLO/PLAYER1_HELLO. An END_HANDSHAKE is expected.
+                AVAILABLE,                // The player completed the handshake successfully and is available for playing.
+                MATCHMAKING,              // The player is exchanging messages to set up a match.
+                MATCHMAKING_INTERRUPTED,  // The matchmaking failed. The player will become AVAILABLE at the next message exchange.
+                PLAYING                   // The player is doing a P2P match.
+        };
     private:
         std::string username;
         Status status;
