@@ -16,7 +16,11 @@ class InfoMessage : public Message {
     public:
         InfoMessage() = default;
         explicit InfoMessage(uint8_t type);
-        ~InfoMessage() override = default;
+
+        /**
+         * Destroys the message and securely wipes its content from memory.
+         */
+        ~InfoMessage() override;
 
         InfoMessage(InfoMessage &&) = default;
         InfoMessage(const InfoMessage&) = default;

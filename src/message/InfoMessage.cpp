@@ -8,6 +8,10 @@ namespace fourinarow {
 
 InfoMessage::InfoMessage(uint8_t type) : type(type) {}
 
+InfoMessage::~InfoMessage() {
+    cleanse(type);
+}
+
 uint8_t InfoMessage::getType() const {
     return type;
 }
