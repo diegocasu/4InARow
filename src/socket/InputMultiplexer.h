@@ -1,5 +1,5 @@
-#ifndef INC_4INAROW_INPUTMULTIPLEXING_H
-#define INC_4INAROW_INPUTMULTIPLEXING_H
+#ifndef INC_4INAROW_INPUTMULTIPLEXER_H
+#define INC_4INAROW_INPUTMULTIPLEXER_H
 
 #include <sys/types.h>
 #include <ostream>
@@ -13,7 +13,7 @@ namespace fourinarow {
  * at the same time is equal to <code>FD_SETSIZE</code>. A socket descriptor is considered valid
  * if and only if its value is in the interval <code>[0, FD_SETSIZE - 1)</code>.
  */
-class InputMultiplexing {
+class InputMultiplexer {
     private:
         fd_set masterSet;
         fd_set readSet;
@@ -27,18 +27,18 @@ class InputMultiplexing {
          */
         char* parseError() const;
     public:
-        InputMultiplexing();
+        InputMultiplexer();
 
         /**
          * Destroys the object, without closing the sockets added to the set of monitored ones.
          * It is up to the caller to close them individually, if needed.
          */
-        ~InputMultiplexing() = default;
+        ~InputMultiplexer() = default;
 
-        InputMultiplexing(const InputMultiplexing&) = default;
-        InputMultiplexing(InputMultiplexing&&) = default;
-        InputMultiplexing& operator=(const InputMultiplexing&) = default;
-        InputMultiplexing& operator=(InputMultiplexing&&) = default;
+        InputMultiplexer(const InputMultiplexer&) = default;
+        InputMultiplexer(InputMultiplexer&&) = default;
+        InputMultiplexer& operator=(const InputMultiplexer&) = default;
+        InputMultiplexer& operator=(InputMultiplexer&&) = default;
 
         /**
          * Adds a socket descriptor to the set of monitored ones. If the descriptor
@@ -82,4 +82,4 @@ class InputMultiplexing {
 
 }
 
-#endif //INC_4INAROW_INPUTMULTIPLEXING_H
+#endif //INC_4INAROW_INPUTMULTIPLEXER_H

@@ -2,7 +2,7 @@
 #define INC_4INAROW_NEWCLIENTHANDLER_H
 
 #include "Handler.h"
-#include <InputMultiplexing.h>
+#include <InputMultiplexer.h>
 
 namespace fourinarow {
 
@@ -24,7 +24,7 @@ class NewClientHandler : public Handler {
          * @param multiplexer  the input multiplexer managing the server sockets.
          * @param playerList   the player list.
          */
-        static void handle(TcpSocket &helloSocket, InputMultiplexing &multiplexer, PlayerList &playerList);
+        static void handle(TcpSocket &helloSocket, InputMultiplexer &multiplexer, PlayerList &playerList);
 };
 
 }

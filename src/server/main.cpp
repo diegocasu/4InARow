@@ -12,7 +12,7 @@
 #include <Player.h>
 #include <CertificateStore.h>
 #include <DigitalSignature.h>
-#include <InputMultiplexing.h>
+#include <InputMultiplexer.h>
 #include "handler/NewClientHandler.h"
 #include "handler/ConnectedClientHandler.h"
 #include "handler/HandshakeClientHandler.h"
@@ -217,7 +217,7 @@ void disconnectClient(PlayerList::iterator &iterator,
                       PlayerList &playerList,
                       PlayerStatusList &statusList,
                       PlayerRemovalList &removalList,
-                      fourinarow::InputMultiplexing &multiplexer) {
+                      fourinarow::InputMultiplexer &multiplexer) {
     removalList.erase(iterator->second.getUsername());
     statusList.erase(iterator->second.getUsername());
     multiplexer.removeDescriptor(iterator->first.getDescriptor());
@@ -281,7 +281,7 @@ void printStatusList(const PlayerStatusList &statusList) {
  * @param digitalSignature  the digital signature tool.
  */
 void startService(fourinarow::TcpSocket &helloSocket,
-                  fourinarow::InputMultiplexing &multiplexer,
+                  fourinarow::InputMultiplexer &multiplexer,
                   PlayerList &playerList,
                   PlayerStatusList &statusList,
                   PlayerRemovalList &removalList,
@@ -347,7 +347,7 @@ int main(int argc, char *argv[]) {
         auto digitalSignature = createDigitalSignature(fourinarow::SERVER_CERTIFICATE_FOLDER + "4InARow_privkey.pem");
 
         auto helloSocket = createHelloSocket(serverAddress);
-        fourinarow::InputMultiplexing multiplexer;
+        fourinarow::InputMultiplexer multiplexer;
         multiplexer.addDescriptor(helloSocket.getDescriptor());
 
         startService(helloSocket, multiplexer, playerList, statusList, removalList, certificate, digitalSignature);

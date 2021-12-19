@@ -3,7 +3,7 @@
 
 namespace fourinarow {
 
-void NewClientHandler::handle(TcpSocket &helloSocket, InputMultiplexing &multiplexer, PlayerList &playerList) {
+void NewClientHandler::handle(TcpSocket &helloSocket, InputMultiplexer &multiplexer, PlayerList &playerList) {
     std::cout << "Hello socket: new connection request" << std::endl;
     auto newDescriptor = -1; // Used for rollback.
 

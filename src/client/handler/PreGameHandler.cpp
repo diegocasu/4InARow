@@ -127,7 +127,7 @@ bool PreGameHandler::parseChallengeRequestAnswer() {
 }
 
 bool PreGameHandler::handleIncomingMessage(const TcpSocket &socket,
-                                           const InputMultiplexing &multiplexer,
+                                           const InputMultiplexer &multiplexer,
                                            Player &myselfForServer,
                                            const std::string &playerList,
                                            PlayerMessage &opponent,
@@ -353,7 +353,7 @@ bool PreGameHandler::handle(const TcpSocket &socket,
                             const std::string &firstPlayerList,
                             PlayerMessage &opponent,
                             std::string &opponentUsername) {
-    InputMultiplexing multiplexer;
+    InputMultiplexer multiplexer;
     multiplexer.addDescriptor(socket.getDescriptor());
     multiplexer.addDescriptor(STDIN_FILENO);
 

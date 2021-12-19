@@ -3,7 +3,7 @@
 
 #include <string>
 #include <TcpSocket.h>
-#include <InputMultiplexing.h>
+#include <InputMultiplexer.h>
 #include <Challenge.h>
 #include <PlayerMessage.h>
 #include "Handler.h"
@@ -119,7 +119,7 @@ class PreGameHandler : Handler {
          * @throws runtime_error  if an error occurred while handling the incoming message.
          */
         static bool handleIncomingMessage(const TcpSocket &socket,
-                                          const InputMultiplexing &multiplexer,
+                                          const InputMultiplexer &multiplexer,
                                           Player &myselfForServer,
                                           const std::string &playerList,
                                           PlayerMessage &opponent,

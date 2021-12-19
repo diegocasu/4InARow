@@ -1,18 +1,18 @@
 #include <errno.h>
 #include <string.h>
 #include <SocketException.h>
-#include "InputMultiplexing.h"
+#include "InputMultiplexer.h"
 
 namespace fourinarow {
 
-InputMultiplexing::InputMultiplexing() {
+InputMultiplexer::InputMultiplexer() {
     FD_ZERO(&masterSet);
     FD_ZERO(&readSet);
     maxDescriptor = 0u;
     numberOfDescriptors = 0u;
 }
 
-void InputMultiplexing::addDescriptor(unsigned int descriptor) {
+void InputMultiplexer::addDescriptor(unsigned int descriptor) {
     if (descriptor >= FD_SETSIZE) {
         throw SocketException("Invalid descriptor");
     }
@@ -28,7 +28,7 @@ void InputMultiplexing::addDescriptor(unsigned int descriptor) {
         maxDescriptor = descriptor;
 }
 
-void InputMultiplexing::removeDescriptor(unsigned int descriptor) {
+void InputMultiplexer::removeDescriptor(unsigned int descriptor) {
     if (descriptor >= FD_SETSIZE) {
         throw SocketException("Invalid descriptor");
     }
@@ -39,7 +39,7 @@ void InputMultiplexing::removeDescriptor(unsigned int descriptor) {
     }
 }
 
-bool InputMultiplexing::isReady(unsigned int descriptor) const {
+bool InputMultiplexer::isReady(unsigned int descriptor) const {
     if (descriptor >= FD_SETSIZE) {
         throw SocketException("Invalid descriptor");
     }
@@ -47,11 +47,11 @@ bool InputMultiplexing::isReady(unsigned int descriptor) const {
     return FD_ISSET(descriptor, &readSet);
 }
 
-char* InputMultiplexing::parseError() const {
+char* InputMultiplexer::parseError() const {
     return strerror(errno);
 }
 
-void InputMultiplexing::select() {
+void InputMultiplexer::select() {
     if (numberOfDescriptors == 0) {
         return;
     }
