@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 #include <regex>
-#include <openssl/pem.h>
 #include "Constants.h"
+#include "Player.h"
 
 namespace fourinarow {
 
@@ -62,7 +62,34 @@ void cleanse(bool &boolean);
  * @param messageType  the message type code.
  * @return  the string containing the human readable type.
  */
-std::string convertMessageType(uint8_t messageType);
+std::string convertMessageType(const uint8_t &messageType);
+
+/**
+ * Translates a player status into a human readable string
+ * containing the status itself.
+ * @param status  the player status.
+ * @return  the string containing the human readable status.
+ */
+std::string convertClientStatus(const Player::Status &status);
+
+/**
+ * Returns the type of a given binary message.
+ * @tparam Exception  the exception type.
+ * @param message     the binary message.
+ * @return            the type of the message.
+ * @throws Exception  if the message is not big enough to hold a type field.
+ */
+template<typename Exception>
+uint8_t getMessageType(const std::vector<unsigned char> &message) {
+    uint8_t type;
+
+    if (message.size() < sizeof(type)) {
+        throw Exception("Malformed message");
+    }
+
+    memcpy(&type, message.data(), sizeof(type));
+    return type;
+}
 
 /**
  * Checks if the given key is correctly sized.
