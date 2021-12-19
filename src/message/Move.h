@@ -13,11 +13,10 @@ namespace fourinarow {
 class Move : public Message {
     private:
         uint8_t type = MOVE;
-        uint8_t row = 0;
         uint8_t column = 0;
     public:
         Move() = default;
-        Move(uint8_t row, uint8_t column);
+        explicit Move(uint8_t column);
 
         /**
          * Destroys the message and securely wipes its content from memory.
@@ -30,7 +29,6 @@ class Move : public Message {
         Move& operator=(Move&&) = default;
 
         uint8_t getType() const;
-        uint8_t getRow() const;
         uint8_t getColumn() const;
 
         std::vector<unsigned char> serialize() const override;

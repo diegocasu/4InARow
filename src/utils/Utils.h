@@ -218,23 +218,6 @@ void checkDigitalSignatureSize(const std::vector<unsigned char> &digitalSignatur
 }
 
 /**
- * Checks if the given row index is valid.
- * If the check fails, the function throws a user specified exception.
- * @tparam Exception  the exception type.
- * @param rowIndex    the row index.
- * @throws Exception  if the row index is invalid.
- */
-template<typename Exception>
-void checkRowIndexValidity(uint8_t rowIndex) {
-    if (rowIndex >= ROWS) {
-        throw Exception("The row index must be a number between 0 and " +
-                        std::to_string(ROWS - 1) +
-                        ". Row index: " +
-                        std::to_string(unsigned(rowIndex)));
-    }
-}
-
-/**
  * Checks if the given column index is valid.
  * If the check fails, the function throws a user specified exception.
  * @tparam Exception   the exception type.
