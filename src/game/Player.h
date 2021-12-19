@@ -216,8 +216,9 @@ class Player {
         void initCipher();
 
         /**
-         * Generates the proof of freshness characterizing the communication
-         * session. The proof is obtained concatenating:
+         * Generates the proof of freshness characterizing a client-server handshake session.
+         * This method must not be used for P2P communications.
+         * The proof is obtained concatenating:
          * 1) the username;
          * 2) the client nonce;
          * 3) the server nonce;
@@ -231,6 +232,21 @@ class Player {
          *                                 This check does not involve the public key that was set.
          */
         void generateFreshnessProof(const std::vector<unsigned char> &certificate);
+
+        /**
+         * Generates the proof of freshness characterizing a P2P handshake session.
+         * This method must not be used for client-server communications.
+         * The proof is obtained concatenating:
+         * 2) the player1 (client) nonce;
+         * 3) the player2 (server) nonce;
+         * 4) the Elliptic-curve Diffie-Hellman public key of the player1 (client);
+         * 5) the Elliptic-curve Diffie-Hellman public key of the player2 (server);
+         * @throws CryptoException         if at least one of the above quantities has not been set/generated,
+         *                                 or an error occurred while deriving the secret quantities.
+         * @throws SerializationException  if an error occurred while retrieving a generated public key.
+         *                                 This check does not involve the public key that was set.
+         */
+        void generateFreshnessProofP2P();
 
         /**
          * Increments the sequence number by one, checking for a possible overflow.

@@ -243,6 +243,12 @@ void Player::generateFreshnessProof(const std::vector<unsigned char> &certificat
                 getClientPublicKey(), getServerPublicKey(), certificate);
 }
 
+void Player::generateFreshnessProofP2P() {
+    checkIfCryptoAttributesInitialized();
+    freshnessProof.reserve(2*NONCE_SIZE + 2*ECDH_PUBLIC_KEY_SIZE);
+    concatenate(freshnessProof, clientNonce, serverNonce, getClientPublicKey(), getServerPublicKey());
+}
+
 void Player::incrementSequenceNumber() {
     if (sequenceNumber > UINT_MAX - 1) {
         throw CryptoException("Max sequence number reached");
