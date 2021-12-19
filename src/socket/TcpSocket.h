@@ -164,7 +164,9 @@ class TcpSocket {
         /**
          * Retrieves a binary message from a connected socket. The method is non-blocking:
          * if no bytes have been received and the given number of seconds has passed,
-         * an exception is thrown. A received message is composed of at most <code>65535</code> bytes.
+         * an exception is thrown. If the given number of seconds is equal to 0, the
+         * method becomes blocking, i.e. it acts as <code>receive()</code>.
+         * A received message is composed of at most <code>65535</code> bytes.
          * @param seconds  the timeout expressed in seconds.
          * @return         a binary message.
          * @throws SocketException  if the message is empty, the remote socket has been closed,
