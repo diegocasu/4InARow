@@ -160,7 +160,7 @@ void handleMessage(const fourinarow::TcpSocket &socket,
     }
 
     if (player.getStatus() == fourinarow::Player::Status::HANDSHAKE) {
-        fourinarow::HandshakeClientHandler::handle(socket, player, statusList, removalList, digitalSignature);
+        fourinarow::HandshakeClientHandler::handle(socket, player, statusList, removalList);
         return;
     }
 

@@ -12,8 +12,7 @@ namespace fourinarow {
 bool HandshakeClientHandler::handleEndHandshake(const TcpSocket &socket,
                                                 Player &player,
                                                 PlayerStatusList &statusList,
-                                                PlayerRemovalList &removalList,
-                                                const DigitalSignature &digitalSignature) {
+                                                PlayerRemovalList &removalList) {
     std::cout << "Handshake: handling an END_HANDSHAKE message" << std::endl;
 
     try {
@@ -31,7 +30,7 @@ bool HandshakeClientHandler::handleEndHandshake(const TcpSocket &socket,
         endHandshake.deserialize(message);
 
         std::string userPublicKeyPath = SERVER_PLAYERS_FOLDER + player.getUsername() + SERVER_PLAYER_KEY_SUFFIX;
-        if (!digitalSignature.verify(player.getFreshnessProof(), endHandshake.getDigitalSignature(), userPublicKeyPath)) {
+        if (!DigitalSignature::verify(player.getFreshnessProof(), endHandshake.getDigitalSignature(), userPublicKeyPath)) {
             std::cerr << "Aborting the handshake: received an invalid proof of freshness" << std::endl;
             socket.send(InfoMessage(MALFORMED_MESSAGE).serialize());
             removalList.insert(player.getUsername());
@@ -80,9 +79,8 @@ void HandshakeClientHandler::handleSendPlayerList(const TcpSocket &socket,
 void HandshakeClientHandler::handle(const TcpSocket &socket,
                                     Player &player,
                                     PlayerStatusList &statusList,
-                                    PlayerRemovalList &removalList,
-                                    const DigitalSignature &digitalSignature) {
-    if (!handleEndHandshake(socket, player, statusList, removalList, digitalSignature)) {
+                                    PlayerRemovalList &removalList) {
+    if (!handleEndHandshake(socket, player, statusList, removalList)) {
         return;
     }
     handleSendPlayerList(socket, player, statusList, removalList);

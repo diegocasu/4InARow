@@ -22,15 +22,13 @@ class HandshakeClientHandler : public Handler {
          * @param player            the player.
          * @param statusList        the player status list.
          * @param removalList       the player removal list.
-         * @param digitalSignature  the digital signature tool of the server.
          * @return                  true if the connection with the client can continue,
          *                          false if it must be closed.
          */
         static bool handleEndHandshake(const TcpSocket &socket,
                                        Player &player,
                                        PlayerStatusList &statusList,
-                                       PlayerRemovalList &removalList,
-                                       const DigitalSignature &digitalSignature);
+                                       PlayerRemovalList &removalList);
 
         /**
          * Implements the second part of the handler, in which a </code>PLAYER_LIST</code>
@@ -60,13 +58,11 @@ class HandshakeClientHandler : public Handler {
          * @param player            the player.
          * @param statusList        the player status list.
          * @param removalList       the player removal list.
-         * @param digitalSignature  the digital signature tool of the server.
          */
         static void handle(const TcpSocket &socket,
                            Player &player,
                            PlayerStatusList &statusList,
-                           PlayerRemovalList &removalList,
-                           const DigitalSignature &digitalSignature);
+                           PlayerRemovalList &removalList);
 };
 
 }
