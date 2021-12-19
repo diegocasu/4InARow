@@ -78,6 +78,21 @@ class InputMultiplexer {
          * @throws SocketException  if an error occurred while monitoring the sockets.
          */
         void select();
+
+        /**
+         * Waits until at least one of the sockets being monitored is ready,
+         * or the given number of seconds has passed.
+         * If the timeout has expired without any socket being ready, an exception is thrown;
+         * otherwise the method returns correctly and the caller can test if a socket is ready
+         * by using <code>isReady()</code>.
+         * If the set of monitored sockets is empty, the method returns immediately without throwing.
+         * If the given number of seconds is equal to 0, the method checks the descriptors and
+         * immediately returns or throws an exception (polling).
+         * @param seconds  the timeout expressed in seconds.
+         * @throws SocketException  if an error occurred while monitoring the sockets,
+         *                          or the timeout has expired.
+         */
+        void selectWithTimeout(unsigned long seconds);
 };
 
 }

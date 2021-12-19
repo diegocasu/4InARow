@@ -64,4 +64,25 @@ void InputMultiplexer::select() {
     }
 }
 
+void InputMultiplexer::selectWithTimeout(unsigned long seconds) {
+    if (numberOfDescriptors == 0) {
+        return;
+    }
+
+    timeval timeout;
+    timeout.tv_sec = seconds;
+    timeout.tv_usec = 0;
+
+    readSet = masterSet;
+    auto success = ::select(maxDescriptor + 1, &readSet, nullptr, nullptr, &timeout);
+
+    if (success == -1) {
+        throw SocketException(parseError());
+    }
+
+    if (success == 0) {
+        throw SocketException("Timeout expired");
+    }
+}
+
 }
