@@ -187,7 +187,13 @@ int main(int argc, char *argv[]) {
             return 0;
         }
 
+        auto handshakeResult = fourinarow::HandshakeHandler::doHandshakeWithPlayer(clientAddress,
+                                                                                   opponent,
+                                                                                   digitalSignature);
+
         //TODO: missing game support.
+        std::cout << *std::get<0>(handshakeResult) << std::endl;
+        std::cout << std::boolalpha << std::get<2>(handshakeResult) << std::endl;
         std::cout << "Game not supported yet" << std::endl;
         return 0;
     } catch (const std::exception &exception) {

@@ -3,6 +3,7 @@
 
 #include "Handler.h"
 #include <CertificateStore.h>
+#include <PlayerMessage.h>
 
 namespace fourinarow {
 
@@ -12,6 +13,8 @@ namespace fourinarow {
  */
 class HandshakeHandler : public Handler {
     private:
+        using P2PHandshakeResult = std::tuple<std::unique_ptr<TcpSocket>, std::unique_ptr<Player>, bool>;
+
         /**
          * Sends a <code>CLIENT_HELLO</code> message to the server, starting the handshake.
          * @param socket           the socket used to communicate with the server.
@@ -41,6 +44,7 @@ class HandshakeHandler : public Handler {
         static void receiveServerHello(const TcpSocket &socket,
                                        Player &myselfForServer,
                                        const CertificateStore &certificateStore);
+
         /**
          * Ends the handshake with the server by sending an <code>END_HANDSHAKE</code> message.
          * Then, it derives the symmetric session key and receives the first <code>PLAYER_LIST</code> message.
@@ -54,6 +58,89 @@ class HandshakeHandler : public Handler {
         static std::string endHandshake(const TcpSocket &socket,
                                         Player &myselfForServer,
                                         const DigitalSignature &digitalSignature);
+        /**
+         * Attempts to connect to the other player, which is acting as server
+         * in the P2P handshake. If the connection fails, another attempt is performed
+         * after 1 second, until the maximum number of retries specified by
+         * <code>P2P_MAX_CONNECTION_RETRIES</code> is reached.
+         * @param socket              the socket used to communicate with the other player.
+         * @param otherPlayerAddress  the IPv4 address of the other player.
+         * @throws SocketException  if the connection to the remote player has failed.
+         */
+        static void connectToPlayer(TcpSocket &socket, const std::string &otherPlayerAddress);
+
+        /**
+         * Waits for a connection attempt done by the other player, which is acting as client
+         * in the P2P handshake. If the connection fails, another attempt is performed
+         * after 1 second, until the maximum number of retries specified by
+         * <code>P2P_MAX_CONNECTION_RETRIES</code> is reached.
+         * @param socket              the socket used to communicate with the other player.
+         * @param otherPlayerAddress  the IPv4 address of the other player.
+         * @return                    the socket used to communicate with the player.
+         * @throws SocketException  if the connection with the remote player failed.
+         */
+        static TcpSocket waitForPlayerConnection(TcpSocket &socket, const std::string &otherPlayerAddress);
+
+        /**
+         * Sends a <code>PLAYER1_HELLO</code> message to the other player, starting the handshake.
+         * @param socket             the socket used to communicate with the player.
+         * @param myselfForOpponent  the object storing the quantities needed for the handshake.
+         * @throws runtime_error  if an error occurred while sending the message.
+         */
+        static void sendPlayer1Hello(const TcpSocket &socket, Player &myselfForOpponent);
+
+        /**
+         * Handles the reception of a <code>PLAYER1_HELLO</code> message, responding
+         * with a <code>PLAYER2_HELLO</code> message.
+         * @param socket            the socket used to communicate with the player.
+         * @param opponent          the object storing the quantities needed for the handshake.
+         * @param digitalSignature  the digital signature tool.
+         * @throws runtime_error    if an error occurred while receiving the message or responding.
+         * @throws SocketException  if an error occurred while sending an error message.
+         */
+        static void handlePlayer1Hello(const TcpSocket &socket,
+                                       Player &opponent,
+                                       const DigitalSignature &digitalSignature);
+
+        /**
+         * Waits for a <code>PLAYER2_HELLO</code> message sent by the other player.
+         * @param socket             the socket used to communicate with the player.
+         * @param myselfForOpponent  the object storing the quantities needed for the handshake.
+         * @param playerMessage      the <code>PLAYER</code> message sent by the server,
+         *                           containing the public key used to verify the digital signature
+         *                           of the freshness proof.
+         * @throws runtime_error  if an error occurred while receiving the message,
+         *                        or the digital signature of the freshness proof is invalid.
+         */
+        static void receivePlayer2Hello(const TcpSocket &socket,
+                                        Player &myselfForOpponent,
+                                        const PlayerMessage &playerMessage);
+
+        /**
+         * Handles the reception of a <code>END_HANDSHAKE</code> message.
+         * If the handshake ends correctly, it derives the symmetric session keys.
+         * @param socket         the socket used to communicate with the player.
+         * @param opponent       the object storing the quantities needed for the handshake.
+         * @param playerMessage  the <code>PLAYER</code> message sent by the server,
+         *                       containing the public key used to verify the digital signature
+         *                       of the freshness proof.
+         * @throws runtime_error    if an error occurred while receiving the message.
+         * @throws SocketException  if an error occurred while sending an error message.
+         */
+        static void handleEndHandshakeP2P(const TcpSocket &socket,
+                                          Player &opponent,
+                                          const PlayerMessage &playerMessage);
+
+        /**
+         * Ends the handshake with the other player by sending
+         * an <code>END_HANDSHAKE</code> message and deriving the symmetric session key.
+         * @param socket             the socket used to communicate with the player.
+         * @param myselfForOpponent  the object storing the quantities needed for the handshake.
+         * @param digitalSignature   the digital signature tool.
+         */
+        static void endHandshakeP2P(const TcpSocket &socket,
+                                    Player &myselfForOpponent,
+                                    const DigitalSignature &digitalSignature);
     public:
         HandshakeHandler() = delete;
         ~HandshakeHandler() = delete;
@@ -77,6 +164,19 @@ class HandshakeHandler : public Handler {
                                                  const std::string &username,
                                                  const CertificateStore &certificateStore,
                                                  const DigitalSignature &digitalSignature);
+
+        /**
+         * Performs the handshake with another player.
+         * @param myAddress         the IPv4 address of this client.
+         * @param playerMessage     the <code>PLAYER</code> message sent by the server,
+         *                          containing the IPv4 address of the opponent and the public key used
+         *                          to verify the digital signature of the freshness proof.
+         * @param digitalSignature  the digital signature tool.
+         * @return
+         */
+        static P2PHandshakeResult doHandshakeWithPlayer(const std::string &myAddress,
+                                                        const PlayerMessage &playerMessage,
+                                                        const DigitalSignature &digitalSignature);
 };
 
 }
