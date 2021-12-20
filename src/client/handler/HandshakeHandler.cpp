@@ -346,6 +346,9 @@ HandshakeHandler::P2PHandshakeResult HandshakeHandler::doHandshakeWithPlayer(con
         return result;
     } catch (const std::exception &exception) {
         std::cout << "Impossible to connect to the other player: " << exception.what() << std::endl;
+        std::get<0>(result) = nullptr;
+        std::get<1>(result) = nullptr;
+        std::get<2>(result) = false;
         return result;
     }
 }

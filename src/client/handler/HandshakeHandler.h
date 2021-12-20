@@ -172,7 +172,11 @@ class HandshakeHandler : public Handler {
          *                          containing the IPv4 address of the opponent and the public key used
          *                          to verify the digital signature of the freshness proof.
          * @param digitalSignature  the digital signature tool.
-         * @return
+         * @return                  a tuple containing a pointer to the socket used to communicate with
+         *                          the other player, a pointer to the <code>Player</code> object
+         *                          containing the handshake information and a boolean flag signaling
+         *                          the success or failure of the handshake.
+         *                          If the flag signals a failure, the two pointers are set to <code>nullptr</code>.
          */
         static P2PHandshakeResult doHandshakeWithPlayer(const std::string &myAddress,
                                                         const PlayerMessage &playerMessage,
