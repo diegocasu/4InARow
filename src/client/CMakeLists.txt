@@ -2,12 +2,14 @@ set(HEADER_FILES
         ${CMAKE_CURRENT_LIST_DIR}/handler/Handler.h
         ${CMAKE_CURRENT_LIST_DIR}/handler/HandshakeHandler.h
         ${CMAKE_CURRENT_LIST_DIR}/handler/PreGameHandler.h
+        ${CMAKE_CURRENT_LIST_DIR}/handler/GameHandler.h
         )
 
 set(SOURCE_FILES
         ${CMAKE_CURRENT_LIST_DIR}/handler/Handler.cpp
         ${CMAKE_CURRENT_LIST_DIR}/handler/HandshakeHandler.cpp
         ${CMAKE_CURRENT_LIST_DIR}/handler/PreGameHandler.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/handler/GameHandler.cpp
         )
 
 add_executable(client main.cpp ${HEADER_FILES} ${SOURCE_FILES})

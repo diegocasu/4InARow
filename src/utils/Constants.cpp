@@ -7,6 +7,7 @@ const unsigned short PLAYER_PORT               = 5001;
 const size_t BACKLOG_SIZE                      = 100;
 const unsigned long CLIENT_MATCHMAKING_TIMEOUT = 30;                       // In seconds.
 const unsigned int P2P_MAX_CONNECTION_RETRIES  = 3;                        // Each retry is interleaved with 1 second of sleep.
+const unsigned int MAX_TURN_DURATION           = 90;                       // In seconds.
 
 const std::string SERVER_CERTIFICATE_FOLDER    = "./certificate/";
 const std::string SERVER_PLAYERS_FOLDER        = "./players/";

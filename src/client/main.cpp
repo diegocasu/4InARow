@@ -5,8 +5,10 @@
 #include <Utils.h>
 #include <DigitalSignature.h>
 #include <CertificateStore.h>
+#include <FourInARow.h>
 #include "handler/HandshakeHandler.h"
 #include "handler/PreGameHandler.h"
+#include "handler/GameHandler.h"
 
 /**
  * Prints a help message describing how to invoke the program from the command line.
@@ -173,31 +175,29 @@ int main(int argc, char *argv[]) {
                                                                                    username,
                                                                                    certificateStore,
                                                                                    digitalSignature);
-        // Handle the pre-game phase.
-        fourinarow::PlayerMessage opponent;
-        std::string opponentUsername;
-        auto playGame = fourinarow::PreGameHandler::handle(serverSocket,
-                                                           myselfForServer,
-                                                           firstPlayerList,
-                                                           opponent,
-                                                           opponentUsername);
+        while (true) {
+            // Handle the pre-game phase.
+            fourinarow::PlayerMessage opponent;
+            std::string opponentUsername;
+            auto playGame = fourinarow::PreGameHandler::handle(serverSocket,myselfForServer, firstPlayerList,opponent,opponentUsername);
 
-        if (!playGame) {
-            std::cout << "Goodbye!" << std::endl;
-            return 0;
+            if (!playGame) {
+                std::cout << "Goodbye!" << std::endl;
+                return 0;
+            }
+
+            auto handshakeResult = fourinarow::HandshakeHandler::doHandshakeWithPlayer(clientAddress, opponent, digitalSignature);
+            if (std::get<2>(handshakeResult)) {
+                fourinarow::GameHandler::handle(*(std::get<0>(handshakeResult)),
+                                                *(std::get<1>(handshakeResult)),
+                                                opponentUsername,
+                                                opponent.isFirstToPlay());
+            }
+            fourinarow::GameHandler::sendEndGame(serverSocket, myselfForServer);
+            firstPlayerList = "";
         }
-
-        auto handshakeResult = fourinarow::HandshakeHandler::doHandshakeWithPlayer(clientAddress,
-                                                                                   opponent,
-                                                                                   digitalSignature);
-
-        //TODO: missing game support.
-        std::cout << *std::get<0>(handshakeResult) << std::endl;
-        std::cout << std::boolalpha << std::get<2>(handshakeResult) << std::endl;
-        std::cout << "Game not supported yet" << std::endl;
-        return 0;
     } catch (const std::exception &exception) {
         std::cerr << "Fatal error: " << exception.what() << std::endl;
+        return 1;
     }
-    return 1;
 }

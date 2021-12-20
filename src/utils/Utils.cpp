@@ -33,6 +33,10 @@ void cleanse(std::vector<unsigned char> &vector) {
     OPENSSL_cleanse(vector.data(), vector.size());
 }
 
+void cleanse(std::vector<int> &vector) {
+    OPENSSL_cleanse(vector.data(), sizeof(int)*vector.size());
+}
+
 void cleanse(std::string &string) {
     OPENSSL_cleanse(&string[0], string.size());
 }
@@ -41,8 +45,16 @@ void cleanse(uint8_t &integer) {
     OPENSSL_cleanse(&integer, sizeof(integer));
 }
 
+void cleanse(unsigned int &integer) {
+    OPENSSL_cleanse(&integer, sizeof(integer));
+}
+
 void cleanse(bool &boolean) {
     OPENSSL_cleanse(&boolean, sizeof(boolean));
+}
+
+void cleanse(FourInARow::Result &result) {
+    OPENSSL_cleanse(&result, sizeof(result));
 }
 
 std::string convertMessageType(const uint8_t &messageType) {

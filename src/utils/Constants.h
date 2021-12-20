@@ -12,6 +12,7 @@ extern const unsigned short PLAYER_PORT;
 extern const size_t BACKLOG_SIZE;
 extern const unsigned long CLIENT_MATCHMAKING_TIMEOUT;
 extern const unsigned int P2P_MAX_CONNECTION_RETRIES;
+extern const unsigned int MAX_TURN_DURATION;
 
 // File paths.
 extern const std::string SERVER_CERTIFICATE_FOLDER;
