@@ -38,21 +38,22 @@ const std::string& FourInARow::getOpponent() const {
     return opponent;
 }
 
-bool FourInARow::isValidMove(uint8_t columnIndex) const {
-    return !matchFinished &&
-           ROWS > 0 &&
-           COLUMNS > 0 &&
-           (columnIndex < COLUMNS) &&
-           (board[ROWS - 1][columnIndex] == EMPTY_SPACE);
+bool FourInARow::isValidMove(const uint8_t &columnIndex) const {
+    return !matchFinished
+           && ROWS > 0
+           && COLUMNS > 0
+           && (columnIndex < COLUMNS)
+           && (board[ROWS - 1][columnIndex] == EMPTY_SPACE);
 }
 
-bool FourInARow::checkWinOnVerticalLine(uint8_t rowIndex, uint8_t columnIndex, bool opponentMove) const {
+bool FourInARow::checkWinOnVerticalLine(const uint8_t &rowIndex, const uint8_t &columnIndex, bool opponentMove) const {
     if (rowIndex >= ROWS || columnIndex >= COLUMNS || rowIndex < 3) {
         return false;
     }
 
     for (int i = rowIndex; i >= rowIndex - 3; i--) {
-        if ((!opponentMove && board[i][columnIndex] == OPPONENT_DISC) || (opponentMove && board[i][columnIndex] == MY_DISC)) {
+        if ((!opponentMove && board[i][columnIndex] == OPPONENT_DISC)
+            || (opponentMove && board[i][columnIndex] == MY_DISC)) {
             return false;
         }
 
@@ -66,7 +67,7 @@ bool FourInARow::checkWinOnVerticalLine(uint8_t rowIndex, uint8_t columnIndex, b
     return true;
 }
 
-bool FourInARow::checkWinOnHorizontalLine(uint8_t rowIndex, uint8_t columnIndex, bool opponentMove) const {
+bool FourInARow::checkWinOnHorizontalLine(const uint8_t &rowIndex, const uint8_t &columnIndex, bool opponentMove) const {
     if (rowIndex >= ROWS || columnIndex >= COLUMNS) {
         return false;
     }
@@ -89,7 +90,8 @@ bool FourInARow::checkWinOnHorizontalLine(uint8_t rowIndex, uint8_t columnIndex,
 
         auto valid = true;
         for (int j = i; j <= i + 3; j++) {
-            if ((opponentMove && board[rowIndex][j] == OPPONENT_DISC) || (!opponentMove && board[rowIndex][j] == MY_DISC)) {
+            if ((opponentMove && board[rowIndex][j] == OPPONENT_DISC)
+                || (!opponentMove && board[rowIndex][j] == MY_DISC)) {
                 continue;
             }
             valid = false;
@@ -104,7 +106,7 @@ bool FourInARow::checkWinOnHorizontalLine(uint8_t rowIndex, uint8_t columnIndex,
     return false;
 }
 
-bool FourInARow::checkWinOnLeftDiagonalLine(uint8_t rowIndex, uint8_t columnIndex, bool opponentMove) const {
+bool FourInARow::checkWinOnLeftDiagonalLine(const uint8_t &rowIndex, const uint8_t &columnIndex, bool opponentMove) const {
     if (rowIndex >= ROWS || columnIndex >= COLUMNS) {
         return false;
     }
@@ -143,7 +145,7 @@ bool FourInARow::checkWinOnLeftDiagonalLine(uint8_t rowIndex, uint8_t columnInde
     return false;
 }
 
-bool FourInARow::checkWinOnRightDiagonalLine(uint8_t rowIndex, uint8_t columnIndex, bool opponentMove) const {
+bool FourInARow::checkWinOnRightDiagonalLine(const uint8_t &rowIndex, const uint8_t &columnIndex, bool opponentMove) const {
     if (rowIndex >= ROWS || columnIndex >= COLUMNS) {
         return false;
     }
@@ -182,7 +184,7 @@ bool FourInARow::checkWinOnRightDiagonalLine(uint8_t rowIndex, uint8_t columnInd
     return false;
 }
 
-bool FourInARow::registerMove(uint8_t columnIndex, bool opponentMove) {
+bool FourInARow::registerMove(const uint8_t &columnIndex, bool opponentMove) {
     if (!isValidMove(columnIndex))
         return false;
 
@@ -201,10 +203,10 @@ bool FourInARow::registerMove(uint8_t columnIndex, bool opponentMove) {
         }
     }
 
-    if (checkWinOnVerticalLine(insertionRow, columnIndex, opponentMove) ||
-        checkWinOnHorizontalLine(insertionRow, columnIndex, opponentMove) ||
-        checkWinOnLeftDiagonalLine(insertionRow, columnIndex, opponentMove) ||
-        checkWinOnRightDiagonalLine(insertionRow, columnIndex, opponentMove)) {
+    if (checkWinOnVerticalLine(insertionRow, columnIndex, opponentMove)
+        || checkWinOnHorizontalLine(insertionRow, columnIndex, opponentMove)
+        || checkWinOnLeftDiagonalLine(insertionRow, columnIndex, opponentMove)
+        || checkWinOnRightDiagonalLine(insertionRow, columnIndex, opponentMove)) {
         matchFinished = true;
         result = opponentMove ? Result::LOSS : Result::WIN;
         return true;
@@ -255,8 +257,8 @@ std::string FourInARow::toString() const {
     for (auto i = 0; i < COLUMNS; i++) {
         boardPrint += ("  " + std::to_string(i) + " ");
     }
-    boardPrint += ("\n\nYou: O   " + opponent + ": X   Turn: " + std::to_string(turn)) + "\n";
 
+    boardPrint += ("\n\nYou: O   " + opponent + ": X   Turn: " + std::to_string(turn)) + "\n";
     return boardPrint;
 }
 

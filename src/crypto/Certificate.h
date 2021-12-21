@@ -8,7 +8,7 @@
 namespace fourinarow {
 
 /**
- * Class representing a X509 certificate.
+ * Class representing an X509 certificate.
  */
 class Certificate {
     private:
@@ -55,7 +55,7 @@ class Certificate {
         /**
          * Returns a string containing the distinguished name saved in the certificate.
          * @return  the distinguished name.
-         * @throws CryptoException  if an error occurred while retrieving the name.
+         * @throws CryptoException  if an error occurs while retrieving the name.
          */
         std::string getDistinguishedName() const;
 
@@ -63,7 +63,7 @@ class Certificate {
          * Returns the public key saved in the certificate, in a format suitable
          * for the OpenSSL API. The returned key must not be freed up after use.
          * @return  the public key.
-         * @throws CryptoException  if an error occurred while retrieving the public key.
+         * @throws CryptoException  if an error occurs while retrieving the public key.
          */
         const EVP_PKEY* getPublicKey() const;
 };

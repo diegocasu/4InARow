@@ -115,7 +115,7 @@ const std::vector<unsigned char>& ServerHello::getPublicKey() const {
     return publicKey;
 }
 
-const std::vector<unsigned char> &ServerHello::getDigitalSignature() const {
+const std::vector<unsigned char>& ServerHello::getDigitalSignature() const {
     return digitalSignature;
 }
 

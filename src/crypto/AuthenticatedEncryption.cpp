@@ -15,6 +15,7 @@ AuthenticatedEncryption::~AuthenticatedEncryption() {
     if (!key.empty()) {
         cleanse(key);
     }
+
     if (!iv.empty()) {
         cleanse(iv);
     }
@@ -27,10 +28,11 @@ AuthenticatedEncryption::AuthenticatedEncryption(AuthenticatedEncryption &&that)
     that.iv = std::vector<unsigned char>();
 }
 
-AuthenticatedEncryption &AuthenticatedEncryption::operator=(AuthenticatedEncryption &&that) noexcept {
+AuthenticatedEncryption& AuthenticatedEncryption::operator=(AuthenticatedEncryption &&that) noexcept {
     if (!key.empty()) {
         cleanse(key);
     }
+
     if (!iv.empty()) {
         cleanse(iv);
     }

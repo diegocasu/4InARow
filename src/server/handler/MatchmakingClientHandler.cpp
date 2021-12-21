@@ -26,7 +26,7 @@ void MatchmakingClientHandler::cancelMatchmaking(Player &player, PlayerList &pla
         cancelMatchmakingStatus(findPlayerByUsername(playerList, player.getMatchmakingPlayer()).second, statusList);
     } catch (const std::exception &exception) {
         std::cout << "Critical error: cannot cancel the matchmaking status of " << player.getMatchmakingPlayer() << ". ";
-        std::cout << "Reason: " << exception.what() << std::endl;
+        std::cout << exception.what() << std::endl;
     }
 
     cancelMatchmakingStatus(player, statusList);
@@ -60,7 +60,7 @@ bool MatchmakingClientHandler::forwardChallengeResponse(const TcpSocket &challen
         challengerSocket.send(encryptAndAuthenticate(&challengeResponse, challengerPlayer));
         return true;
     } catch (const std::exception &exception) {
-        std::cerr << "Error while forwarding the message: " << exception.what() << std::endl;
+        std::cerr << "Error while forwarding the message. " << exception.what() << std::endl;
 
         /*
          * Rollback and removal of the challenger player.
@@ -85,7 +85,7 @@ bool MatchmakingClientHandler::sendPlayerMessageToChallenger(const TcpSocket &ch
         challengerSocket.send(encryptAndAuthenticate(&message, challengerPlayer));
         return true;
     } catch (const std::exception &exception) {
-        std::cerr << "Error while sending the message: " << exception.what() << std::endl;
+        std::cerr << "Error while sending the message. " << exception.what() << std::endl;
 
         /*
          * Rollback and removal of the challenger player
@@ -173,22 +173,22 @@ void MatchmakingClientHandler::handle(const TcpSocket &socket,
         InfoMessage protocolViolation(PROTOCOL_VIOLATION);
         socket.send(encryptAndAuthenticate(&protocolViolation, player));
     } catch (const SocketException &exception) {
-        std::cerr << "Error while handling the message: " << exception.what() << std::endl;
+        std::cerr << "Error while handling the message. " << exception.what() << std::endl;
         cancelMatchmaking(player, playerList, statusList);
         removalList.insert(player.getUsername());
 
     } catch (const SerializationException &exception) {
-        std::cerr << "Error while handling the message: " << exception.what() << std::endl;
+        std::cerr << "Error while handling the message. " << exception.what() << std::endl;
         cancelMatchmaking(player, playerList, statusList);
         failSafeSendErrorInCiphertext(socket, player, InfoMessage(MALFORMED_MESSAGE), removalList);
 
     } catch (const CryptoException &exception) {
-        std::cerr << "Error while handling the message: " << exception.what() << std::endl;
+        std::cerr << "Error while handling the message. " << exception.what() << std::endl;
         cancelMatchmaking(player, playerList, statusList);
         failSafeSendErrorInCiphertext(socket, player, InfoMessage(MALFORMED_MESSAGE), removalList);
 
     } catch (const std::exception &exception) {
-        std::cerr << "Error while handling the message: " << exception.what() << std::endl;
+        std::cerr << "Error while handling the message. " << exception.what() << std::endl;
         cancelMatchmaking(player, playerList, statusList);
         failSafeSendErrorInCiphertext(socket, player, InfoMessage(INTERNAL_ERROR), removalList);
         removalList.insert(player.getUsername());

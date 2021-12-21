@@ -8,7 +8,7 @@
 namespace fourinarow {
 
 /**
- * Class representing a PLAYER2_HELLO message.
+ * Class representing a <code>PLAYER2_HELLO</code> message.
  */
 class Player2Hello : public Message {
     private:
@@ -23,15 +23,15 @@ class Player2Hello : public Message {
                      std::vector<unsigned char> digitalSignature);
         ~Player2Hello() override = default;
 
-        Player2Hello(Player2Hello &&) = default;
+        Player2Hello(Player2Hello&&) = default;
         Player2Hello(const Player2Hello&) = default;
         Player2Hello& operator=(const Player2Hello&) = default;
         Player2Hello& operator=(Player2Hello&&) = default;
 
         uint8_t getType() const;
-        const std::vector<unsigned char> &getNonce() const;
-        const std::vector<unsigned char> &getPublicKey() const;
-        const std::vector<unsigned char> &getDigitalSignature() const;
+        const std::vector<unsigned char>& getNonce() const;
+        const std::vector<unsigned char>& getPublicKey() const;
+        const std::vector<unsigned char>& getDigitalSignature() const;
 
         std::vector<unsigned char> serialize() const override;
         void deserialize(const std::vector<unsigned char> &message) override;

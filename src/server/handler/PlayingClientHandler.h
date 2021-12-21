@@ -6,8 +6,7 @@
 namespace fourinarow {
 
 /**
- * Class representing a handler for messages sent by a player
- * in the <code>PLAYING</code> status.
+ * Class representing a handler for messages sent by a player in the <code>PLAYING</code> status.
  */
 class PlayingClientHandler : public Handler {
     private:
@@ -21,10 +20,10 @@ class PlayingClientHandler : public Handler {
     public:
         PlayingClientHandler() = delete;
         ~PlayingClientHandler() = delete;
-        PlayingClientHandler(const PlayingClientHandler &) = delete;
-        PlayingClientHandler(PlayingClientHandler &&) = delete;
-        PlayingClientHandler &operator=(const PlayingClientHandler &) = delete;
-        PlayingClientHandler &operator=(PlayingClientHandler &&) = delete;
+        PlayingClientHandler(const PlayingClientHandler&) = delete;
+        PlayingClientHandler(PlayingClientHandler&&) = delete;
+        PlayingClientHandler &operator=(const PlayingClientHandler&) = delete;
+        PlayingClientHandler &operator=(PlayingClientHandler&&) = delete;
 
         /**
          * Handles a message sent by a player in the <code>PLAYING</code> status.

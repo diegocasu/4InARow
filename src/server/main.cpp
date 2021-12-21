@@ -45,7 +45,7 @@ void printHelp() {
  * @param argc           the number of arguments passed via command line.
  * @param argv           the arguments passed via command line.
  * @param serverAddress  a reference to the variable that will store the server address.
- * @return               true if all and only the required arguments were supplied via
+ * @return               true if all and only the required arguments are supplied via
  *                       command line, false otherwise.
  */
 bool parseArguments(int argc, char *argv[], std::string &serverAddress) {
@@ -69,7 +69,7 @@ bool parseArguments(int argc, char *argv[], std::string &serverAddress) {
  * serialized in binary format, ready to be sent through a socket.
  * @param path  the path of the certificate file.
  * @return      the certificate of the server in binary format.
- * @throws runtime_error  if an error occurred while loading the certificate.
+ * @throws runtime_error  if an error occurs while loading the certificate.
  */
 std::vector<unsigned char> loadCertificate(const std::string &path) {
     std::cout << "Loading the server certificate " << path << std::endl;
@@ -77,7 +77,7 @@ std::vector<unsigned char> loadCertificate(const std::string &path) {
     try {
         return fourinarow::CertificateStore::serializeCertificate(path);
     } catch (const std::exception &exception) {
-        std::cerr << "Impossible to load the certificate: " << exception.what() << std::endl;
+        std::cerr << "Impossible to load the certificate. " << exception.what() << std::endl;
         throw std::runtime_error("Cannot load the certificate");
     }
 }
@@ -87,7 +87,7 @@ std::vector<unsigned char> loadCertificate(const std::string &path) {
  * in PEM format in a file.
  * @param path  the path of the private key file.
  * @return      the digital signature object.
- * @throws runtime_error  if an error occurred while loading the private key.
+ * @throws runtime_error  if an error occurs while loading the private key.
  */
 fourinarow::DigitalSignature createDigitalSignature(const std::string &path) {
     std::cout << "Creating the digital signature tool using the private key " << path << std::endl;
@@ -95,7 +95,7 @@ fourinarow::DigitalSignature createDigitalSignature(const std::string &path) {
     try {
         return fourinarow::DigitalSignature(path);
     } catch (const std::exception &exception) {
-        std::cerr << "Impossible to create the digital signature tool: " << exception.what() << std::endl;
+        std::cerr << "Impossible to create the digital signature tool. " << exception.what() << std::endl;
         throw std::runtime_error("Cannot create the digital signature tool");
     }
 }
@@ -105,6 +105,7 @@ fourinarow::DigitalSignature createDigitalSignature(const std::string &path) {
  * sets it in a listening state.
  * @param serverAddress  the address to which the socket will bind.
  * @return               the TCP hello socket.
+ * @throws runtime_error  if an error occurs while creating the socket.
  */
 fourinarow::TcpSocket createHelloSocket(const std::string &serverAddress) {
     std::cout << "Starting the hello socket on " << serverAddress << ':' << fourinarow::SERVER_PORT << std::endl;
@@ -115,7 +116,7 @@ fourinarow::TcpSocket createHelloSocket(const std::string &serverAddress) {
         helloSocket.listen(fourinarow::BACKLOG_SIZE);
         return helloSocket;
     } catch (const std::exception &exception) {
-        std::cerr << "Impossible to start the socket: " << exception.what() << std::endl;
+        std::cerr << "Impossible to start the socket. " << exception.what() << std::endl;
         throw std::runtime_error("Cannot start the hello socket");
     }
 }
@@ -202,7 +203,7 @@ bool isInsideRemovalList(const PlayerRemovalList &removalList, const fourinarow:
 }
 
 /**
- * Disconnects the client by removing the corresponding entries in
+ * Disconnects the client, removing the corresponding entries in
  * the player list, the player status list and the player removal list.
  * Moreover, the corresponding socket is removed from the multiplexer.
  * The iterator passed to the function is automatically updated to point
@@ -352,7 +353,7 @@ int main(int argc, char *argv[]) {
 
         startService(helloSocket, multiplexer, playerList, statusList, removalList, certificate, digitalSignature);
     } catch (const std::exception &exception) {
-        std::cerr << "Fatal error: " << exception.what() << std::endl;
+        std::cerr << "Fatal error. " << exception.what() << std::endl;
         return 1;
     }
 }

@@ -6,8 +6,7 @@
 namespace fourinarow {
 
 /**
- * Class representing a handler for messages sent by a player
- * in the <code>AVAILABLE</code> status.
+ * Class representing a handler for messages sent by a player in the <code>AVAILABLE</code> status.
  */
 class AvailableClientHandler : public Handler {
     private:
@@ -45,8 +44,8 @@ class AvailableClientHandler : public Handler {
          * @param socket      the socket used to communicate.
          * @param player      the player.
          * @param statusList  the player status list.
-         * @throws  SocketException  if an error occurred while sending the response.
-         * @throws  CryptoException  if an error occurred while encrypting the response,
+         * @throws  SocketException  if an error occurs while sending the response.
+         * @throws  CryptoException  if an error occurs while encrypting the response,
          *                           or the maximum sequence number has been reached.
          */
         static void handleSendPlayerList(const TcpSocket &socket,

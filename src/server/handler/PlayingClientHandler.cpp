@@ -31,19 +31,19 @@ void PlayingClientHandler::handle(const TcpSocket &socket,
         InfoMessage protocolViolation(PROTOCOL_VIOLATION);
         socket.send(encryptAndAuthenticate(&protocolViolation, player));
     } catch (const SocketException &exception) {
-        std::cerr << "Error while handling the message: " << exception.what() << std::endl;
+        std::cerr << "Error while handling the message. " << exception.what() << std::endl;
         removalList.insert(player.getUsername());
 
     } catch (const SerializationException &exception) {
-        std::cerr << "Error while handling the message: " << exception.what() << std::endl;
+        std::cerr << "Error while handling the message. " << exception.what() << std::endl;
         failSafeSendErrorInCiphertext(socket, player, InfoMessage(MALFORMED_MESSAGE), removalList);
 
     } catch (const CryptoException &exception) {
-        std::cerr << "Error while handling the message: " << exception.what() << std::endl;
+        std::cerr << "Error while handling the message. " << exception.what() << std::endl;
         failSafeSendErrorInCiphertext(socket, player, InfoMessage(MALFORMED_MESSAGE), removalList);
 
     } catch (const std::exception &exception) {
-        std::cerr << "Error while handling the message: " << exception.what() << std::endl;
+        std::cerr << "Error while handling the message. " << exception.what() << std::endl;
         failSafeSendErrorInCiphertext(socket, player, InfoMessage(INTERNAL_ERROR), removalList);
         removalList.insert(player.getUsername());
     }

@@ -13,7 +13,7 @@ namespace fourinarow {
  * It allows to add certificates and certificate revocation lists, and
  * to verify untrusted ones against them. Moreover, it offers methods
  * to serialize and deserialize certificates using the DER format.
- * The store assumes a X509 format for all the items.
+ * The store assumes an X509 format for all the items.
  */
 class CertificateStore {
     private:
@@ -41,7 +41,7 @@ class CertificateStore {
     public:
         /**
          * Creates an empty certificate store.
-         * @throws CryptoException  if an error occurred while initializing the store.
+         * @throws CryptoException  if an error occurs while initializing the store.
          */
         CertificateStore();
 
@@ -92,7 +92,7 @@ class CertificateStore {
          * @param certificate  the untrusted certificate.
          * @return             true if the certificate is valid, false otherwise.
          * @throws CryptoException  if the store has no loaded certificates, or an error
-         *                          occurred while verifying the certificate.
+         *                          occurs while verifying the certificate.
          */
         bool verifyCertificate(const Certificate &certificate) const;
 
@@ -101,7 +101,7 @@ class CertificateStore {
          * @param path  the file path.
          * @return      the serialized certificate.
          * @throws CryptoException         if the file cannot be opened or the certificate cannot be loaded.
-         * @throws SerializationException  if an error occurred while serializing the certificate.
+         * @throws SerializationException  if an error occurs while serializing the certificate.
          */
         static std::vector<unsigned char> serializeCertificate(const std::string &path);
 

@@ -48,8 +48,8 @@ class GameHandler : public Handler {
         static bool isExitCommand(const unsigned int &command);
 
         /**
-         * Parses a command of the user. The method does not return
-         * until the supplied command is a valid one.
+         * Parses a command of the user.
+         * The method does not return until the supplied command is a valid one.
          * @return  the command inserted by the user.
          */
         static unsigned int parseCommand();
@@ -67,11 +67,11 @@ class GameHandler : public Handler {
          * @param socket     the socket used to communicate with the opponent.
          * @param opponent   the object storing the quantities derived in the handshake with the player.
          * @param gameBoard  the game board.
-         * @return           true if the match has finished or the user wants to leave the match,
+         * @return           true if the match is finished or the user wants to leave the match,
          *                   false otherwise.
-         * @throws SocketException         if an error occurred while sending the move to the opponent.
-         * @throws SerializationException  if an error occurred while serializing the move.
-         * @throws CryptoException         if an error occurred while encrypting the move, or the maximum
+         * @throws SocketException         if an error occurs while sending the move to the opponent.
+         * @throws SerializationException  if an error occurs while serializing the move.
+         * @throws CryptoException         if an error occurs while encrypting the move, or the maximum
          *                                 sequence number has been reached.
          */
         static bool handleUserTurn(const TcpSocket &socket, Player &opponent, FourInARow &gameBoard);
@@ -81,10 +81,10 @@ class GameHandler : public Handler {
          * @param socket     the socket used to communicate with the opponent.
          * @param opponent   the object storing the quantities derived in the handshake with the player.
          * @param gameBoard  the game board.
-         * @return           true if the move was valid and the match has not ended, false otherwise.
-         * @throws SocketException         if an error occurred while receiving the move from the opponent.
-         * @throws SerializationException  if an error occurred while deserializing the received message.
-         * @throws CryptoException         if an error occurred while decrypting the message, or the maximum
+         * @return           true if the move is valid and does not end the match, false otherwise.
+         * @throws SocketException         if an error occurs while receiving the move from the opponent.
+         * @throws SerializationException  if an error occurs while deserializing the received message.
+         * @throws CryptoException         if an error occurs while decrypting the message, or the maximum
          *                                 sequence number has been reached.
          */
         static bool receiveOpponentMove(const TcpSocket &socket, Player &opponent, FourInARow &gameBoard);
@@ -109,11 +109,11 @@ class GameHandler : public Handler {
                            bool firstToPlay);
 
         /**
-         * Sens a <code>END_GAME</code> message to the server to notify
+         * Sends a <code>END_GAME</code> message to the server to notify
          * that the P2P match has ended and the player is available.
          * @param serverSocket     the socket used to communicate with the server.
          * @param myselfForServer  the object storing the quantities derived in the handshake with the server.
-         * @throws runtime_error  if an error occurred while sending the message to the server.
+         * @throws runtime_error  if an error occurs while sending the message to the server.
          */
         static void sendEndGame(const TcpSocket &serverSocket, Player &myselfForServer);
 };

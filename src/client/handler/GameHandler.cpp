@@ -156,7 +156,7 @@ void GameHandler::handle(const TcpSocket &socket,
             }
         }
     } catch (const std::exception &exception) {
-        std::cerr << "\nCommunication error: " << exception.what() << std::endl;
+        std::cerr << "\nCommunication error. " << exception.what() << std::endl;
         std::cerr << "Returning to the main menu...\n" << std::endl;
     }
 }
@@ -166,7 +166,7 @@ void GameHandler::sendEndGame(const TcpSocket &serverSocket, Player &myselfForSe
         InfoMessage endGame(END_GAME);
         serverSocket.send(encryptAndAuthenticate(&endGame, myselfForServer));
     } catch (const std::exception &exception) {
-        std::cerr << "Cannot notify the server about the end of the match: " << exception.what() << std::endl;
+        std::cerr << "Cannot notify the server about the end of the match. " << exception.what() << std::endl;
         throw std::runtime_error("Cannot notify end game");
     }
 

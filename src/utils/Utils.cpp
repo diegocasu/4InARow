@@ -66,6 +66,7 @@ std::string convertMessageType(const uint8_t &messageType) {
     if (messageType == REQ_PLAYER_LIST)          return "REQ_PLAYER_LIST";
     if (messageType == PLAYER_LIST)              return "PLAYER_LIST";
     if (messageType == CHALLENGE)                return "CHALLENGE";
+    if (messageType == PLAYER_NOT_REGISTERED)    return "PLAYER_NOT_REGISTERED";
     if (messageType == PLAYER_NOT_AVAILABLE)     return "PLAYER_NOT_AVAILABLE";
     if (messageType == PLAYER_ALREADY_CONNECTED) return "PLAYER_ALREADY_CONNECTED";
     if (messageType == CHALLENGE_REFUSED)        return "CHALLENGE_REFUSED";
@@ -74,7 +75,6 @@ std::string convertMessageType(const uint8_t &messageType) {
     if (messageType == GOODBYE)                  return "GOODBYE";
     if (messageType == MOVE)                     return "MOVE";
     if (messageType == END_GAME)                 return "END_GAME";
-    if (messageType == PLAYER_NOT_REGISTERED)    return "PLAYER_NOT_REGISTERED";
     if (messageType == PROTOCOL_VIOLATION)       return "PROTOCOL_VIOLATION";
     if (messageType == MALFORMED_MESSAGE)        return "MALFORMED_MESSAGE";
     if (messageType == INTERNAL_ERROR)           return "INTERNAL_ERROR";

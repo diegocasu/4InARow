@@ -6,7 +6,7 @@ const unsigned short SERVER_PORT               = 5000;
 const unsigned short PLAYER_PORT               = 5001;
 const size_t BACKLOG_SIZE                      = 100;
 const unsigned long CLIENT_MATCHMAKING_TIMEOUT = 30;                       // In seconds.
-const unsigned int P2P_MAX_CONNECTION_RETRIES  = 3;                        // Each retry is interleaved with 1 second of sleep.
+const unsigned int P2P_MAX_CONNECTION_RETRIES  = 3;                        // Each retry is interleaved by 1 second of sleep.
 const unsigned int MAX_TURN_DURATION           = 90;                       // In seconds.
 
 const std::string SERVER_CERTIFICATE_FOLDER    = "./certificate/";
@@ -46,9 +46,9 @@ const uint8_t MAX_USERNAME_SIZE                = 255;
 const uint8_t ECDH_PUBLIC_KEY_SIZE             = 91;                       // ECDH with prime256v1 curve, DER format.
 const uint16_t RSA_PUBLIC_KEY_SIZE             = 294;                      // RSA-2048, DER format.
 const uint16_t DIGITAL_SIGNATURE_SIZE          = 256;                      // RSA-2048 digital signatures.
-const uint8_t KEY_SIZE                         = 16;                       // AES-128 GCM
-const uint8_t IV_SIZE                          = 12;                       // AES-128 GCM
-const uint8_t TAG_SIZE                         = 16;                       // AES-128 GCM
+const uint8_t KEY_SIZE                         = 16;                       // AES-128 GCM.
+const uint8_t IV_SIZE                          = 12;                       // AES-128 GCM.
+const uint8_t TAG_SIZE                         = 16;                       // AES-128 GCM.
 
 const uint16_t MAX_CERTIFICATE_SIZE            = MAX_MSG_SIZE -            // Size derived from the composition of SERVER_HELLO.
                                                  sizeof(uint8_t) -         // sizeof(uint8_t) refers to the "type" field size,

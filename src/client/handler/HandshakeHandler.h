@@ -8,8 +8,7 @@
 namespace fourinarow {
 
 /**
- * Class representing a handler for the handshake with the server
- * or with another client.
+ * Class representing a handler for the handshake with the server or with another client.
  */
 class HandshakeHandler : public Handler {
     private:
@@ -20,7 +19,7 @@ class HandshakeHandler : public Handler {
          * @param socket           the socket used to communicate with the server.
          * @param myselfForServer  the object storing the quantities needed for the handshake.
          * @param username         the username of the client.
-         * @throws runtime_error  if an error occurred while sending the <code>CLIENT_HELLO</code> message.
+         * @throws runtime_error  if an error occurs while sending the <code>CLIENT_HELLO</code> message.
          */
         static void sendClientHello(const TcpSocket &socket, Player &myselfForServer, const std::string &username);
 
@@ -37,9 +36,9 @@ class HandshakeHandler : public Handler {
          * @param socket            the socket used to communicate with the server.
          * @param myselfForServer   the object storing the quantities needed for the handshake.
          * @param certificateStore  the certificate store used to verify untrusted certificates.
-         * @throws runtime_error  if an error occurred while receiving the <code>SERVER_HELLO</code> message,
-         *                        or the server certificate is invalid, or the digital signature of the
-         *                        freshness proof is invalid.
+         * @throws runtime_error  if an error occurs while receiving the <code>SERVER_HELLO</code> message,
+         *                        or the server certificate is invalid,
+         *                        or the digital signature of the freshness proof is invalid.
          */
         static void receiveServerHello(const TcpSocket &socket,
                                        Player &myselfForServer,
@@ -52,7 +51,7 @@ class HandshakeHandler : public Handler {
          * @param myselfForServer   the object storing the quantities needed for the handshake.
          * @param digitalSignature  the digital signature tool.
          * @return                  the first player list.
-         * @throws runtime_error  if an error occurred while sending the <code>END_HANDSHAKE</code> message,
+         * @throws runtime_error  if an error occurs while sending the <code>END_HANDSHAKE</code> message,
          *                        or deriving the session key, or receiving the <code>PLAYER_LIST</code> message.
          */
         static std::string endHandshake(const TcpSocket &socket,
@@ -65,7 +64,7 @@ class HandshakeHandler : public Handler {
          * <code>P2P_MAX_CONNECTION_RETRIES</code> is reached.
          * @param socket              the socket used to communicate with the other player.
          * @param otherPlayerAddress  the IPv4 address of the other player.
-         * @throws SocketException  if the connection to the remote player has failed.
+         * @throws SocketException  if the connection to the remote player fails.
          */
         static void connectToPlayer(TcpSocket &socket, const std::string &otherPlayerAddress);
 
@@ -77,7 +76,7 @@ class HandshakeHandler : public Handler {
          * @param socket              the socket used to communicate with the other player.
          * @param otherPlayerAddress  the IPv4 address of the other player.
          * @return                    the socket used to communicate with the player.
-         * @throws SocketException  if the connection with the remote player failed.
+         * @throws SocketException  if the connection with the remote player fails.
          */
         static TcpSocket waitForPlayerConnection(TcpSocket &socket, const std::string &otherPlayerAddress);
 
@@ -85,7 +84,7 @@ class HandshakeHandler : public Handler {
          * Sends a <code>PLAYER1_HELLO</code> message to the other player, starting the handshake.
          * @param socket             the socket used to communicate with the player.
          * @param myselfForOpponent  the object storing the quantities needed for the handshake.
-         * @throws runtime_error  if an error occurred while sending the message.
+         * @throws runtime_error  if an error occurs while sending the message.
          */
         static void sendPlayer1Hello(const TcpSocket &socket, Player &myselfForOpponent);
 
@@ -95,8 +94,8 @@ class HandshakeHandler : public Handler {
          * @param socket            the socket used to communicate with the player.
          * @param opponent          the object storing the quantities needed for the handshake.
          * @param digitalSignature  the digital signature tool.
-         * @throws runtime_error    if an error occurred while receiving the message or responding.
-         * @throws SocketException  if an error occurred while sending an error message.
+         * @throws runtime_error    if an error occurs while receiving the message or responding.
+         * @throws SocketException  if an error occurs while sending an error message.
          */
         static void handlePlayer1Hello(const TcpSocket &socket,
                                        Player &opponent,
@@ -109,7 +108,7 @@ class HandshakeHandler : public Handler {
          * @param playerMessage      the <code>PLAYER</code> message sent by the server,
          *                           containing the public key used to verify the digital signature
          *                           of the freshness proof.
-         * @throws runtime_error  if an error occurred while receiving the message,
+         * @throws runtime_error  if an error occurs while receiving the message,
          *                        or the digital signature of the freshness proof is invalid.
          */
         static void receivePlayer2Hello(const TcpSocket &socket,
@@ -124,8 +123,8 @@ class HandshakeHandler : public Handler {
          * @param playerMessage  the <code>PLAYER</code> message sent by the server,
          *                       containing the public key used to verify the digital signature
          *                       of the freshness proof.
-         * @throws runtime_error    if an error occurred while receiving the message.
-         * @throws SocketException  if an error occurred while sending an error message.
+         * @throws runtime_error    if an error occurs while receiving the message.
+         * @throws SocketException  if an error occurs while sending an error message.
          */
         static void handleEndHandshakeP2P(const TcpSocket &socket,
                                           Player &opponent,
@@ -157,7 +156,7 @@ class HandshakeHandler : public Handler {
          * @param certificateStore  the certificate store used to verify untrusted certificates.
          * @param digitalSignature  the digital signature tool.
          * @return                  the first player list.
-         * @throws runtime_error  if the handshake has failed.
+         * @throws runtime_error  if the handshake fails.
          */
         static std::string doHandshakeWithServer(const TcpSocket &socket,
                                                  Player &myselfForServer,

@@ -7,7 +7,7 @@
 namespace fourinarow {
 
 /**
- * Class representing a END_HANDSHAKE message.
+ * Class representing a <code>END_HANDSHAKE</code> message.
  */
 class EndHandshake : public Message {
     private:
@@ -18,7 +18,7 @@ class EndHandshake : public Message {
         explicit EndHandshake(std::vector<unsigned char> digitalSignature);
         ~EndHandshake() override = default;
 
-        EndHandshake(EndHandshake &&) = default;
+        EndHandshake(EndHandshake&&) = default;
         EndHandshake(const EndHandshake&) = default;
         EndHandshake& operator=(const EndHandshake&) = default;
         EndHandshake& operator=(EndHandshake&&) = default;

@@ -8,7 +8,7 @@
 namespace fourinarow {
 
 /**
- * Class representing a SERVER_HELLO message.
+ * Class representing a <code>SERVER_HELLO</code> message.
  */
 class ServerHello : public Message {
     private:
@@ -25,7 +25,7 @@ class ServerHello : public Message {
                     std::vector<unsigned char> digitalSignature);
         ~ServerHello() override = default;
 
-        ServerHello(ServerHello &&) = default;
+        ServerHello(ServerHello&&) = default;
         ServerHello(const ServerHello&) = default;
         ServerHello& operator=(const ServerHello&) = default;
         ServerHello& operator=(ServerHello&&) = default;

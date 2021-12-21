@@ -27,9 +27,9 @@ bool PreGameHandler::isChallengeCommand(const unsigned int &command, const std::
 }
 
 bool PreGameHandler::isChallengeResponseMessage(const uint8_t &type) {
-    return type == PLAYER_NOT_AVAILABLE ||
-           type == CHALLENGE_REFUSED ||
-           type == CHALLENGE_ACCEPTED;
+    return type == PLAYER_NOT_AVAILABLE
+           || type == CHALLENGE_REFUSED
+           || type == CHALLENGE_ACCEPTED;
 }
 
 void PreGameHandler::clearStdin() {
@@ -170,7 +170,7 @@ bool PreGameHandler::handleIncomingMessage(const TcpSocket &socket,
         printAvailableCommands(playerList);
         return false;
     } catch (const std::exception &exception) {
-        std::cerr << "\nCommunication error: " << exception.what() << std::endl;
+        std::cerr << "\nCommunication error. " << exception.what() << std::endl;
         throw std::runtime_error("Lost connection with the server");
     }
 }
@@ -208,7 +208,7 @@ void PreGameHandler::handlePlayerListRefreshCommand(const TcpSocket &socket,
         printAvailableCommands(currentPlayerList);
 
     } catch (const std::exception &exception) {
-        std::cerr << "Impossible to handle the player list refresh: ";
+        std::cerr << "Impossible to handle the player list refresh. ";
         std::cerr << exception.what() << std::endl;
         throw std::runtime_error("Cannot handle the player list refresh");
     }
@@ -219,7 +219,7 @@ void PreGameHandler::handleExitCommand(const TcpSocket &socket, Player &myselfFo
         InfoMessage goodbye(GOODBYE);
         socket.send(encryptAndAuthenticate(&goodbye, myselfForServer));
     } catch (const std::exception &exception) {
-        std::cerr << "Impossible to notify the server about the application exit: " << exception.what() << std::endl;
+        std::cerr << "Impossible to notify the server about the application exit. " << exception.what() << std::endl;
         throw std::runtime_error("Cannot notify the server about exit");
     }
 }
@@ -343,7 +343,7 @@ bool PreGameHandler::handleChallengeCommand(const TcpSocket &socket,
         printAvailableCommands(playerList);
         return false;
     } catch (const std::exception &exception) {
-        std::cerr << "Impossible to send the challenge: " << exception.what() << std::endl;
+        std::cerr << "Impossible to send the challenge. " << exception.what() << std::endl;
         throw std::runtime_error("Cannot send the challenge");
     }
 }

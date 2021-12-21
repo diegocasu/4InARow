@@ -24,7 +24,7 @@ const std::string &fourinarow::PlayerMessage::getIpAddress() const {
     return ipAddress;
 }
 
-const std::vector<unsigned char> &fourinarow::PlayerMessage::getPublicKey() const {
+const std::vector<unsigned char>& fourinarow::PlayerMessage::getPublicKey() const {
     return publicKey;
 }
 
@@ -35,6 +35,7 @@ bool fourinarow::PlayerMessage::isFirstToPlay() const {
 std::vector<unsigned char> PlayerMessage::serialize() const {
     sockaddr_in dummySockaddr;
     auto result = inet_pton(AF_INET, ipAddress.data(), &dummySockaddr.sin_addr);
+
     if (result == 0) {
         throw SerializationException("Invalid network address");
     }

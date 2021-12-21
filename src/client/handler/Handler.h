@@ -17,19 +17,18 @@ class Handler {
          * @param message  the message to encrypt and authenticate.
          * @param player   the player to which the message will be sent.
          * @return         the ciphertext concatenated with the tag.
-         * @throws SerializationException  if the message has not the expected format
-         * @throws CryptoException         if an error occurred while encrypting the message,
+         * @throws SerializationException  if the message has not the expected format.
+         * @throws CryptoException         if an error occurs while encrypting the message,
          *                                 or the maximum sequence number has been reached.
          */
         static std::vector<unsigned char> encryptAndAuthenticate(const Message *message, Player &player);
 
         /**
-         * Performs the authenticated decryption of the given message,
-         * returning the plaintext.
+         * Performs the authenticated decryption of the given message, returning the plaintext.
          * @param message  the encrypted message.
          * @param player   the player receiving the message.
          * @return         the decrypted message.
-         * @throws CryptoException  if an error occurred while decrypting the message,
+         * @throws CryptoException  if an error occurs while decrypting the message,
          *                          or the tag is not valid,
          *                          or the maximum sequence number has been reached.
          */

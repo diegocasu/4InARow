@@ -42,7 +42,7 @@ class DigitalSignature {
          * to free the memory allocated to hold the key.
          * @param publicKey  the public key, in binary format.
          * @return           the public key, in OpenSSL format.
-         * @throws CryptoException         if an error occurred while initializing the OpenSSL API.
+         * @throws CryptoException         if an error occurs while initializing the OpenSSL API.
          * @throws SerializationException  if the public key is not represented in a correct binary format.
          */
         static EVP_PKEY* deserializePublicKey(const std::vector<unsigned char> &serializedPublicKey);
@@ -84,7 +84,7 @@ class DigitalSignature {
          * Signs the SHA256 digest of a message.
          * @param message  the message to sign.
          * @return         the digital signature of the message.
-         * @throws CryptoException  if the message is empty, or an error occurred
+         * @throws CryptoException  if the message is empty, or an error occurs
          *                          while creating the signature.
          */
         std::vector<unsigned char> sign(const std::vector<unsigned char> &message) const;
@@ -97,7 +97,7 @@ class DigitalSignature {
          * @param publicKey  the public key used to verify the signature.
          * @return           true if the signature is valid, false otherwise.
          * @throws CryptoException  if the message, the signature or the public key are empty;
-         *                          if an error occurred while verifying the signature.
+         *                          if an error occurs while verifying the signature.
          */
         static bool verify(const std::vector<unsigned char> &message,
                            const std::vector<unsigned char> &signature,
@@ -113,7 +113,7 @@ class DigitalSignature {
          * @return           true if the signature is valid, false otherwise.
          * @throws CryptoException  if the message or the signature are empty;
          *                          if the file cannot be opened or the public key cannot be loaded;
-         *                          if an error occurred while verifying the signature.
+         *                          if an error occurs while verifying the signature.
          */
         static bool verify(const std::vector<unsigned char> &message,
                            const std::vector<unsigned char> &signature,
@@ -127,7 +127,7 @@ class DigitalSignature {
          * @param publicKey  the public key used to verify the signature.
          * @return           true if the signature is valid, false otherwise.
          * @throws CryptoException        if the message, the signature or the public key are empty;
-         *                                if an error occurred while verifying the signature.
+         *                                if an error occurs while verifying the signature.
          * @throws SerializationException if the public key is not represented in a correct binary format.
          */
         static bool verify(const std::vector<unsigned char> &message,
@@ -139,7 +139,7 @@ class DigitalSignature {
          * @param path  the path of the file containing the public key.
          * @return      the serialized key.
          * @throws CryptoException         if the file cannot be opened or the key cannot be loaded.
-         * @throws SerializationException  if an error occurred while serializing the key.
+         * @throws SerializationException  if an error occurs while serializing the key.
          */
         static std::vector<unsigned char> serializePublicKey(const std::string &path);
 };

@@ -7,6 +7,7 @@ namespace fourinarow {
 
 void DiffieHellman::generateParameters(EVP_PKEY **parameters) {
     EVP_PKEY_CTX *context = EVP_PKEY_CTX_new_id(EVP_PKEY_EC, nullptr);
+
     if (!context) {
         throw CryptoException(getOpenSslError());
     }
@@ -31,6 +32,7 @@ void DiffieHellman::generateParameters(EVP_PKEY **parameters) {
 
 void DiffieHellman::generateKeyPair(EVP_PKEY *parameters) {
     EVP_PKEY_CTX *context = EVP_PKEY_CTX_new(parameters, nullptr);
+
     if (!context) {
         throw CryptoException(getOpenSslError());
     }
@@ -86,8 +88,8 @@ DiffieHellman& DiffieHellman::operator=(DiffieHellman &&that) noexcept {
 
 std::vector<unsigned char> DiffieHellman::getSerializedPublicKey() const {
     unsigned char *publicKeyBuffer = nullptr;
-
     auto outputSize = i2d_PUBKEY(privateKey, &publicKeyBuffer);
+
     if (outputSize < 0) {
         throw SerializationException(getOpenSslError());
     }
@@ -101,8 +103,8 @@ std::vector<unsigned char> DiffieHellman::getSerializedPublicKey() const {
 
 EVP_PKEY* DiffieHellman::deserializePublicKey(const std::vector<unsigned char> &serializedPeerPublicKey) const {
     const unsigned char *buffer = serializedPeerPublicKey.data();
-
     EVP_PKEY *peerPublicKey = d2i_PUBKEY(nullptr, &buffer, serializedPeerPublicKey.size());
+
     if (!peerPublicKey) {
         throw CryptoException(getOpenSslError());
     }
@@ -120,6 +122,7 @@ std::vector<unsigned char> DiffieHellman::deriveSharedSecret(const std::vector<u
 
     // Derive the shared secret.
     EVP_PKEY_CTX *context = EVP_PKEY_CTX_new(privateKey, nullptr);
+
     if (!context) {
         EVP_PKEY_free(peerPublicKey);
         throw CryptoException(getOpenSslError());

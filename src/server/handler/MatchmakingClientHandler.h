@@ -7,8 +7,7 @@
 namespace fourinarow {
 
 /**
- * Class representing a handler for messages sent by a player
- * in the <code>MATCHMAKING</code> status.
+ * Class representing a handler for messages sent by a player in the <code>MATCHMAKING</code> status.
  */
 class MatchmakingClientHandler : public Handler {
     private:
@@ -63,12 +62,11 @@ class MatchmakingClientHandler : public Handler {
          * @param challengeResponseType  the challenge response type, either <code>CHALLENGE_ACCEPTED</code>
          *                               or <code>CHALLENGE_REFUSED</code>.
          * @param challengerPlayer       the challenger player.
-         * @param challengedPlayer       the challenged player. Used only to cancel
-         *                               the matchmaking status if an error occurs.
+         * @param challengedPlayer       the challenged player. Used only to cancel the matchmaking status
+         *                               if an error occurs.
          * @param statusList             the player status list.
          * @param removalList            the player removal list.
-         * @return                       true if the message was forwarded correctly,
-         *                               false otherwise.
+         * @return                       true if the message is forwarded correctly, false otherwise.
          */
         static bool forwardChallengeResponse(const TcpSocket &challengerSocket,
                                              const uint8_t challengeResponseType,
@@ -84,12 +82,11 @@ class MatchmakingClientHandler : public Handler {
          * @param challengerSocket       the socket used to communicate with the challenger.
          * @param message                the <code>PLAYER</code> message.
          * @param challengerPlayer       the challenger player.
-         * @param challengedPlayer       the challenged player. Used only to cancel
-         *                               the matchmaking status if an error occurs.
+         * @param challengedPlayer       the challenged player. Used only to cancel the matchmaking status
+         *                               if an error occurs.
          * @param statusList             the player status list.
          * @param removalList            the player removal list.
-         * @return                       true if the message was sent correctly,
-         *                               false otherwise.
+         * @return                       true if the message is sent correctly, false otherwise.
          */
         static bool sendPlayerMessageToChallenger(const TcpSocket &challengerSocket,
                                                   const PlayerMessage &message,
@@ -118,10 +115,10 @@ class MatchmakingClientHandler : public Handler {
     public:
         MatchmakingClientHandler() = delete;
         ~MatchmakingClientHandler() = delete;
-        MatchmakingClientHandler(const MatchmakingClientHandler &) = delete;
-        MatchmakingClientHandler(MatchmakingClientHandler &&) = delete;
-        MatchmakingClientHandler &operator=(const MatchmakingClientHandler &) = delete;
-        MatchmakingClientHandler &operator=(MatchmakingClientHandler &&) = delete;
+        MatchmakingClientHandler(const MatchmakingClientHandler&) = delete;
+        MatchmakingClientHandler(MatchmakingClientHandler&&) = delete;
+        MatchmakingClientHandler &operator=(const MatchmakingClientHandler&) = delete;
+        MatchmakingClientHandler &operator=(MatchmakingClientHandler&&) = delete;
 
         /**
          * Handles a message sent by a player in the <code>MATCHMAKING</code> status.

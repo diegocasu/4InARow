@@ -36,7 +36,7 @@ void printHelp() {
  * @param username       a reference to the variable that will store the username.
  * @param serverAddress  a reference to the variable that will store the server address.
  * @param clientAddress  a reference to the variable that will store the client address.
- * @return               true if all and only the required arguments were supplied via
+ * @return               true if all and only the required arguments are supplied via
  *                       command line, false otherwise.
  */
 bool parseArguments(int argc, char *argv[], std::string &username, std::string &serverAddress, std::string &clientAddress) {
@@ -79,11 +79,10 @@ bool parseArguments(int argc, char *argv[], std::string &username, std::string &
 }
 
 /**
- * Creates a digital signature object using a private key stored
- * in PEM format in a file.
+ * Creates a digital signature object using a private key stored in PEM format in a file.
  * @param path  the path of the private key file.
  * @return      the digital signature object.
- * @throws runtime_error  if an error occurred while loading the private key.
+ * @throws runtime_error  if an error occurs while loading the private key.
  */
 fourinarow::DigitalSignature createDigitalSignature(const std::string &path) {
     std::cout << "Creating the digital signature tool using the private key " << path << std::endl;
@@ -91,7 +90,7 @@ fourinarow::DigitalSignature createDigitalSignature(const std::string &path) {
     try {
         return fourinarow::DigitalSignature(path);
     } catch (const std::exception &exception) {
-        std::cerr << "Impossible to create the digital signature tool: " << exception.what() << std::endl;
+        std::cerr << "Impossible to create the digital signature tool. " << exception.what() << std::endl;
         throw std::runtime_error("Cannot create the digital signature tool");
     }
 }
@@ -102,7 +101,7 @@ fourinarow::DigitalSignature createDigitalSignature(const std::string &path) {
  * @param pathCertificate  the path of the file storing the certificate.
  * @param pathCRL          the path of the file storing the certificate revocation list.
  * @return                 the certificate store.
- * @throws runtime_error  if an error occurred while creating the store or loading the items.
+ * @throws runtime_error  if an error occurs while creating the store or loading the items.
  */
 fourinarow::CertificateStore createCertificateStore(const std::string &pathCertificate, const std::string &pathCRL) {
     std::cout << "Creating a certificate store holding the CA certificate " << pathCertificate;
@@ -114,7 +113,7 @@ fourinarow::CertificateStore createCertificateStore(const std::string &pathCerti
         certificateStore.addCertificateRevocationList(pathCRL);
         return certificateStore;
     } catch (const std::exception &exception) {
-        std::cerr << "Impossible to create the certificate store: " << exception.what() << std::endl;
+        std::cerr << "Impossible to create the certificate store. " << exception.what() << std::endl;
         throw std::runtime_error("Cannot create the certificate store");
     }
 }
@@ -124,8 +123,7 @@ fourinarow::CertificateStore createCertificateStore(const std::string &pathCerti
  * @param clientAddress  the address to which the socket will bind.
  * @param serverAddress  the address to which the socket will connect.
  * @return               the new socket.
- * @throws runtime_error  if an error occurred while creating and binding the socket,
- *                        or connecting to the remote address.
+ * @throws runtime_error  if an error occurs while creating, binding or connecting the socket.
  */
 fourinarow::TcpSocket connectToRemoteServer(const std::string &clientAddress, const std::string &serverAddress) {
     std::cout << "Connecting to the remote server " << serverAddress << ':' << fourinarow::SERVER_PORT;
@@ -146,7 +144,7 @@ fourinarow::TcpSocket connectToRemoteServer(const std::string &clientAddress, co
         serverSocket.connect(serverAddress, fourinarow::SERVER_PORT);
         return serverSocket;
     } catch (const std::exception &exception) {
-        std::cerr << "Impossible to connect to the remote server: " << exception.what() << std::endl;
+        std::cerr << "Impossible to connect to the remote server. " << exception.what() << std::endl;
         throw std::runtime_error("Cannot connect to the server");
     }
 }
@@ -197,7 +195,7 @@ int main(int argc, char *argv[]) {
             firstPlayerList = "";
         }
     } catch (const std::exception &exception) {
-        std::cerr << "Fatal error: " << exception.what() << std::endl;
+        std::cerr << "Fatal error. " << exception.what() << std::endl;
         return 1;
     }
 }

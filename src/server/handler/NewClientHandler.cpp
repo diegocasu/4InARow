@@ -18,7 +18,7 @@ void NewClientHandler::handle(TcpSocket &helloSocket, InputMultiplexer &multiple
         multiplexer.addDescriptor(newClientSocket.getDescriptor());
         playerList[std::move(newClientSocket)] = std::move(newPlayer);
     } catch (const std::exception &exception) {
-        std::cerr << "Impossible to accept the connection: " << exception.what() << std::endl;
+        std::cerr << "Impossible to accept the connection. " << exception.what() << std::endl;
         if (newDescriptor >= 0) {
             multiplexer.removeDescriptor(newDescriptor); // Rollback in case the insertion in playerList fails.
         }

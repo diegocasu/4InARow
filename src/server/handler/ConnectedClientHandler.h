@@ -8,8 +8,7 @@
 namespace fourinarow {
 
 /**
- * Class representing a handler for messages sent by a player
- * in the <code>CONNECTED</code> status.
+ * Class representing a handler for messages sent by a player in the <code>CONNECTED</code> status.
  */
 class ConnectedClientHandler : public Handler {
     private:
@@ -24,8 +23,7 @@ class ConnectedClientHandler : public Handler {
 
         /**
          * Checks if the given username is registered, namely if
-         * the server has a corresponding public key file in
-         * its dedicated folder.
+         * the server has a corresponding public key file in its dedicated folder.
          * @param username  the username of the client.
          * @return          true if the username is registered, false otherwise.
          */
@@ -42,9 +40,9 @@ class ConnectedClientHandler : public Handler {
          * @param statusList   the player status list.
          * @param clientHello  the <code>CLIENT_HELLO</code> message.
          * @param certificate  the certificate of the server.
-         * @throws CryptoException         if an error occurred while generating the nonce and the keys,
+         * @throws CryptoException         if an error occurs while generating the nonce and the keys,
          *                                 or while generating the proof of freshness.
-         * @throws SerializationException  if the message contains invalid username, nonce or key.
+         * @throws SerializationException  if the message contains an invalid username, nonce or key.
          */
         static void updatePlayerQuantities(Player &player,
                                            PlayerStatusList &statusList,
@@ -60,8 +58,7 @@ class ConnectedClientHandler : public Handler {
 
         /**
          * Handles a message sent by a player in the <code>CONNECTED</code> status.
-         * If an unrecoverable error is detected, the player is put
-         * into the removal list.
+         * If an unrecoverable error is detected, the player is put into the removal list.
          * @param socket            the socket used to communicate.
          * @param player            the player.
          * @param statusList        the player status list.

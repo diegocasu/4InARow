@@ -11,7 +11,7 @@ namespace fourinarow {
 /**
  * Class representing a socket using IPv4 addresses and exchanging data by means of the TCP protocol.
  * The socket allows to send and receive messages of at most <code>65535</code> bytes.
- * It is up to the user to manage fragmentation and reassembly for messages of bigger sizes.
+ * It is up to the user to manage fragmentation and reassembly for messages of bigger size.
  */
 class TcpSocket {
     private:
@@ -25,40 +25,41 @@ class TcpSocket {
 
         /**
          * Creates a TCP socket representing a socket already connected at system level.
-         * This constructor is useful to represent a socket created by a successful <code>accept()</code>.
+         * This constructor is useful to represent a socket created by
+         * a successful <code>accept()</code>.
          * @param descriptor             the descriptor of the socket.
-         * @param rawDestinationAddress  the structure representing the address to which the socket is connected.
+         * @param rawDestinationAddress  the structure representing the address
+         *                               to which the socket is connected.
          */
         TcpSocket(int descriptor, const sockaddr_in &rawDestinationAddress);
 
         /**
          * Returns a string containing a human readable description of the error
          * that occurred while operating on the socket.
-         * @return  the string containing a readable description of the error.
+         * @return  the string containing the error.
          */
         char* parseError() const;
 
         /**
-         * Sends all the bytes composing a binary message through a connected socket.
-         * @param buffer        the buffer containing the binary message.
+         * Sends all the bytes of a message through a connected socket.
+         * @param buffer        the buffer containing the message.
          * @param bufferLength  the length of the buffer.
-         * @throws SocketException  if the send operation fails.
+         * @throws SocketException  if the operation fails.
          */
         void sendAllBytes(const unsigned char *buffer, size_t bufferLength) const;
 
         /**
-         * Retrieves all the bytes composing a binary message from a connected socket.
+         * Receives all the bytes of a message from a connected socket.
          * @param buffer         the buffer that will hold the message.
          * @param numberOfBytes  the number of bytes composing the message.
-         * @throws SocketException  if the receive operation fails, or the remote socket has been closed.
+         * @throws SocketException  if the operation fails, or the remote socket has been closed.
          */
         void receiveAllBytes(unsigned char *buffer, size_t numberOfBytes) const;
     public:
         /**
-         * Creates a TCP socket using IPv4 addresses. The method requests only the creation
-         * of a system socket: the address to which bind or connect is specified
-         * with the dedicated methods.
-         * @throws SocketException  if the system socket cannot be created.
+         * Creates a TCP socket using IPv4 addresses.
+         * The method requests only the creation of a system socket.
+         * @throws SocketException  if the socket cannot be created.
          */
         TcpSocket();
 
@@ -90,20 +91,20 @@ class TcpSocket {
         TcpSocket(const TcpSocket&) = delete;
         TcpSocket& operator=(const TcpSocket&) = delete;
 
-        const std::string &getSourceAddress() const;
+        const std::string& getSourceAddress() const;
         unsigned short getSourcePort() const;
-        const std::string &getDestinationAddress() const;
+        const std::string& getDestinationAddress() const;
         unsigned short getDestinationPort() const;
         int getDescriptor() const;
 
         /**
-         * Returns the source address in the form ADDRESS:PORT.
+         * Returns the source address in the form <code>ADDRESS:PORT</code>.
          * @return  the full source address.
          */
         const std::string getFullSourceAddress() const;
 
         /**
-         * Returns the destination address in the form ADDRESS:PORT.
+         * Returns the destination address in the form <code>ADDRESS:PORT</code>.
          * @return  the full destination address.
          */
         const std::string getFullDestinationAddress() const;
@@ -112,7 +113,8 @@ class TcpSocket {
          * Binds the socket to the specified address.
          * @param address  the IPv4 address.
          * @param port     the port.
-         * @throws SocketException  if the given address is invalid, or the bind operation fails.
+         * @throws SocketException  if the given address is invalid,
+         *                          or the bind operation fails.
          */
         void bind(std::string address, unsigned short port);
 
@@ -126,18 +128,18 @@ class TcpSocket {
         /**
          * Accepts an incoming connection request. The method is blocking: the socket
          * waits until an incoming request arrives.
-         * @return  the socket representing a new connection with a client.
+         * @return  the socket representing the new connection.
          * @throws SocketException  if the connection cannot be accepted.
          */
         TcpSocket accept();
 
         /**
          * Connects the socket to the specified remote address. The method is blocking:
-         * the socket waits until the connection request is not accepted.
+         * the socket waits until the connection request is accepted.
          * @param address  the IPv4 address.
          * @param port     the port.
-         * @throws SocketException  if the given address is invalid, or
-         *                          the connection to the remote address fails.
+         * @throws SocketException  if the given address is invalid,
+         *                          or the connection to the remote address fails.
          */
         void connect(std::string address, unsigned short port);
 
@@ -146,32 +148,34 @@ class TcpSocket {
          * the socket waits until the entire message has been sent. A message can be
          * composed of at most <code>65535</code> bytes.
          * @param message  the binary message to send.
-         * @throws SocketException  if the message is empty, exceeds the maximum size,
-         *                          or an error occurred while performing the send.
+         * @throws SocketException  if the message is empty or exceeds the maximum size,
+         *                          or an error occurs while performing the send.
          */
         void send(const std::vector<unsigned char> &message) const;
 
         /**
-         * Retrieves a binary message from a connected socket. The method is blocking:
-         * the socket waits until the entire message sent by the other end has been
-         * received. A received message is composed of at most <code>65535</code> bytes.
+         * Receives a binary message from a connected socket. The method is blocking:
+         * the socket waits until the entire message has been received.
+         * A received message is composed of at most <code>65535</code> bytes.
          * @return  a binary message.
-         * @throws SocketException  if the message is empty, the remote socket has been closed,
-         *                          or an error occurred while performing the receive.
+         * @throws SocketException  if the message is empty,
+         *                          or an error occurs while performing the receive,
+         *                          or the remote socket has been closed.
          */
         std::vector<unsigned char> receive() const;
 
         /**
-         * Retrieves a binary message from a connected socket. The method is non-blocking:
+         * Receives a binary message from a connected socket. The method is non-blocking:
          * if no bytes have been received and the given number of seconds has passed,
-         * an exception is thrown. If the given number of seconds is equal to 0, the
-         * method becomes blocking, i.e. it acts as <code>receive()</code>.
+         * an exception is thrown. If the given number of seconds is equal to <code>0</code>,
+         * the method becomes blocking, i.e. it acts as <code>receive()</code>.
          * A received message is composed of at most <code>65535</code> bytes.
          * @param seconds  the timeout expressed in seconds.
          * @return         a binary message.
-         * @throws SocketException  if the message is empty, the remote socket has been closed,
-         *                          an error occurred while performing the receive,
-         *                          or the timeout has expired.
+         * @throws SocketException  if the message is empty,
+         *                          or an error occurs while performing the receive,
+         *                          or the timeout expires,
+         *                          or the remote socket has been closed.
          */
         std::vector<unsigned char> receiveWithTimeout(unsigned long seconds) const;
 

@@ -10,9 +10,8 @@ namespace fourinarow {
 /**
  * Class representing a "Four-in-a-row" game board.
  * It allows to register the moves of two players checking for their validity,
- * and to detect the end of the game.
- * The board is represented as a matrix in a bottom-up way, namely
- * the (0,0) element is the bottom-left space of the board.
+ * and to detect the end of the game. The board is represented as a matrix
+ * in a bottom-up way, namely the (0,0) element is the bottom-left space of the board.
  */
 class FourInARow {
     public:
@@ -36,7 +35,7 @@ class FourInARow {
          * @param columnIndex  the index of the column affected by the move.
          * @return             true if the move is valid, false otherwise.
          */
-        bool isValidMove(uint8_t columnIndex) const;
+        bool isValidMove(const uint8_t &columnIndex) const;
 
         /**
          * Checks if a vertical line of four aligned discs has been achieved by the player.
@@ -49,7 +48,7 @@ class FourInARow {
          * @return             true if a vertical line of four aligned discs has been achieved by
          *                     the player, false otherwise.
          */
-        bool checkWinOnVerticalLine(uint8_t rowIndex, uint8_t columnIndex, bool opponentMove) const;
+        bool checkWinOnVerticalLine(const uint8_t &rowIndex, const uint8_t &columnIndex, bool opponentMove) const;
 
         /**
          * Checks if a horizontal line of four aligned discs has been achieved by the player.
@@ -62,7 +61,7 @@ class FourInARow {
          * @return             true if a horizontal line of four aligned discs has been achieved by
          *                     the player, false otherwise.
          */
-        bool checkWinOnHorizontalLine(uint8_t rowIndex, uint8_t columnIndex, bool opponentMove) const;
+        bool checkWinOnHorizontalLine(const uint8_t &rowIndex, const uint8_t &columnIndex, bool opponentMove) const;
 
         /**
          * Checks if a left diagonal line of four aligned discs has been achieved by the player.
@@ -75,7 +74,7 @@ class FourInARow {
          * @return             true if a left diagonal line of four aligned discs has been achieved by
          *                     the player, false otherwise.
          */
-        bool checkWinOnLeftDiagonalLine(uint8_t rowIndex, uint8_t columnIndex, bool opponentMove) const;
+        bool checkWinOnLeftDiagonalLine(const uint8_t &rowIndex, const uint8_t &columnIndex, bool opponentMove) const;
 
         /**
          * Checks if a right diagonal line of four aligned discs has been achieved by the player.
@@ -88,12 +87,12 @@ class FourInARow {
          * @return             true if a right diagonal line of four aligned discs has been achieved by
          *                     the player, false otherwise.
          */
-        bool checkWinOnRightDiagonalLine(uint8_t rowIndex, uint8_t columnIndex, bool opponentMove) const;
+        bool checkWinOnRightDiagonalLine(const uint8_t &rowIndex, const uint8_t &columnIndex, bool opponentMove) const;
     public:
         explicit FourInARow(std::string opponent);
 
         /**
-         * Destroys the object and securely wipes the match information from memory.
+         * Destroys the object and securely wipes the information about the match from memory.
          */
         ~FourInARow();
 
@@ -104,8 +103,8 @@ class FourInARow {
 
         /**
          * Returns a flag signaling if the match has ended or not. A match ends
-         * when either one of the two players is able to achieve a vertical/horizontal/diagonal
-         * line of four discs, or the board has filled up.
+         * when either one of the two players is able to achieve a
+         * vertical/horizontal/diagonal line of four discs, or the board is full.
          * @return  true if the match has ended, false otherwise.
          */
         bool isMatchFinished() const;
@@ -128,7 +127,7 @@ class FourInARow {
          * @param opponentMove  true if the move is done by the opponent, false otherwise.
          * @return              true if the move was valid, false otherwise.
          */
-        bool registerMove(uint8_t columnIndex, bool opponentMove);
+        bool registerMove(const uint8_t &columnIndex, bool opponentMove);
 
         /**
          * Returns a string representing the board, the discs and the players.

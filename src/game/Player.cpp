@@ -102,7 +102,8 @@ void Player::setClientPublicKey(std::vector<unsigned char> publicKey) {
     checkEcdhPublicKeySize<SerializationException>(publicKey);
 
     if (clientKeys != nullptr) {
-        throw CryptoException("The key pair of the client has already been generated, so the public key cannot be set");
+        throw CryptoException("The key pair of the client has already been generated, "
+                              "so the public key cannot be set");
     }
 
     if (!serverPublicKey.empty()) {
@@ -117,7 +118,8 @@ void Player::setServerPublicKey(std::vector<unsigned char> publicKey) {
     checkEcdhPublicKeySize<SerializationException>(publicKey);
 
     if (serverKeys != nullptr) {
-        throw CryptoException("The key pair of the server has already been generated, so the public key cannot be set");
+        throw CryptoException("The key pair of the server has already been generated, "
+                              "so the public key cannot be set");
     }
 
     if (!clientPublicKey.empty()) {
@@ -204,7 +206,7 @@ void Player::initCipher() {
 
     /*
      * Security check in case the symmetric cipher is changed carelessly.
-     * It never throws if KEY_SIZE and IV_SIZE are chosen to be compliant with AES-128.
+     * It never throws if KEY_SIZE and IV_SIZE are chosen to be compliant with AES-128 GCM.
      */
     if (secretBlock.size() < KEY_SIZE + IV_SIZE) {
         throw CryptoException("The secret block is too small to extract both the key and the IV");

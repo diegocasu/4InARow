@@ -12,11 +12,11 @@ uint8_t Player1Hello::getType() const {
     return type;
 }
 
-const std::vector<unsigned char> &Player1Hello::getNonce() const {
+const std::vector<unsigned char>& Player1Hello::getNonce() const {
     return nonce;
 }
 
-const std::vector<unsigned char> &Player1Hello::getPublicKey() const {
+const std::vector<unsigned char>& Player1Hello::getPublicKey() const {
     return publicKey;
 }
 

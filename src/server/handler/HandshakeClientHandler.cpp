@@ -42,14 +42,14 @@ bool HandshakeClientHandler::handleEndHandshake(const TcpSocket &socket,
         player.initCipher();
         return true;
     } catch (const SocketException &exception) {
-        std::cerr << "Error while finalizing the handshake: " << exception.what() << std::endl;
+        std::cerr << "Error while finalizing the handshake. " << exception.what() << std::endl;
 
     } catch (const SerializationException &exception) {
-        std::cerr << "Error while finalizing the handshake: " << exception.what() << std::endl;
+        std::cerr << "Error while finalizing the handshake. " << exception.what() << std::endl;
         failSafeSendErrorInCleartext(socket, InfoMessage(MALFORMED_MESSAGE));
 
     } catch (const std::exception &exception) {
-        std::cerr << "Error while finalizing the handshake: " << exception.what() << std::endl;
+        std::cerr << "Error while finalizing the handshake. " << exception.what() << std::endl;
         failSafeSendErrorInCleartext(socket, InfoMessage(INTERNAL_ERROR));
     }
     removalList.insert(player.getUsername());
@@ -67,10 +67,10 @@ void HandshakeClientHandler::handleSendPlayerList(const TcpSocket &socket,
         socket.send(encryptAndAuthenticate(&playerListMessage, player));
         return;
     } catch (const SocketException &exception) {
-        std::cerr << "Error while sending the player list: " << exception.what() << std::endl;
+        std::cerr << "Error while sending the player list. " << exception.what() << std::endl;
 
     } catch (const std::exception &exception) {
-        std::cerr << "Error while sending the player list: " << exception.what() << std::endl;
+        std::cerr << "Error while sending the player list. " << exception.what() << std::endl;
         failSafeSendErrorInCiphertext(socket, player, InfoMessage(INTERNAL_ERROR), removalList);
     }
     removalList.insert(player.getUsername());

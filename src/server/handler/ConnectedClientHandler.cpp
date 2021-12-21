@@ -86,14 +86,14 @@ void ConnectedClientHandler::handle(const TcpSocket &socket,
                                 ).serialize());
         return;
     } catch (const SocketException &exception) {
-        std::cerr << "Error while performing the handshake: " << exception.what() << std::endl;
+        std::cerr << "Error while performing the handshake. " << exception.what() << std::endl;
 
     } catch (const SerializationException &exception) {
-        std::cerr << "Error while performing the handshake: " << exception.what() << std::endl;
+        std::cerr << "Error while performing the handshake. " << exception.what() << std::endl;
         failSafeSendErrorInCleartext(socket, InfoMessage(MALFORMED_MESSAGE));
 
     } catch (const std::exception &exception) {
-        std::cerr << "Error while performing the handshake: " << exception.what() << std::endl;
+        std::cerr << "Error while performing the handshake. " << exception.what() << std::endl;
         failSafeSendErrorInCleartext(socket, InfoMessage(INTERNAL_ERROR));
     }
     removalList.insert(player.getUsername());

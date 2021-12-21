@@ -11,7 +11,9 @@ namespace fourinarow {
  * The multiplexer is able to monitor a set of sockets and detect when at least one of them
  * is ready for a read operation. The maximum number of sockets that can be monitored
  * at the same time is equal to <code>FD_SETSIZE</code>. A socket descriptor is considered valid
- * if and only if its value is in the interval <code>[0, FD_SETSIZE - 1)</code>.
+ * if and only if its value is in the interval <code>[0, FD_SETSIZE)</code>.
+ * Since the class uses <code>select()</code> internally, a multiplexer can be used
+ * to monitor generic file descriptors like <code>stdin</code>.
  */
 class InputMultiplexer {
     private:
@@ -23,7 +25,7 @@ class InputMultiplexer {
         /**
          * Returns a string containing a human readable description of the error
          * that occurred while using <code>select()</code>.
-         * @return  the string containing a readable description of the error.
+         * @return  the string containing the error.
          */
         char* parseError() const;
     public:
@@ -58,8 +60,8 @@ class InputMultiplexer {
         void removeDescriptor(unsigned int descriptor);
 
         /**
-         * Checks if the given socket is ready for performing a read, namely if one of
-         * the following conditions is true:
+         * Checks if the given socket is ready for performing a read.
+         * A socket is ready if one of the following conditions is true:
          * 1) there is at least one byte to read;
          * 2) the socket has been closed;
          * 3) the socket is in an error state;
@@ -68,29 +70,29 @@ class InputMultiplexer {
          * @return            true if the socket is ready, false otherwise.
          * @throws SocketException  if the descriptor is invalid.
          */
-        bool isReady(unsigned int descriptor) const;
+        bool isReady(const unsigned int &descriptor) const;
 
         /**
          * Waits until at least one of the sockets being monitored is ready.
          * The method is blocking, unless the set of sockets is empty.
          * After the method returns, the caller can test if a
          * socket is ready by calling <code>isReady()</code>.
-         * @throws SocketException  if an error occurred while monitoring the sockets.
+         * @throws SocketException  if an error occurs while monitoring the sockets.
          */
         void select();
 
         /**
          * Waits until at least one of the sockets being monitored is ready,
          * or the given number of seconds has passed.
-         * If the timeout has expired without any socket being ready, an exception is thrown;
-         * otherwise the method returns correctly and the caller can test if a socket is ready
-         * by using <code>isReady()</code>.
+         * If the timeout has expired without any socket being ready,
+         * an exception is thrown; otherwise the method returns correctly and
+         * the caller can test if a socket is ready by using <code>isReady()</code>.
          * If the set of monitored sockets is empty, the method returns immediately without throwing.
-         * If the given number of seconds is equal to 0, the method checks the descriptors and
-         * immediately returns or throws an exception (polling).
+         * If the given number of seconds is equal to <code>0</code>, the method checks
+         * the descriptors and immediately returns or throws an exception (polling).
          * @param seconds  the timeout expressed in seconds.
-         * @throws SocketException  if an error occurred while monitoring the sockets,
-         *                          or the timeout has expired.
+         * @throws SocketException  if an error occurs while monitoring the sockets,
+         *                          or the timeout expires.
          */
         void selectWithTimeout(unsigned long seconds);
 };

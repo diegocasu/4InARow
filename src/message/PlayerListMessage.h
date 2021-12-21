@@ -9,7 +9,7 @@
 namespace fourinarow {
 
 /**
- * Class representing a PLAYER_LIST message.
+ * Class representing a <code>PLAYER_LIST</code> message.
  */
 class PlayerListMessage : public Message {
     private:
@@ -24,7 +24,7 @@ class PlayerListMessage : public Message {
          */
         ~PlayerListMessage() override;
 
-        PlayerListMessage(PlayerListMessage &&) = default;
+        PlayerListMessage(PlayerListMessage&&) = default;
         PlayerListMessage(const PlayerListMessage&) = default;
         PlayerListMessage& operator=(const PlayerListMessage&) = default;
         PlayerListMessage& operator=(PlayerListMessage&&) = default;

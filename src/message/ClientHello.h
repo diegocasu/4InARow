@@ -9,7 +9,7 @@
 namespace fourinarow {
 
 /**
- * Class representing a CLIENT_HELLO message.
+ * Class representing a <code>CLIENT_HELLO</code> message.
  */
 class ClientHello : public Message {
     private:
@@ -22,7 +22,7 @@ class ClientHello : public Message {
         ClientHello(std::string username, std::vector<unsigned char> nonce, std::vector<unsigned char> publicKey);
         ~ClientHello() override = default;
 
-        ClientHello(ClientHello &&) = default;
+        ClientHello(ClientHello&&) = default;
         ClientHello(const ClientHello&) = default;
         ClientHello& operator=(const ClientHello&) = default;
         ClientHello& operator=(ClientHello&&) = default;

@@ -9,6 +9,7 @@ namespace fourinarow {
 
 CertificateStore::CertificateStore() {
     store = X509_STORE_new();
+
     if (!store) {
         throw CryptoException(getOpenSslError());
     }
@@ -41,12 +42,14 @@ CertificateStore& CertificateStore::operator=(CertificateStore &&that) noexcept 
 
 X509* CertificateStore::loadCertificate(const std::string &path) {
     FILE *file = fopen(path.data(), "r");
+
     if (!file) {
         throw CryptoException("Impossible to open the certificate file");
     }
 
     X509 *certificate = PEM_read_X509(file, nullptr, nullptr, nullptr);
     fclose(file);
+
     if (!certificate) {
         throw CryptoException(getOpenSslError());
     }
@@ -56,6 +59,7 @@ X509* CertificateStore::loadCertificate(const std::string &path) {
 
 void CertificateStore::addCertificate(const std::string &path) {
     X509 *certificate = loadCertificate(path);
+
     if (1 != X509_STORE_add_cert(store, certificate)) {
         X509_free(certificate);
         throw CryptoException(getOpenSslError());
@@ -67,12 +71,14 @@ void CertificateStore::addCertificate(const std::string &path) {
 
 X509_CRL* CertificateStore::loadCertificateRevocationList(const std::string &path) {
     FILE *file = fopen(path.data(), "r");
+
     if (!file) {
         throw CryptoException("Impossible to open the certificate revocation list file");
     }
 
     X509_CRL *certificateRevocationList = PEM_read_X509_CRL(file, nullptr, nullptr, nullptr);
     fclose(file);
+
     if (!certificateRevocationList) {
         throw CryptoException(getOpenSslError());
     }
@@ -126,9 +132,9 @@ bool CertificateStore::verifyCertificate(const Certificate &certificate) const {
 
 std::vector<unsigned char> CertificateStore::serializeCertificate(const std::string &path) {
     X509 *certificate = loadCertificate(path);
-
     unsigned char *certificateBuffer = nullptr;
     auto outputSize = i2d_X509(certificate, &certificateBuffer);
+
     if (outputSize < 0) {
         X509_free(certificate);
         throw SerializationException(getOpenSslError());
@@ -149,6 +155,7 @@ Certificate CertificateStore::deserializeCertificate(const std::vector<unsigned 
 
     const unsigned char *buffer = serializedCertificate.data();
     X509 *certificate = d2i_X509(nullptr, &buffer, serializedCertificate.size());
+
     if (!certificate) {
         throw SerializationException(getOpenSslError());
     }

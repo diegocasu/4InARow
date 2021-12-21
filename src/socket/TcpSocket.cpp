@@ -10,8 +10,12 @@
 
 namespace fourinarow {
 
-char *TcpSocket::parseError() const {
-    return strerror(errno);
+TcpSocket::TcpSocket()
+: sourceAddress("unspecified"), sourcePort(0), destinationAddress("unspecified"), destinationPort(0) {
+    descriptor = socket(AF_INET, SOCK_STREAM, 0);
+    if (descriptor == -1) {
+        throw SocketException(parseError());
+    }
 }
 
 TcpSocket::TcpSocket(int descriptor, const sockaddr_in &rawDestinationAddress)
@@ -29,19 +33,11 @@ TcpSocket::TcpSocket(int descriptor, const sockaddr_in &rawDestinationAddress)
     this->destinationPort = ntohs(this->rawDestinationAddress.sin_port);
 }
 
-TcpSocket::TcpSocket()
-: sourceAddress("unspecified"), sourcePort(0), destinationAddress("unspecified"), destinationPort(0) {
-    descriptor = socket(AF_INET, SOCK_STREAM, 0);
-    if (descriptor == -1) {
-        throw SocketException(parseError());
-    }
-}
-
 TcpSocket::~TcpSocket() {
     if (descriptor != -1) {
         auto success = close(descriptor);
         if (success == -1) {
-            std::cerr << "Impossible to close the socket: " << parseError() << std::endl;
+            std::cerr << "Impossible to close the socket. " << parseError() << std::endl;
         }
     }
 }
@@ -63,7 +59,7 @@ TcpSocket& TcpSocket::operator=(TcpSocket &&that) noexcept {
     if (descriptor != -1) {
         auto success = close(descriptor);
         if (success == -1) {
-            std::cerr << "Impossible to close the socket: " << parseError() << std::endl;
+            std::cerr << "Impossible to close the socket. " << parseError() << std::endl;
         }
     }
 
@@ -82,7 +78,7 @@ TcpSocket& TcpSocket::operator=(TcpSocket &&that) noexcept {
     return *this;
 }
 
-const std::string &TcpSocket::getSourceAddress() const {
+const std::string& TcpSocket::getSourceAddress() const {
     return sourceAddress;
 }
 
@@ -90,7 +86,7 @@ unsigned short TcpSocket::getSourcePort() const {
     return sourcePort;
 }
 
-const std::string &TcpSocket::getDestinationAddress() const {
+const std::string& TcpSocket::getDestinationAddress() const {
     return destinationAddress;
 }
 
@@ -108,6 +104,10 @@ const std::string TcpSocket::getFullSourceAddress() const {
 
 const std::string TcpSocket::getFullDestinationAddress() const {
     return destinationAddress + ':' + std::to_string(destinationPort);
+}
+
+char *TcpSocket::parseError() const {
+    return strerror(errno);
 }
 
 void TcpSocket::bind(std::string address, unsigned short port) {
@@ -140,7 +140,7 @@ TcpSocket TcpSocket::accept() {
     sockaddr_in clientAddress;
     auto length = sizeof(clientAddress);
 
-    auto newSocketDescriptor = ::accept(descriptor, (sockaddr*) &clientAddress, (socklen_t *) &length);
+    auto newSocketDescriptor = ::accept(descriptor, (sockaddr*) &clientAddress, (socklen_t*) &length);
     if (newSocketDescriptor == -1) {
         throw SocketException(parseError());
     }
@@ -172,9 +172,11 @@ void TcpSocket::sendAllBytes(const unsigned char *buffer, size_t bufferLength) c
 
     while ((size_t) totalBytesSent < bufferLength) { // Safe cast, totalBytesSent is always non-negative.
         auto bytesSent = ::send(descriptor, buffer + totalBytesSent, bufferLength - totalBytesSent, MSG_NOSIGNAL);
+
         if (bytesSent == -1) {
             throw SocketException(parseError());
         }
+
         totalBytesSent += bytesSent;
     }
 }
@@ -207,12 +209,15 @@ void TcpSocket::receiveAllBytes(unsigned char *buffer, size_t numberOfBytes) con
 
     while ((size_t) totalBytesReceived < numberOfBytes) { // Safe cast, totalBytesReceived is always non-negative.
         auto bytesReceived = ::recv(descriptor, buffer + totalBytesReceived, numberOfBytes - totalBytesReceived, 0);
+
         if (bytesReceived == -1) {
             throw SocketException(parseError());
         }
+
         if (bytesReceived == 0) {
             throw SocketException("Remote socket has been closed");
         }
+
         totalBytesReceived += bytesReceived;
     }
 }
@@ -258,11 +263,11 @@ std::vector<unsigned char> TcpSocket::receiveWithTimeout(unsigned long seconds) 
 }
 
 bool TcpSocket::operator==(const TcpSocket &rhs) const {
-    return sourceAddress == rhs.sourceAddress &&
-           sourcePort == rhs.sourcePort &&
-           destinationAddress == rhs.destinationAddress &&
-           destinationPort == rhs.destinationPort &&
-           descriptor == rhs.descriptor;
+    return sourceAddress == rhs.sourceAddress
+           && sourcePort == rhs.sourcePort
+           && destinationAddress == rhs.destinationAddress
+           && destinationPort == rhs.destinationPort
+           && descriptor == rhs.descriptor;
 }
 
 bool TcpSocket::operator!=(const TcpSocket &rhs) const {

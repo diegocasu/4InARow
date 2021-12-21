@@ -21,7 +21,7 @@ class AuthenticatedEncryption {
          * Creates an object able to encrypt and decrypt messages using AES-128 GCM.
          * The key must be on 16 bytes, while the initialization vector must be on 12 bytes.
          * Note that the method makes a copy of the quantities, so it is responsibility
-         * of the caller to destroy the original ones.
+         * of the caller to securely destroy the original ones.
          * @param key  the key.
          * @param iv   the initialization vector.
          * @throws CryptoException  if the key and the initialization vector are wrongly sized.
@@ -36,7 +36,7 @@ class AuthenticatedEncryption {
 
         /**
          * Move constructs an authenticated encryption object, automatically transferring
-         * the ownership of the private key and the initialization vector, so that
+         * the ownership of the private key and initialization vector, so that
          * the moved object cannot access them anymore.
          * Calling <code>encrypt()</code> or <code>decrypt()</code> on the moved object
          * results in undefined behaviour.
@@ -46,7 +46,7 @@ class AuthenticatedEncryption {
 
         /**
          * Move assigns an authenticated encryption object, automatically transferring
-         * the ownership of the private key and the initialization vector, so that
+         * the ownership of the private key and initialization vector, so that
          * the moved object cannot access them anymore.
          * Calling <code>encrypt()</code> or <code>decrypt()</code> on the moved object
          * results in undefined behaviour.
@@ -64,22 +64,23 @@ class AuthenticatedEncryption {
          * @param plaintext  the plaintext to encrypt.
          * @param aad        the additional authenticated data (optional).
          * @return           an array of bytes containing the ciphertext concatenated with the tag.
-         * @throws CryptoException  if the plaintext is empty, or an error occurred while encrypting
+         * @throws CryptoException  if the plaintext is empty, or an error occurs while encrypting
          *                          and generating the tag.
          */
         std::vector<unsigned char> encrypt(const std::vector<unsigned char> &plaintext,
-                                           const std::vector<unsigned char> &aad) const;
+                                           const std::vector<unsigned char> &aad = std::vector<unsigned char>()) const;
 
         /**
          * Decrypts a ciphertext verifying that the associated tag is valid.
          * @param ciphertextAndTag  an array of bytes containing the ciphertext concatenated with the tag.
          * @param aad               the additional authenticated data (optional).
          * @return                  the decrypted plaintext.
-         * @throws CryptoException  if the given array is empty or malformed, or an error occurred
-         *                          while decrypting and generating the tag, or the tag is not valid.
+         * @throws CryptoException  if the given array is empty or malformed,
+         *                          or an error occurs while decrypting and generating the tag,
+         *                          or the tag is not valid.
          */
         std::vector<unsigned char> decrypt(const std::vector<unsigned char> &ciphertextAndTag,
-                                           const std::vector<unsigned char> &aad) const;
+                                           const std::vector<unsigned char> &aad = std::vector<unsigned char>()) const;
 };
 
 }

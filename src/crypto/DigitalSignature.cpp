@@ -33,12 +33,14 @@ DigitalSignature& DigitalSignature::operator=(DigitalSignature &&that) noexcept 
 
 void DigitalSignature::loadPrivateKey(const std::string &path) {
     FILE *file = fopen(path.data(), "r");
+
     if (!file) {
         throw CryptoException("Impossible to open the private key file");
     }
 
     privateKey = PEM_read_PrivateKey(file, nullptr, nullptr, nullptr);
     fclose(file);
+
     if (!privateKey) {
         throw CryptoException(getOpenSslError());
     }
@@ -46,12 +48,14 @@ void DigitalSignature::loadPrivateKey(const std::string &path) {
 
 EVP_PKEY* DigitalSignature::loadPublicKey(const std::string &path) {
     FILE *file = fopen(path.data(), "r");
+
     if (!file) {
         throw CryptoException("Impossible to open the public key file");
     }
 
     EVP_PKEY *publicKey = PEM_read_PUBKEY(file, nullptr, nullptr, nullptr);
     fclose(file);
+
     if (!publicKey) {
         throw CryptoException(getOpenSslError());
     }
@@ -99,9 +103,11 @@ bool DigitalSignature::verify(const std::vector<unsigned char> &message,
     if (message.empty()) {
         throw CryptoException("Empty message");
     }
+
     if (signature.empty()) {
         throw CryptoException("Empty signature");
     }
+
     if (publicKey == nullptr) {
         throw CryptoException("Empty public key");
     }
@@ -185,8 +191,8 @@ std::vector<unsigned char> DigitalSignature::serializePublicKey(const std::strin
 
 EVP_PKEY *DigitalSignature::deserializePublicKey(const std::vector<unsigned char> &serializedPublicKey) {
     const unsigned char *buffer = serializedPublicKey.data();
-
     EVP_PKEY *publicKey = d2i_PUBKEY(nullptr, &buffer, serializedPublicKey.size());
+
     if (!publicKey) {
         throw CryptoException(getOpenSslError());
     }

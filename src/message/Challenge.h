@@ -9,7 +9,7 @@
 namespace fourinarow {
 
 /**
- * Class representing a CHALLENGE message.
+ * Class representing a <code>CHALLENGE</code> message.
  */
 class Challenge : public Message {
     private:
@@ -24,7 +24,7 @@ class Challenge : public Message {
          */
         ~Challenge() override;
 
-        Challenge(Challenge &&) = default;
+        Challenge(Challenge&&) = default;
         Challenge(const Challenge&) = default;
         Challenge& operator=(const Challenge&) = default;
         Challenge& operator=(Challenge&&) = default;

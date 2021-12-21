@@ -7,8 +7,7 @@
 namespace fourinarow {
 
 /**
- * Class representing a handler for messages sent by a player
- * in the <code>HANDSHAKE</code> status.
+ * Class representing a handler for messages sent by a player in the <code>HANDSHAKE</code> status.
  */
 class HandshakeClientHandler : public Handler {
     private:

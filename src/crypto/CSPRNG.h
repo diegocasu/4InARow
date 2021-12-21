@@ -23,14 +23,14 @@ class CSPRNG {
          * @param destination    the destination vector.
          * @param numberOfBytes  the number of bytes to generate.
          * @throws CryptoException  if the destination vector is not big enough to hold the bytes,
-         *                          or an error occurred while generating them.
+         *                          or an error occurs while generating them.
          */
         static void nextBytes(std::vector<unsigned char> &destination, unsigned int numberOfBytes);
 
         /**
          * Generates a random boolean.
          * @return  a random boolean.
-         * @throws CryptoException  if an error occurred while generating the boolean.
+         * @throws CryptoException  if an error occurs while generating the boolean.
          */
         static bool nextBool();
 };

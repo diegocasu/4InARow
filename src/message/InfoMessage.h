@@ -8,7 +8,7 @@ namespace fourinarow {
 
 /**
  * Class representing a message composed only of a type
- * (ex. REQ_PLAYER_LIST, PROTOCOL_VIOLATION, etc.).
+ * (ex. <code>REQ_PLAYER_LIST, PROTOCOL_VIOLATION</code>, etc.).
  */
 class InfoMessage : public Message {
     private:
@@ -22,7 +22,7 @@ class InfoMessage : public Message {
          */
         ~InfoMessage() override;
 
-        InfoMessage(InfoMessage &&) = default;
+        InfoMessage(InfoMessage&&) = default;
         InfoMessage(const InfoMessage&) = default;
         InfoMessage& operator=(const InfoMessage&) = default;
         InfoMessage& operator=(InfoMessage&&) = default;

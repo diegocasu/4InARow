@@ -35,18 +35,17 @@ class Handler {
          * @param player   the player to which the message will be sent.
          * @return         the ciphertext concatenated with the tag.
          * @throws SerializationException  if the message has not the expected format
-         * @throws CryptoException         if an error occurred while encrypting the message,
+         * @throws CryptoException         if an error occurs while encrypting the message,
          *                                 or the maximum sequence number has been reached.
          */
         static std::vector<unsigned char> encryptAndAuthenticate(const Message *message, Player &player);
 
         /**
-         * Performs the authenticated decryption of the given message,
-         * returning the plaintext.
+         * Performs the authenticated decryption of the given message, returning the plaintext.
          * @param message  the encrypted message.
          * @param player   the player receiving the message.
          * @return         the decrypted message.
-         * @throws CryptoException  if an error occurred while decrypting the message,
+         * @throws CryptoException  if an error occurs while decrypting the message,
          *                          or the tag is not valid,
          *                          or the maximum sequence number has been reached.
          */
@@ -67,7 +66,7 @@ class Handler {
         /**
          * Sends an error message using authenticated encryption through the given socket,
          * without throwing an exception if a failure occurs.
-         * If the maximum sequence number has been reached or the socket was closed,
+         * If the maximum sequence number has been reached or the socket has been closed,
          * the player is put in the removal list.
          * This method is useful for sending error messages inside a <code>catch</code> clause.
          * @param socket       the socket used to communicate with the player.
@@ -103,8 +102,7 @@ class Handler {
                                          const std::string &matchmakingPlayer,
                                          bool matchmakingInitiator);
         /**
-         * Puts a <code>MATCHMAKING</code> player in the
-         * <code>MATCHMAKING_INTERRUPTED</code> state.
+         * Puts a <code>MATCHMAKING</code> player in the <code>MATCHMAKING_INTERRUPTED</code> state.
          * @param player      the player.
          * @param statusList  the player status list.
          */

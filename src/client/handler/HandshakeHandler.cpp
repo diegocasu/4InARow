@@ -31,15 +31,15 @@ void HandshakeHandler::sendClientHello(const TcpSocket &socket, Player &myselfFo
                                         myselfForServer.getClientPublicKey()
                                         ).serialize());
     }  catch (const std::exception &exception) {
-        std::cerr << "Impossible to send the CLIENT_HELLO message: " << exception.what() << std::endl;
+        std::cerr << "Impossible to send the CLIENT_HELLO message. " << exception.what() << std::endl;
         throw std::runtime_error("Handshake with the server failed");
     }
 }
 
 bool HandshakeHandler::isValidCertificate(const CertificateStore &certificateStore,
                                           const Certificate &serverCertificate) {
-    return certificateStore.verifyCertificate(serverCertificate) &&
-           (serverCertificate.getDistinguishedName() == SERVER_DISTINGUISHED_NAME);
+    return certificateStore.verifyCertificate(serverCertificate)
+           && (serverCertificate.getDistinguishedName() == SERVER_DISTINGUISHED_NAME);
 }
 
 void HandshakeHandler::receiveServerHello(const TcpSocket &socket,
@@ -73,7 +73,7 @@ void HandshakeHandler::receiveServerHello(const TcpSocket &socket,
             throw CryptoException("Invalid signature of the freshness proof");
         }
     } catch (const std::exception &exception) {
-        std::cerr << "Impossible to continue the handshake: " << exception.what() << std::endl;
+        std::cerr << "Impossible to continue the handshake. " << exception.what() << std::endl;
         throw std::runtime_error("Handshake with the server failed");
     }
 }
@@ -111,7 +111,7 @@ std::string HandshakeHandler::endHandshake(const TcpSocket &socket,
         playerListMessage.deserialize(message);
         return playerListMessage.getPlayerList();
     } catch (const std::exception &exception) {
-        std::cerr << "Impossible to finalize the handshake: " << exception.what() << std::endl;
+        std::cerr << "Impossible to finalize the handshake. " << exception.what() << std::endl;
         throw std::runtime_error("Handshake with the server failed");
     }
 }
@@ -169,7 +169,7 @@ void HandshakeHandler::sendPlayer1Hello(const TcpSocket &socket, Player &myselfF
                                  myselfForOpponent.getClientPublicKey()
                                  ).serialize());
     }  catch (const std::exception &exception) {
-        std::cerr << "Impossible to start the handshake: " << exception.what() << std::endl;
+        std::cerr << "Impossible to start the handshake. " << exception.what() << std::endl;
         throw std::runtime_error("Handshake with the player failed");
     }
 }
@@ -205,14 +205,14 @@ void HandshakeHandler::handlePlayer1Hello(const TcpSocket &socket,
                                  ).serialize());
         return;
     } catch (const SocketException &exception) {
-        std::cerr << "Impossible to start the handshake: " << exception.what() << std::endl;
+        std::cerr << "Impossible to start the handshake. " << exception.what() << std::endl;
 
     } catch (const SerializationException &exception) {
-        std::cerr << "Impossible to start the handshake: " << exception.what() << std::endl;
+        std::cerr << "Impossible to start the handshake. " << exception.what() << std::endl;
         socket.send(InfoMessage(MALFORMED_MESSAGE).serialize());
 
     } catch (const std::exception &exception) {
-        std::cerr << "Impossible to start the handshake: " << exception.what() << std::endl;
+        std::cerr << "Impossible to start the handshake. " << exception.what() << std::endl;
         socket.send(InfoMessage(INTERNAL_ERROR).serialize());
     }
     throw std::runtime_error("Handshake with the player failed");
@@ -244,7 +244,7 @@ void HandshakeHandler::receivePlayer2Hello(const TcpSocket &socket,
             throw CryptoException("Invalid signature of the freshness proof");
         }
     } catch (const std::exception &exception) {
-        std::cerr << "Impossible to continue the handshake: " << exception.what() << std::endl;
+        std::cerr << "Impossible to continue the handshake. " << exception.what() << std::endl;
         throw std::runtime_error("Handshake with the player failed");
     }
 }
@@ -276,14 +276,14 @@ void HandshakeHandler::handleEndHandshakeP2P(const TcpSocket &socket,
         opponent.initCipher();
         return;
     } catch (const SocketException &exception) {
-        std::cerr << "Error while finalizing the handshake: " << exception.what() << std::endl;
+        std::cerr << "Error while finalizing the handshake. " << exception.what() << std::endl;
 
     } catch (const SerializationException &exception) {
-        std::cerr << "Error while finalizing the handshake: " << exception.what() << std::endl;
+        std::cerr << "Error while finalizing the handshake. " << exception.what() << std::endl;
         socket.send(InfoMessage(MALFORMED_MESSAGE).serialize());
 
     } catch (const std::exception &exception) {
-        std::cerr << "Error while finalizing the handshake: " << exception.what() << std::endl;
+        std::cerr << "Error while finalizing the handshake. " << exception.what() << std::endl;
         socket.send(InfoMessage(INTERNAL_ERROR).serialize());
     }
     throw std::runtime_error("Handshake with the player failed");
@@ -301,7 +301,7 @@ void HandshakeHandler::endHandshakeP2P(const TcpSocket &socket,
 
         myselfForOpponent.initCipher();
     } catch (const std::exception &exception) {
-        std::cerr << "Impossible to finalize the handshake: " << exception.what() << std::endl;
+        std::cerr << "Impossible to finalize the handshake. " << exception.what() << std::endl;
         throw std::runtime_error("Handshake with the player failed");
     }
 }
@@ -345,7 +345,7 @@ HandshakeHandler::P2PHandshakeResult HandshakeHandler::doHandshakeWithPlayer(con
         std::get<2>(result) = true;
         return result;
     } catch (const std::exception &exception) {
-        std::cout << "Impossible to connect to the other player: " << exception.what() << std::endl;
+        std::cout << "Impossible to connect to the other player. " << exception.what() << std::endl;
         std::get<0>(result) = nullptr;
         std::get<1>(result) = nullptr;
         std::get<2>(result) = false;

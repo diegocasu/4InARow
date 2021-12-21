@@ -18,32 +18,32 @@ namespace fourinarow {
 std::string getOpenSslError();
 
 /**
- * Returns an indented string containing the hexadecimal representation of the
- * bytes held by a given array.
+ * Returns a formatted string containing the hexadecimal
+ * representation of the bytes held by a given array.
  * @param vector  the array of bytes.
- * @return  the string containing the hexadecimal representation of the bytes.
+ * @return  the formatted string representing the array.
  */
 std::string dumpVector(const std::vector<unsigned char> &vector);
 
 /**
- * Fills the given array with zeros destroying its content, so that
- * the compiler does not remove the operations when optimizing.
+ * Fills the given array with zeros destroying its content,
+ * so that the compiler does not remove the operations when optimizing.
  * It relies on <code>OPENSSL_cleanse()</code>.
  * @param vector  the array whose content must be destroyed.
  */
 void cleanse(std::vector<unsigned char> &vector);
 
 /**
- * Fills the given array with zeros destroying its content, so that
- * the compiler does not remove the operations when optimizing.
+ * Fills the given array with zeros destroying its content,
+ * so that the compiler does not remove the operations when optimizing.
  * It relies on <code>OPENSSL_cleanse()</code>.
  * @param vector  the array whose content must be destroyed.
  */
 void cleanse(std::vector<int> &vector);
 
 /**
- * Fills the given string with zeros destroying its content, so that
- * the compiler does not remove the operations when optimizing.
+ * Fills the given string with zeros destroying its content,
+ * so that the compiler does not remove the operations when optimizing.
  * It relies on <code>OPENSSL_cleanse()</code>.
  * @param string  the string whose content must be destroyed.
  */
@@ -66,8 +66,8 @@ void cleanse(uint8_t &integer);
 void cleanse(unsigned int &integer);
 
 /**
- * Fills the given boolean with zeros destroying its content, so that
- * the compiler does not remove the operations when optimizing.
+ * Fills the given boolean with zeros destroying its content,
+ * so that the compiler does not remove the operations when optimizing.
  * It relies on <code>OPENSSL_cleanse()</code>.
  * @param boolean  the boolean whose content must be destroyed.
  */
@@ -82,23 +82,23 @@ void cleanse(bool &boolean);
 void cleanse(FourInARow::Result &result);
 
 /**
- * Translates a message type code into a human readable string
- * containing the type itself.
- * @param messageType  the message type code.
+ * Translates a message type into a human readable string.
+ * @param messageType  the message type.
  * @return  the string containing the human readable type.
  */
 std::string convertMessageType(const uint8_t &messageType);
 
 /**
- * Translates a player status into a human readable string
- * containing the status itself.
+ * Translates a player status into a human readable string.
  * @param status  the player status.
  * @return  the string containing the human readable status.
  */
 std::string convertClientStatus(const Player::Status &status);
 
 /**
- * Returns the type of a given binary message.
+ * Returns the type of a binary message.
+ * If the message is not big enough to hold a type field,
+ * the function throws a user specified exception.
  * @tparam Exception  the exception type.
  * @param message     the binary message.
  * @return            the type of the message.
@@ -161,7 +161,9 @@ void checkIvSize(const std::vector<unsigned char> &iv) {
  */
 template<typename Exception>
 void checkUsernameValidity(const std::string &username) {
-    if (username.empty() || username.size() > MAX_USERNAME_SIZE || std::regex_search(username, std::regex("[^A-Za-z0-9]"))) {
+    if (username.empty()
+        || username.size() > MAX_USERNAME_SIZE
+        || std::regex_search(username, std::regex("[^A-Za-z0-9]"))) {
         throw Exception("The username must be composed of at least 1 character, at most " +
                         std::to_string(MAX_USERNAME_SIZE) +
                         " characters and cannot contain whitespaces or special characters. Username: " +
@@ -296,7 +298,7 @@ void checkCertificateSize(const std::vector<unsigned char> &certificate) {
 }
 
 /**
- * Concatenate two vectors. The concatenation is obtained by copying the
+ * Concatenates two vectors. The concatenation is obtained by copying the
  * elements of the source vector into the destination one.
  * This function is used as the base case for the variadic <code>concatenate()</code>.
  * @tparam T           the type of the vector's elements.
@@ -309,7 +311,7 @@ void concatenate(std::vector<T> &destination, const std::vector<T> &vector) {
 }
 
 /**
- * Concatenate multiple vectors in the order they are passed.
+ * Concatenates multiple vectors in the order they are passed.
  * The concatenation is obtained by copying the elements of
  * the source vectors into a destination vector.
  * @tparam T           the type of the vector's elements.

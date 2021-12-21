@@ -16,11 +16,9 @@ namespace fourinarow {
  * quantities needed to communicate with another party. It can be used:
  * 1) by the server to represent a client;
  * 2) by a player accepting connections to represent another player,
- *    i.e. by a player acting as a server in P2P communications;
+ *    i.e. by a player acting as server in P2P communications;
  * 3) by a player to represent herself when communicating with the server or
- *    when she is acting as a client in P2P communications. In this case,
- *    the class allows to conveniently store quantities and the status variable
- *    has no meaning.
+ *    acting as client in P2P communications.
  * Inside a single Player object, only one party, either the client or the server,
  * can own a generated key pair. Once a party owns a generated pair,
  * the other one is forced to store only a public key.
@@ -28,15 +26,14 @@ namespace fourinarow {
 class Player {
     public:
         /*
-         * The status is significant only from the point of view of a server or
-         * a player acting as server in P2P communications. The server exploits all
-         * the possible status, while a player acting as server only the ones
-         * related to the handshake.
+         * The status is used only by the server when managing registered clients.
+         * It is not used by a player in P2P communications, regardless of the
+         * role the player is interpreting in the exchange (client or server).
          */
         enum class Status {
                 OFFLINE,                  // The player is not connected to the server.
-                CONNECTED,                // The player is connected. A CLIENT_HELLO/PLAYER1_HELLO is expected.
-                HANDSHAKE,                // The player sent a CLIENT_HELLO/PLAYER1_HELLO. An END_HANDSHAKE is expected.
+                CONNECTED,                // The player is connected. A CLIENT_HELLO is expected.
+                HANDSHAKE,                // The player sent a CLIENT_HELLO. An END_HANDSHAKE is expected.
                 AVAILABLE,                // The player completed the handshake successfully and is available for playing.
                 MATCHMAKING,              // The player is exchanging messages to set up a match.
                 MATCHMAKING_INTERRUPTED,  // The matchmaking failed. The player will become AVAILABLE at the next message exchange.
@@ -60,7 +57,8 @@ class Player {
         /**
          * Checks if the nonces, the public key of the other party and
          * the key pair of this party have been initialized.
-         * @throws CryptoException  if at least one of the above quantities has not been initialized.
+         * @throws CryptoException  if at least one of the above quantities has not been initialized
+         *                          or has been destroyed.
          */
         void checkIfCryptoAttributesInitialized() const;
     public:
@@ -93,7 +91,7 @@ class Player {
          * key pair, the calls subsequent to <code>initCipher()</code>
          * return an empty vector, because the method destroys the pair.
          * @return  the public key of the client.
-         * @throws SerializationException  if an error occurred while retrieving a generated public key.
+         * @throws SerializationException  if an error occurs while retrieving a generated public key.
          *                                 The exception cannot be thrown if the key was set.
          */
         std::vector<unsigned char> getClientPublicKey() const;
@@ -103,7 +101,7 @@ class Player {
          * key pair, the calls subsequent to <code>initCipher()</code>
          * return an empty vector, because the method destroys the pair.
          * @return  the public key of the server.
-         * @throws SerializationException  if an error occurred while retrieving a generated public key.
+         * @throws SerializationException  if an error occurs while retrieving a generated public key.
          *                                 The exception cannot be thrown if the key was set.
          */
         const std::vector<unsigned char> getServerPublicKey() const;
@@ -166,13 +164,13 @@ class Player {
 
         /**
          * Generates and stores a random nonce for the client.
-         * @throws CryptoException  if an error occurred while generating the nonce.
+         * @throws CryptoException  if an error occurs while generating the nonce.
          */
         void generateClientNonce();
 
         /**
          * Generates and stores a random nonce for the server.
-         * @throws CryptoException  if an error occurred while generating the nonce.
+         * @throws CryptoException  if an error occurs while generating the nonce.
          */
         void generateServerNonce();
 
@@ -183,7 +181,7 @@ class Player {
          * the public key of the client has not already been set.
          * @throws CryptoException  if the public key of the client has already been set,
          *                          or the server key pair has already been generated,
-         *                          or an error occurred while generating the pair.
+         *                          or an error occurs while generating the pair.
          */
         void generateClientKeys();
 
@@ -194,7 +192,7 @@ class Player {
          * the public key of the server has not already been set.
          * @throws CryptoException  if the public key of the server has already been set,
          *                          or the client key pair has already been generated,
-         *                          or an error occurred while generating the pair.
+         *                          or an error occurs while generating the pair.
          */
         void generateServerKeys();
 
@@ -208,7 +206,7 @@ class Player {
          * At the end of the method, the ECDH key pair that was previously generated
          * is securely destroyed and made unrecoverable.
          * @throws CryptoException         if at least one of the above quantities has not been set/generated,
-         *                                 or an error occurred while deriving the secret quantities.
+         *                                 or an error occurs while deriving the secret quantities.
          * @throws SerializationException  if the public key that was set is not represented
          *                                 in a correct binary format. This check does not involve
          *                                 the generated public key.
@@ -227,9 +225,8 @@ class Player {
          * 6) the certificate of the server.
          * @throws CryptoException         if at least one of the above quantities has not been set/generated,
          *                                 or the certificate is not correctly sized,
-         *                                 or an error occurred while deriving the secret quantities.
-         * @throws SerializationException  if an error occurred while retrieving a generated public key.
-         *                                 This check does not involve the public key that was set.
+         *                                 or an error occurs while deriving the secret quantities.
+         * @throws SerializationException  if an error occurs while retrieving a generated public key.
          */
         void generateFreshnessProof(const std::vector<unsigned char> &certificate);
 
@@ -242,9 +239,8 @@ class Player {
          * 4) the Elliptic-curve Diffie-Hellman public key of the player1 (client);
          * 5) the Elliptic-curve Diffie-Hellman public key of the player2 (server);
          * @throws CryptoException         if at least one of the above quantities has not been set/generated,
-         *                                 or an error occurred while deriving the secret quantities.
-         * @throws SerializationException  if an error occurred while retrieving a generated public key.
-         *                                 This check does not involve the public key that was set.
+         *                                 or an error occurs while deriving the secret quantities.
+         * @throws SerializationException  if an error occurs while retrieving a generated public key.
          */
         void generateFreshnessProofP2P();
 
@@ -253,8 +249,7 @@ class Player {
          * The sequence number is big enough to cover the number of messages
          * exchanged during an average communication session.
          * If the maximum sequence number has been reached, the communication must be terminated.
-         * @throws CryptoException  if the maximum sequence number has been reached and
-         *                          the communication must be terminated.
+         * @throws CryptoException  if the maximum sequence number has been reached.
          */
         void incrementSequenceNumber();
 };

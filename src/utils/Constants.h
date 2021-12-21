@@ -6,7 +6,7 @@
 
 namespace fourinarow {
 
-// Communication related quantities.
+// Networking quantities.
 extern const unsigned short SERVER_PORT;
 extern const unsigned short PLAYER_PORT;
 extern const size_t BACKLOG_SIZE;
@@ -22,7 +22,7 @@ extern const std::string CLIENT_CERTIFICATES_FOLDER;
 extern const std::string CLIENT_KEYS_FOLDER;
 extern const std::string CLIENT_PRIVATE_KEY_SUFFIX;
 
-// Server distinguished name.
+// Distinguished name inside the server's certificate.
 extern const std::string SERVER_DISTINGUISHED_NAME;
 
 // Message types.

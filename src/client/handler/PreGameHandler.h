@@ -21,8 +21,7 @@ class PreGameHandler : Handler {
         /**
          * Checks if the given command is a player list refresh.
          * @param command  the command.
-         * @return         true if a refresh of the player list was asked,
-         *                 false otherwise.
+         * @return         true if a refresh of the player list is asked, false otherwise.
          */
         static bool isRefreshPlayerListCommand(const unsigned int &command);
 
@@ -30,7 +29,7 @@ class PreGameHandler : Handler {
          * Checks if the given command is an exit one.
          * @param command     the command.
          * @param playerList  the player list.
-         * @return            true if the user asked to exit the application, false otherwise.
+         * @return            true if the user asks to exit the application, false otherwise.
          */
         static bool isExitCommand(const unsigned int &command, const std::string &playerList);
 
@@ -38,7 +37,7 @@ class PreGameHandler : Handler {
          * Checks if the given command is a challenge one.
          * @param command     the command.
          * @param playerList  the player list.
-         * @return            true if the user asked to send a challenge, false otherwise.
+         * @return            true if the user asks to send a challenge, false otherwise.
          */
         static bool isChallengeCommand(const unsigned int &command, const std::string &playerList);
 
@@ -78,11 +77,11 @@ class PreGameHandler : Handler {
 
         /**
          * Parses a command of the user, storing it in the given variable.
-         * It performs only one trial, returning true if the attempt was successful.
+         * It performs only one trial, returning true if the attempt is successful.
          * @param playerList     the player list.
          * @param outputCommand  the reference to the variable that will store the command.
-         *                       It is modified only if the parsing was successful.
-         * @return               true if the parsing was successful, false otherwise.
+         *                       It is modified only if the parsing is successful.
+         * @return               true if the parsing is successful, false otherwise.
          */
         static bool parseCommand(const std::string &playerList, unsigned int &outputCommand);
 
@@ -97,7 +96,7 @@ class PreGameHandler : Handler {
         /**
          * Parses the user answer to an incoming challenge request.
          * The method does not return until a valid answer has been supplied.
-         * @return  true if the challenge was accepted, false otherwise.
+         * @return  true if the challenge is accepted, false otherwise.
          */
         static bool parseChallengeRequestAnswer();
 
@@ -110,13 +109,13 @@ class PreGameHandler : Handler {
          * @param playerList        the player list.
          * @param opponent          a reference to an empty object that will store the <code>PLAYER</code> message
          *                          containing the information about the opponent. The content of this object
-         *                          is valid only if a challenge has been accepted, i.e. if the method returns true.
+         *                          is valid only if a challenge is accepted, i.e. if the method returns true.
          * @param opponentUsername  a reference to an empty string that will store the username of the opponent.
-         *                          The content of the string is valid only if a challenge has been accepted,
+         *                          The content of the string is valid only if a challenge is accepted,
          *                          i.e. if the method returns true.
-         * @return                  true if the message was a challenge request and
-         *                          the user accepted it, false otherwise.
-         * @throws runtime_error  if an error occurred while handling the incoming message.
+         * @return                  true if the message is a challenge request and the user accepts it,
+         *                          false otherwise.
+         * @throws runtime_error  if an error occurs while handling the incoming message.
          */
         static bool handleIncomingMessage(const TcpSocket &socket,
                                           const InputMultiplexer &multiplexer,
@@ -131,7 +130,7 @@ class PreGameHandler : Handler {
          * @param myselfForServer    the object storing the quantities needed to communicate with the server.
          * @param currentPlayerList  the current player list. It is modified only if
          *                           there is no pending challenge request.
-         * @throws runtime_error  if an error occurred while refreshing the player list or
+         * @throws runtime_error  if an error occurs while refreshing the player list or
          *                        managing a pending challenge request.
          */
         static void handlePlayerListRefreshCommand(const TcpSocket &socket,
@@ -141,7 +140,7 @@ class PreGameHandler : Handler {
          * Handles a command for exiting the application.
          * @param socket            the socket used to communicate with the server.
          * @param myselfForServer   the object storing the quantities needed to communicate with the server.
-         * @throws runtime_error  if an error occurred while sending the application exit message.
+         * @throws runtime_error  if an error occurs while sending the application exit message.
          */
         static void handleExitCommand(const TcpSocket &socket, Player &myselfForServer);
 
@@ -151,10 +150,10 @@ class PreGameHandler : Handler {
          * the matchmaking is aborted and an empty vector is returned.
          * @param socket           the socket used to communicate with the server.
          * @param myselfForServer  the object storing the quantities needed to communicate with the server.
-         * @return                 an empty vector if the matchmaking was aborted, an encrypted message
-         *                         if the reception succeeded.
-         * @throws SocketException  if the remote socket has been closed or an error has occurred
-         *                          while aborting the matchmaking.
+         * @return                 an empty vector if the matchmaking is aborted, an encrypted message
+         *                         if the reception succeeds.
+         * @throws SocketException  if an error occurs while aborting the matchmaking,
+         *                          or the remote socket has been closed.
          * @throws CryptoException  if the maximum sequence number has been reached.
          */
         static std::vector<unsigned char> receiveMessageOrCancelMatchmaking(const TcpSocket &socket,
@@ -166,12 +165,12 @@ class PreGameHandler : Handler {
          * @param socket           the socket used to communicate with the server.
          * @param myselfForServer  the object storing the quantities needed to communicate with the server.
          * @param playerList       the player list.
-         * @return                 true if a <code>CHALLENGE_ACCEPTED</code> message has been received,
+         * @return                 true if a <code>CHALLENGE_ACCEPTED</code> message is received,
          *                         false otherwise.
-         * @throws SocketException         if the remote socket has been closed or an error has occurred
-         *                                 while aborting the matchmaking.
-         * @throws SerializationException  if an error occurred while deserializing the message.
-         * @throws CryptoException         if an error occurred while decrypting the message, or
+         * @throws SocketException         if an error occurs while aborting the matchmaking,
+         *                                 or the remote socket has been closed.
+         * @throws SerializationException  if an error occurs while deserializing the message.
+         * @throws CryptoException         if an error occurs while decrypting the message, or
          *                                 the maximum sequence number has been reached.
          */
         static bool receiveChallengeResponse(const TcpSocket &socket,
@@ -186,12 +185,12 @@ class PreGameHandler : Handler {
          * @param playerList       the player list.
          * @param opponent         a reference to an empty object that will store the <code>PLAYER</code> message.
          *                         The content of this object is valid only if a <code>PLAYER</code> message
-         *                         has been received, i.e. if the method returns true.
-         * @return                 true if a <code>PLAYER</code> message has been received, false otherwise.
-         * @throws SocketException         if the remote socket has been closed or an error has occurred
-         *                                 while aborting the matchmaking.
-         * @throws SerializationException  if an error occurred while deserializing the message.
-         * @throws CryptoException         if an error occurred while decrypting the message, or
+         *                         is received, i.e. if the method returns true.
+         * @return                 true if a <code>PLAYER</code> message is received, false otherwise.
+         * @throws SocketException         if an error occurs while aborting the matchmaking,
+         *                                 or the remote socket has been closed.
+         * @throws SerializationException  if an error occurs while deserializing the message.
+         * @throws CryptoException         if an error occurs while decrypting the message, or
          *                                 the maximum sequence number has been reached.
          */
         static bool receivePlayerMessage(const TcpSocket &socket,
@@ -206,12 +205,12 @@ class PreGameHandler : Handler {
          * @param playerList        the player list.
          * @param opponent          a reference to an empty object that will store the <code>PLAYER</code> message
          *                          containing the information about the opponent. The content of this object
-         *                          is valid only if a challenge has been accepted, i.e. if the method returns true.
+         *                          is valid only if a challenge is accepted, i.e. if the method returns true.
          * @param opponentUsername  a reference to an empty string that will store the username of the opponent.
-         *                          The content of the string is valid only if a challenge has been accepted,
+         *                          The content of the string is valid only if a challenge is accepted,
          *                          i.e. if the method returns true.
-         * @return                  true if the matchmaking succeeded, false otherwise.
-         * @throws runtime_error  if an error occurred while challenging another player.
+         * @return                  true if the matchmaking succeeds, false otherwise.
+         * @throws runtime_error  if an error occurs while challenging another player.
          */
         static bool handleChallengeCommand(const TcpSocket &socket,
                                            Player &myselfForServer,
@@ -238,9 +237,9 @@ class PreGameHandler : Handler {
          * @param firstPlayerList  the initial player list.
          * @param opponent         a reference to an empty object that will store the <code>PLAYER</code> message
          *                         containing the information about the opponent. The content of this object
-         *                         is valid only if a challenge has been accepted, i.e. if the method returns true.
+         *                         is valid only if a challenge is accepted, i.e. if the method returns true.
          * @param opponentUsername  a reference to an empty string that will store the username of the opponent.
-         *                          The content of the string is valid only if a challenge has been accepted,
+         *                          The content of the string is valid only if a challenge is accepted,
          *                          i.e. if the method returns true.
          * @return                 true if a match must be set up, false if the user wants to exit the application.
          */

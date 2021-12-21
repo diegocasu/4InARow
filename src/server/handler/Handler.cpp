@@ -49,7 +49,7 @@ void Handler::failSafeSendErrorInCleartext(const TcpSocket &socket, const InfoMe
     try {
         socket.send(message.serialize());
     } catch (const std::exception &exception) {
-        std::cout << "Impossible to send the error message: " << exception.what() << std::endl;
+        std::cout << "Impossible to send the error message. " << exception.what() << std::endl;
     }
 }
 
@@ -61,7 +61,7 @@ void Handler::failSafeSendErrorInCiphertext(const TcpSocket &socket,
         auto authenticatedCiphertext = encryptAndAuthenticate(&message, player);
         socket.send(authenticatedCiphertext);
     } catch (const std::exception &exception) {
-        std::cout << "Impossible to send the error message: " << exception.what() << std::endl;
+        std::cout << "Impossible to send the error message. " << exception.what() << std::endl;
         removalList.insert(player.getUsername());
     }
 }

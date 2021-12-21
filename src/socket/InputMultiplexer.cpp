@@ -39,7 +39,7 @@ void InputMultiplexer::removeDescriptor(unsigned int descriptor) {
     }
 }
 
-bool InputMultiplexer::isReady(unsigned int descriptor) const {
+bool InputMultiplexer::isReady(const unsigned int &descriptor) const {
     if (descriptor >= FD_SETSIZE) {
         throw SocketException("Invalid descriptor");
     }

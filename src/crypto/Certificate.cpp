@@ -16,7 +16,7 @@ Certificate::~Certificate() {
     }
 }
 
-Certificate::Certificate(Certificate&& that) noexcept : rawCertificate(that.rawCertificate) {
+Certificate::Certificate(Certificate &&that) noexcept : rawCertificate(that.rawCertificate) {
     that.rawCertificate = nullptr; // Avoid to call X509_free() multiple times.
 }
 
@@ -36,11 +36,13 @@ const X509* Certificate::getRawCertificate() const {
 
 std::string Certificate::getDistinguishedName() const {
     X509_NAME *subjectName = X509_get_subject_name(rawCertificate); // Must not be freed.
+
     if (!subjectName) {
         throw CryptoException(getOpenSslError());
     }
 
     char *buffer = X509_NAME_oneline(subjectName, nullptr, 0);
+
     if (!buffer) {
         throw CryptoException(getOpenSslError());
     }
@@ -53,9 +55,11 @@ std::string Certificate::getDistinguishedName() const {
 const EVP_PKEY *Certificate::getPublicKey() const {
     // Using 'get0', EVP_PKEY must not be freed up after use.
     EVP_PKEY *publicKey = X509_get0_pubkey((X509*) rawCertificate);
+
     if (!publicKey) {
         throw CryptoException(getOpenSslError());
     }
+
     return publicKey;
 }
 

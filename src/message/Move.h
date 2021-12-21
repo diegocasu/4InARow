@@ -8,7 +8,7 @@
 namespace fourinarow {
 
 /**
- * Class representing a MOVE message.
+ * Class representing a <code>MOVE</code> message.
  */
 class Move : public Message {
     private:
@@ -23,7 +23,7 @@ class Move : public Message {
          */
         ~Move() override;
 
-        Move(Move &&) = default;
+        Move(Move&&) = default;
         Move(const Move&) = default;
         Move& operator=(const Move&) = default;
         Move& operator=(Move&&) = default;

@@ -12,9 +12,9 @@ namespace fourinarow {
 bool AvailableClientHandler::isValidChallenge(const std::string &challenger,
                                               const std::string &challenged,
                                               PlayerStatusList &statusList) {
-    return (challenger != challenged) &&
-           (statusList.count(challenged) != 0) &&
-           (statusList[challenged] == Player::Status::AVAILABLE);
+    return (challenger != challenged)
+           && (statusList.count(challenged) != 0)
+           && (statusList[challenged] == Player::Status::AVAILABLE);
 }
 
 void AvailableClientHandler::handleChallengeMessage(const TcpSocket &challengerSocket,
@@ -49,7 +49,7 @@ void AvailableClientHandler::handleChallengeMessage(const TcpSocket &challengerS
         setMatchmakingStatus(iterator.second, statusList, challenger.getUsername(), false);
         std::cout << "CHALLENGE message forwarded to '" << challengeMessage.getUsername() << '\'' << std::endl;
     } catch (const std::exception &exception) {
-        std::cerr << "Error while forwarding the message: " << exception.what() << std::endl;
+        std::cerr << "Error while forwarding the message. " << exception.what() << std::endl;
 
         /*
          * Rollback and removal of the challenged player
@@ -107,19 +107,19 @@ void AvailableClientHandler::handle(const TcpSocket &socket,
         InfoMessage protocolViolation(PROTOCOL_VIOLATION);
         socket.send(encryptAndAuthenticate(&protocolViolation, player));
     } catch (const SocketException &exception) {
-        std::cerr << "Error while handling the message: " << exception.what() << std::endl;
+        std::cerr << "Error while handling the message. " << exception.what() << std::endl;
         removalList.insert(player.getUsername());
 
     } catch (const SerializationException &exception) {
-        std::cerr << "Error while handling the message: " << exception.what() << std::endl;
+        std::cerr << "Error while handling the message. " << exception.what() << std::endl;
         failSafeSendErrorInCiphertext(socket, player, InfoMessage(MALFORMED_MESSAGE), removalList);
 
     } catch (const CryptoException &exception) {
-        std::cerr << "Error while handling the message: " << exception.what() << std::endl;
+        std::cerr << "Error while handling the message. " << exception.what() << std::endl;
         failSafeSendErrorInCiphertext(socket, player, InfoMessage(MALFORMED_MESSAGE), removalList);
 
     } catch (const std::exception &exception) {
-        std::cerr << "Error while handling the message: " << exception.what() << std::endl;
+        std::cerr << "Error while handling the message. " << exception.what() << std::endl;
         failSafeSendErrorInCiphertext(socket, player, InfoMessage(INTERNAL_ERROR), removalList);
         removalList.insert(player.getUsername());
     }
