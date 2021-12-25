@@ -20,14 +20,17 @@ void PlayingClientHandler::handle(const TcpSocket &socket,
         auto encryptedMessage = socket.receive();
         auto message = authenticateAndDecrypt(encryptedMessage, player);
         auto type = getMessageType<SerializationException>(message);
+        cleanse(message);
 
         if (type == END_GAME) {
             std::cout << "Received an END_GAME message. Making the client available again for playing" << std::endl;
             setAvailableStatus(player, statusList);
+            cleanse(type);
             return;
         }
 
         std::cerr << "Protocol violation: received " << convertMessageType(type) << std::endl;
+        cleanse(type);
         InfoMessage protocolViolation(PROTOCOL_VIOLATION);
         socket.send(encryptAndAuthenticate(&protocolViolation, player));
     } catch (const SocketException &exception) {

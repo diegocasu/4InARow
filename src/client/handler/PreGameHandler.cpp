@@ -144,11 +144,16 @@ bool PreGameHandler::handleIncomingMessage(const TcpSocket &socket,
 
         if (type != CHALLENGE) {
             // Ignore the message. It could be a spurious message due to a failed matchmaking.
+            cleanse(message);
+            cleanse(type);
             return false;
         }
 
         Challenge challenge;
         challenge.deserialize(message);
+        cleanse(message);
+        cleanse(type);
+
         printChallengeRequest(challenge.getUsername());
         auto challengeAccepted = parseChallengeRequestAnswer();
 
@@ -189,11 +194,16 @@ void PreGameHandler::handlePlayerListRefreshCommand(const TcpSocket &socket,
         if (type != PLAYER_LIST) {
             std::cout << "An error occurred while synchronizing the player list. Try again.\n" << std::endl;
             printAvailableCommands(currentPlayerList);
+            cleanse(message);
+            cleanse(type);
             return;
         }
 
         PlayerListMessage playerList;
         playerList.deserialize(message);
+        cleanse(message);
+        cleanse(type);
+
         currentPlayerList = playerList.getPlayerList();
         printPlayerList(currentPlayerList);
         printAvailableCommands(currentPlayerList);
@@ -260,20 +270,24 @@ bool PreGameHandler::receiveChallengeResponse(const TcpSocket &socket,
 
     auto message = authenticateAndDecrypt(challengeResponseMessage, myselfForServer);
     auto type = getMessageType<SerializationException>(message);
+    cleanse(message);
 
     if (!isChallengeResponseMessage(type) || type == PLAYER_NOT_AVAILABLE) {
         std::cout << "Matchmaking failed. Try to refresh the player list\n" << std::endl;
         printAvailableCommands(playerList);
+        cleanse(type);
         return false;
     }
 
     if (type == CHALLENGE_REFUSED) {
         std::cout << "The user has refused your challenge\n" << std::endl;
         printAvailableCommands(playerList);
+        cleanse(type);
         return false;
     }
 
     std::cout << "The user has accepted the challenge!" << std::endl;
+    cleanse(type);
     return true;
 }
 
@@ -296,10 +310,14 @@ bool PreGameHandler::receivePlayerMessage(const TcpSocket &socket,
     if (type != PLAYER) {
         std::cout << "Matchmaking failed. Try to refresh the player list\n" << std::endl;
         printAvailableCommands(playerList);
+        cleanse(message);
+        cleanse(type);
         return false;
     }
 
     opponent.deserialize(message);
+    cleanse(message);
+    cleanse(type);
     return true;
 }
 

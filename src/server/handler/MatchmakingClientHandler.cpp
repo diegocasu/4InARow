@@ -157,18 +157,23 @@ void MatchmakingClientHandler::handle(const TcpSocket &socket,
         auto encryptedMessage = socket.receive();
         auto message = authenticateAndDecrypt(encryptedMessage, player);
         auto type = getMessageType<SerializationException>(message);
+        cleanse(message);
 
         if (type == GOODBYE) {
             handleGoodbye(player, playerList, statusList, removalList);
+            cleanse(type);
             return;
         }
 
         if (isValidChallengeResponse(player, type)) {
             handleChallengeResponse(socket, type, player, playerList, statusList, removalList);
+            cleanse(type);
             return;
         }
 
         std::cerr << "Protocol violation: received " << convertMessageType(type) << std::endl;
+        cleanse(type);
+
         cancelMatchmaking(player, playerList, statusList);
         InfoMessage protocolViolation(PROTOCOL_VIOLATION);
         socket.send(encryptAndAuthenticate(&protocolViolation, player));

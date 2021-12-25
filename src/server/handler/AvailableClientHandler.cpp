@@ -90,20 +90,28 @@ void AvailableClientHandler::handle(const TcpSocket &socket,
 
         if (type == GOODBYE) {
             handleGoodbye(player, removalList);
+            cleanse(message);
+            cleanse(type);
             return;
         }
 
         if (type == REQ_PLAYER_LIST) {
             handleSendPlayerList(socket, player, statusList);
+            cleanse(message);
+            cleanse(type);
             return;
         }
 
         if (type == CHALLENGE) {
             handleChallengeMessage(socket, message, player, playerList, statusList, removalList);
+            cleanse(message);
+            cleanse(type);
             return;
         }
 
         std::cerr << "Protocol violation: received " << convertMessageType(type) << std::endl;
+        cleanse(message);
+        cleanse(type);
         InfoMessage protocolViolation(PROTOCOL_VIOLATION);
         socket.send(encryptAndAuthenticate(&protocolViolation, player));
     } catch (const SocketException &exception) {

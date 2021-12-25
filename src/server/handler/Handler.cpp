@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string.h>
 #include <arpa/inet.h>
+#include <Utils.h>
 #include "Handler.h"
 
 namespace fourinarow {
@@ -27,9 +28,11 @@ std::vector<unsigned char> Handler::encryptAndAuthenticate(const Message *messag
     std::vector<unsigned char> aad(sizeof(sequenceNumber));
     memcpy(aad.data(), &sequenceNumber, sizeof(sequenceNumber));
 
-    auto authenticatedCiphertext = player.getCipher().encrypt(message->serialize(), aad);
-    player.incrementSequenceNumber();
+    auto plaintext = message->serialize();
+    auto authenticatedCiphertext = player.getCipher().encrypt(plaintext, aad);
+    cleanse(plaintext);
 
+    player.incrementSequenceNumber();
     return authenticatedCiphertext;
 }
 

@@ -109,6 +109,9 @@ std::string HandshakeHandler::endHandshake(const TcpSocket &socket,
 
         PlayerListMessage playerListMessage;
         playerListMessage.deserialize(message);
+        cleanse(message);
+        cleanse(type);
+
         return playerListMessage.getPlayerList();
     } catch (const std::exception &exception) {
         std::cerr << "Impossible to finalize the handshake. " << exception.what() << std::endl;

@@ -111,6 +111,8 @@ bool GameHandler::receiveOpponentMove(const TcpSocket &socket, Player &opponent,
 
     Move opponentMove;
     opponentMove.deserialize(message);
+    cleanse(message);
+    cleanse(type);
 
     if (!gameBoard.registerMove(opponentMove.getColumn(), true)) {
         std::cout << gameBoard.getOpponent() << " is trying to cheat. What a loser! Closing the communication...\n" << std::endl;
