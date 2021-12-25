@@ -201,21 +201,20 @@ void Player::initCipher() {
     entropySource.reserve(sharedSecret.size() + clientNonce.size() + serverNonce.size());
     concatenate(entropySource, sharedSecret, clientNonce, serverNonce);
 
-    // Derive the key and the initialization vector for the cipher.
+    // Derive the key for the cipher.
     auto secretBlock = SHA256::hash(entropySource);
 
     /*
      * Security check in case the symmetric cipher is changed carelessly.
-     * It never throws if KEY_SIZE and IV_SIZE are chosen to be compliant with AES-128 GCM.
+     * It never throws if KEY_SIZE is compliant with AES-128 GCM.
      */
-    if (secretBlock.size() < KEY_SIZE + IV_SIZE) {
-        throw CryptoException("The secret block is too small to extract both the key and the IV");
+    if (secretBlock.size() < KEY_SIZE) {
+        throw CryptoException("The secret block is too small to extract the key");
     }
 
     cipher = std::make_unique<AuthenticatedEncryption>(std::vector<unsigned char>(secretBlock.begin(),
-                                                                                      secretBlock.begin() + KEY_SIZE),
-                                                       std::vector<unsigned char>(secretBlock.begin() + KEY_SIZE,
-                                                                                     secretBlock.begin() + KEY_SIZE + IV_SIZE));
+                                                                                  secretBlock.begin() + KEY_SIZE));
+
     // Cleansing.
     if (clientKeys != nullptr) {
         clientKeys.reset();

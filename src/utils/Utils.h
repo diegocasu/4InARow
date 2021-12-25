@@ -135,24 +135,6 @@ void checkKeySize(const std::vector<unsigned char> &key) {
 }
 
 /**
- * Checks if the given initialization vector is correctly sized.
- * If the check fails, the function throws a user specified exception.
- * @tparam Exception  the exception type.
- * @param iv          the initialization vector.
- * @throws Exception  if the initialization vector is wrongly sized.
- */
-template<typename Exception>
-void checkIvSize(const std::vector<unsigned char> &iv) {
-    if (iv.size() != IV_SIZE) {
-        throw Exception("The IV size must be exactly " +
-                        std::to_string(IV_SIZE) +
-                        " bytes. IV size: " +
-                        std::to_string(iv.size()) +
-                        " bytes");
-    }
-}
-
-/**
  * Checks if the given username is valid.
  * If the check fails, the function throws a user specified exception.
  * @tparam Exception  the exception type.

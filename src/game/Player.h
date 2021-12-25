@@ -198,8 +198,7 @@ class Player {
 
         /**
          * Initializes the cipher used to encrypt, decrypt and authenticate the communications.
-         * The key and initialization vector of the cipher are derived from the SHA256 hash
-         * of an entropy source. The latter is obtained concatenating:
+         * The key is derived from the SHA256 hash of an entropy source. The latter is obtained concatenating:
          * 1) the Elliptic-curve Diffie-Hellman shared secret;
          * 2) the client nonce;
          * 3) the server nonce.

@@ -1,31 +1,25 @@
 #include <Utils.h>
 #include <CryptoException.h>
 #include <Constants.h>
+#include "CSPRNG.h"
 #include "AuthenticatedEncryption.h"
 
 namespace fourinarow {
 
-AuthenticatedEncryption::AuthenticatedEncryption(std::vector<unsigned char> key, std::vector<unsigned char> iv)
-: key(std::move(key)), iv(std::move(iv)) {
+AuthenticatedEncryption::AuthenticatedEncryption(std::vector<unsigned char> key) : key(std::move(key)) {
     checkKeySize<CryptoException>(this->key);
-    checkIvSize<CryptoException>(this->iv);
 }
 
 AuthenticatedEncryption::~AuthenticatedEncryption() {
     if (!key.empty()) {
         cleanse(key);
     }
-
-    if (!iv.empty()) {
-        cleanse(iv);
-    }
 }
 
 AuthenticatedEncryption::AuthenticatedEncryption(AuthenticatedEncryption &&that) noexcept
-: cipher(that.cipher), key(std::move(that.key)), iv(std::move(that.iv)) {
+: cipher(that.cipher), key(std::move(that.key)) {
     that.cipher = nullptr;
     that.key = std::vector<unsigned char>();
-    that.iv = std::vector<unsigned char>();
 }
 
 AuthenticatedEncryption& AuthenticatedEncryption::operator=(AuthenticatedEncryption &&that) noexcept {
@@ -33,16 +27,10 @@ AuthenticatedEncryption& AuthenticatedEncryption::operator=(AuthenticatedEncrypt
         cleanse(key);
     }
 
-    if (!iv.empty()) {
-        cleanse(iv);
-    }
-
     cipher = that.cipher;
     key = std::move(that.key);
-    iv = std::move(that.iv);
     that.cipher = nullptr;
     that.key = std::vector<unsigned char>();
-    that.iv = std::vector<unsigned char>();
 
     return *this;
 }
@@ -53,8 +41,13 @@ std::vector<unsigned char> AuthenticatedEncryption::encrypt(const std::vector<un
         throw CryptoException("Empty plaintext");
     }
 
+    std::vector<unsigned char> iv(IV_SIZE);
+    std::vector<unsigned char> result(IV_SIZE + plaintext.size() + TAG_SIZE);
+
+    CSPRNG::nextBytes(iv, IV_SIZE);
+    memcpy(result.data(), iv.data(), IV_SIZE);
+
     EVP_CIPHER_CTX *context = EVP_CIPHER_CTX_new();
-    std::vector<unsigned char> result(plaintext.size() + TAG_SIZE);
     auto ciphertextLength = 0;
     auto encryptOutputLength = 0;
 
@@ -77,20 +70,22 @@ std::vector<unsigned char> AuthenticatedEncryption::encrypt(const std::vector<un
     }
 
     // Provide the plaintext.
-    if (1 != EVP_EncryptUpdate(context, result.data(), &encryptOutputLength, plaintext.data(), plaintext.size())) {
+    if (1 != EVP_EncryptUpdate(context, result.data() + IV_SIZE, &encryptOutputLength,
+                               plaintext.data(), plaintext.size())) {
         EVP_CIPHER_CTX_free(context);
         throw CryptoException(getOpenSslError());
     }
     ciphertextLength = encryptOutputLength;
 
-    if (1 != EVP_EncryptFinal(context, result.data() + ciphertextLength, &encryptOutputLength)) {
+    if (1 != EVP_EncryptFinal(context, result.data() + IV_SIZE + ciphertextLength, &encryptOutputLength)) {
         EVP_CIPHER_CTX_free(context);
         throw CryptoException(getOpenSslError());
     }
     ciphertextLength += encryptOutputLength;
 
     // Retrieve the tag.
-    if (1 != EVP_CIPHER_CTX_ctrl(context, EVP_CTRL_AEAD_GET_TAG, TAG_SIZE, result.data() + ciphertextLength)) {
+    if (1 != EVP_CIPHER_CTX_ctrl(context, EVP_CTRL_AEAD_GET_TAG, TAG_SIZE,
+                                 result.data() + IV_SIZE + ciphertextLength)) {
         EVP_CIPHER_CTX_free(context);
         throw CryptoException(getOpenSslError());
     }
@@ -99,19 +94,23 @@ std::vector<unsigned char> AuthenticatedEncryption::encrypt(const std::vector<un
     return result;
 }
 
-std::vector<unsigned char> AuthenticatedEncryption::decrypt(const std::vector<unsigned char> &ciphertextAndTag,
+std::vector<unsigned char> AuthenticatedEncryption::decrypt(const std::vector<unsigned char> &ciphertext,
                                                             const std::vector<unsigned char> &aad) const {
-    if (ciphertextAndTag.empty()) {
-        throw CryptoException("Empty ciphertext and tag");
+    if (ciphertext.empty()) {
+        throw CryptoException("Empty ciphertext");
     }
 
-    if (ciphertextAndTag.size() <= TAG_SIZE) {
-        throw CryptoException("Malformed ciphertext and tag");
+    if (ciphertext.size() <= IV_SIZE + TAG_SIZE) {
+        throw CryptoException("Malformed ciphertext");
     }
+
+    std::vector<unsigned char> iv(IV_SIZE);
+    memcpy(iv.data(), ciphertext.data(), IV_SIZE);
+
+    size_t ciphertextLength = ciphertext.size() - IV_SIZE - TAG_SIZE;
+    std::vector<unsigned char> plaintext(ciphertextLength);
 
     EVP_CIPHER_CTX *context = EVP_CIPHER_CTX_new();
-    size_t ciphertextLength = ciphertextAndTag.size() - TAG_SIZE;
-    std::vector<unsigned char> plaintext(ciphertextLength);
     auto decryptOutputLength = 0;
 
     if (!context) {
@@ -133,14 +132,15 @@ std::vector<unsigned char> AuthenticatedEncryption::decrypt(const std::vector<un
     }
 
     // Provide the ciphertext.
-    if (1 != EVP_DecryptUpdate(context, plaintext.data(), &decryptOutputLength, ciphertextAndTag.data(), ciphertextLength)) {
+    if (1 != EVP_DecryptUpdate(context, plaintext.data(), &decryptOutputLength,
+                               ciphertext.data() + IV_SIZE, ciphertextLength)) {
         EVP_CIPHER_CTX_free(context);
         throw CryptoException(getOpenSslError());
     }
 
     // Provide the expected tag.
     if (1 != EVP_CIPHER_CTX_ctrl(context, EVP_CTRL_AEAD_SET_TAG, TAG_SIZE,
-                                 (unsigned char*) ciphertextAndTag.data() + ciphertextLength)) {
+                                 (unsigned char*) ciphertext.data() + IV_SIZE + ciphertextLength)) {
         EVP_CIPHER_CTX_free(context);
         throw CryptoException(getOpenSslError());
     }
