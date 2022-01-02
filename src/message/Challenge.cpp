@@ -68,6 +68,7 @@ void Challenge::deserialize(const std::vector<unsigned char> &message) {
     checkIfEnoughSpace(message, processedBytes, usernameLength);
     username.resize(usernameLength);
     memcpy(&username[0], message.data() + processedBytes, usernameLength);
+    checkUsernameValidity<SerializationException>(username);
 }
 
 }

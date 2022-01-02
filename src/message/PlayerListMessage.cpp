@@ -71,6 +71,7 @@ void PlayerListMessage::deserialize(const std::vector<unsigned char> &message) {
     checkIfEnoughSpace(message, processedBytes, playerListLength);
     playerList.resize(playerListLength);
     memcpy(&playerList[0], message.data() + processedBytes, playerListLength);
+    checkPlayerListSize<SerializationException>(playerList);
 }
 
 }

@@ -79,6 +79,7 @@ void ServerHello::deserialize(const std::vector<unsigned char> &message) {
     checkIfEnoughSpace(message, processedBytes, certificateLength);
     certificate.resize(certificateLength);
     memcpy(certificate.data(), message.data() + processedBytes, certificateLength);
+    checkCertificateSize<SerializationException>(certificate);
     processedBytes += certificateLength;
 
     // Deserialize the nonce.

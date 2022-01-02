@@ -89,7 +89,7 @@ void PlayerMessage::deserialize(const std::vector<unsigned char> &message) {
     memcpy(&addressLength, message.data() + processedBytes, sizeof(addressLength));
     processedBytes += sizeof(addressLength);
 
-    if (addressLength == 0) {
+    if (addressLength == 0 || addressLength > MAX_IPV4_ADDRESS_SIZE) {
         throw SerializationException("Malformed message");
     }
 

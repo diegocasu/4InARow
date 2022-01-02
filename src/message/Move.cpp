@@ -51,15 +51,9 @@ void Move::deserialize(const std::vector<unsigned char> &message) {
     }
 
     // Deserialize the column index and check if valid.
-    uint8_t receivedColumn;
-    checkIfEnoughSpace(message, processedBytes, sizeof(receivedColumn));
-    memcpy(&receivedColumn, message.data() + processedBytes, sizeof(receivedColumn));
-
-    if (receivedColumn >= COLUMNS) {
-        throw SerializationException("Malformed message");
-    }
-
-    column = receivedColumn;
+    checkIfEnoughSpace(message, processedBytes, sizeof(column));
+    memcpy(&column, message.data() + processedBytes, sizeof(column));
+    checkColumnIndexValidity<SerializationException>(column);
 }
 
 }
