@@ -48,7 +48,7 @@ void HandshakeHandler::receiveServerHello(const TcpSocket &socket,
     std::cout << "Handshake: waiting for a SERVER_HELLO message" << std::endl;
 
     try {
-        auto message = socket.receive();
+        auto message = socket.receiveWithTimeout(CLIENT_PROTOCOL_TIMEOUT);
         auto type = getMessageType<SerializationException>(message);
 
         if (type != SERVER_HELLO) {
@@ -89,7 +89,7 @@ std::string HandshakeHandler::endHandshake(const TcpSocket &socket,
         socket.send(endHandshake.serialize());
 
         // The handshake could fail or succeed: depending on the case, the response of the server is encrypted or not.
-        auto serverResponse = socket.receive();
+        auto serverResponse = socket.receiveWithTimeout(CLIENT_PROTOCOL_TIMEOUT);
         auto type = getMessageType<SerializationException>(serverResponse);
 
         if (type == PROTOCOL_VIOLATION || type == MALFORMED_MESSAGE || type == INTERNAL_ERROR) {
@@ -183,7 +183,7 @@ void HandshakeHandler::handlePlayer1Hello(const TcpSocket &socket,
     std::cout << "Handshake: waiting for a PLAYER1_HELLO message" << std::endl;
 
     try {
-        auto message = socket.receive();
+        auto message = socket.receiveWithTimeout(CLIENT_PROTOCOL_TIMEOUT);
         auto type = getMessageType<SerializationException>(message);
 
         if (type != PLAYER1_HELLO) {
@@ -227,7 +227,7 @@ void HandshakeHandler::receivePlayer2Hello(const TcpSocket &socket,
     std::cout << "Handshake: waiting for a PLAYER2_HELLO message" << std::endl;
 
     try {
-        auto message = socket.receive();
+        auto message = socket.receiveWithTimeout(CLIENT_PROTOCOL_TIMEOUT);
         auto type = getMessageType<SerializationException>(message);
 
         if (type != PLAYER2_HELLO) {
@@ -258,7 +258,7 @@ void HandshakeHandler::handleEndHandshakeP2P(const TcpSocket &socket,
     std::cout << "Handshake: waiting for an END_HANDSHAKE message" << std::endl;
 
     try {
-        auto message = socket.receive();
+        auto message = socket.receiveWithTimeout(CLIENT_PROTOCOL_TIMEOUT);
         auto type = getMessageType<SerializationException>(message);
 
         if (type != END_HANDSHAKE) {

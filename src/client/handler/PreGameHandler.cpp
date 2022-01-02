@@ -187,7 +187,7 @@ void PreGameHandler::handlePlayerListRefreshCommand(const TcpSocket &socket,
         InfoMessage requestPlayerList(REQ_PLAYER_LIST);
         socket.send(encryptAndAuthenticate(&requestPlayerList, myselfForServer));
 
-        auto encryptedMessage = socket.receive();
+        auto encryptedMessage = socket.receiveWithTimeout(CLIENT_PROTOCOL_TIMEOUT);
         auto message = authenticateAndDecrypt(encryptedMessage, myselfForServer);
         auto type = getMessageType<SerializationException>(message);
 

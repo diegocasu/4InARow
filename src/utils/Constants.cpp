@@ -5,6 +5,7 @@ namespace fourinarow {
 const unsigned short SERVER_PORT               = 5000;
 const unsigned short PLAYER_PORT               = 5001;
 const size_t BACKLOG_SIZE                      = 100;
+const unsigned long CLIENT_PROTOCOL_TIMEOUT    = 10;                       // In seconds.
 const unsigned long CLIENT_MATCHMAKING_TIMEOUT = 30;                       // In seconds.
 const unsigned int P2P_MAX_CONNECTION_RETRIES  = 3;                        // Each retry is interleaved by 1 second of sleep.
 const unsigned int MAX_TURN_DURATION           = 90;                       // In seconds.
