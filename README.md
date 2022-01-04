@@ -19,7 +19,9 @@ The repository is organised in the following way:
 - _src/utils_ contains utility functions and constants.
 
 ## Requirements
-- CMake 3.16+. It has not been tested, but earlier versions should work too.
+- A Unix-like OS. The code has been tested on Ubuntu 20.04.3 LTS. 
+- A C++ compiler supporting C++14.
+- CMake 3.16+. Older versions should work too (not tested).
 - OpenSSL 1.1.1+. The most recent version of OpenSSL can be installed running:
 ```bash
   sudo apt-get install libssl-dev
@@ -59,5 +61,5 @@ To execute the application:
   ```
 - Play!
 
-The application uses the ports 5000 and 5001, which can be changed by modifying the
+The application uses the ports 5000 and 5001. If necessary, they can be changed by modifying the
 variables ```SERVER_PORT``` and ```PLAYER_PORT``` in ```src/utils/Constants.cpp```.
