@@ -101,6 +101,25 @@ class PreGameHandler : Handler {
         static bool parseChallengeRequestAnswer();
 
         /**
+         * Handles the response of the user to an incoming challenge request.
+         * It parses the response of the user and sends it to the server.
+         * It does not wait for the reception of a <code>PLAYER</code> message.
+         * @param socket            the socket used to communicate with the server.
+         * @param challenge         the object storing the received <code>CHALLENGE</code> request.
+         * @param myselfForServer   the object storing the quantities needed to communicate with the server.
+         * @param playerList        the player list.
+         * @return                  true if the user accepts the challenge request, false otherwise.
+         * @throws SocketException  if an error occurs while sending the response,
+         *                          or the remote socket has been closed.
+         * @throws CryptoException  if an error occurs while encrypting the response, or
+         *                          the maximum sequence number has been reached.
+         */
+        static bool handleResponseToIncomingChallenge(const TcpSocket &socket,
+                                                      const Challenge &challenge,
+                                                      Player &myselfForServer,
+                                                      const std::string &playerList);
+
+        /**
          * Handles an incoming message sent by the server not in response to a user command.
          * If the message is a <code>CHALLENGE</code one, it prompts the user to accept or refuse the request.
          * @param socket            the socket used to communicate with the server.
@@ -113,8 +132,8 @@ class PreGameHandler : Handler {
          * @param opponentUsername  a reference to an empty string that will store the username of the opponent.
          *                          The content of the string is valid only if a challenge is accepted,
          *                          i.e. if the method returns true.
-         * @return                  true if the message is a challenge request and the user accepts it,
-         *                          false otherwise.
+         * @return                  true if the message is a challenge request, the user accepts it
+         *                          and a <code>PLAYER</code> message is received correctly, false otherwise.
          * @throws runtime_error  if an error occurs while handling the incoming message.
          */
         static bool handleIncomingMessage(const TcpSocket &socket,
@@ -125,17 +144,29 @@ class PreGameHandler : Handler {
                                           std::string &opponentUsername);
 
         /**
-         * Handles a command for refreshing the player list.
+         * Handles a command for refreshing the player list. If a pending <code>CHALLENGE</code> message
+         * is waiting to be processed, the method does not perform the refresh,
+         * but handles the <code>CHALLENGE</code>.
          * @param socket             the socket used to communicate with the server.
          * @param myselfForServer    the object storing the quantities needed to communicate with the server.
-         * @param currentPlayerList  the current player list. It is modified only if
-         *                           there is no pending challenge request.
+         * @param currentPlayerList  the current player list. It is modified only if there is no pending challenge
+         *                           request and the refresh succeeds.
+         * @param opponent           a reference to an empty object that will store the <code>PLAYER</code> message
+         *                           containing the information about the opponent. The content of this object
+         *                           is valid only if a pending challenge is accepted, i.e. if the method returns true.
+         * @param opponentUsername   a reference to an empty string that will store the username of the opponent.
+         *                           The content of the string is valid only if a pending challenge is accepted,
+         *                           i.e. if the method returns true.
+         * @return                   true if a pending <code>CHALLENGE<code> message is present, the user accepts it
+         *                           and a <code>PLAYER</code> message is received correctly, false otherwise.
          * @throws runtime_error  if an error occurs while refreshing the player list or
          *                        managing a pending challenge request.
          */
-        static void handlePlayerListRefreshCommand(const TcpSocket &socket,
+        static bool handlePlayerListRefreshCommand(const TcpSocket &socket,
                                                    Player &myselfForServer,
-                                                   std::string &currentPlayerList);
+                                                   std::string &currentPlayerList,
+                                                   PlayerMessage &opponent,
+                                                   std::string &opponentUsername);
         /**
          * Handles a command for exiting the application.
          * @param socket            the socket used to communicate with the server.
@@ -161,12 +192,17 @@ class PreGameHandler : Handler {
 
         /**
          * Receives a response to a challenge sent by this client.
+         * If a pending <code>CHALLENGE</code> message is present, the challenge sent by this client
+         * is ignored and the method handles the pending one.
          * If no message is received, the matchmaking is aborted.
-         * @param socket           the socket used to communicate with the server.
-         * @param myselfForServer  the object storing the quantities needed to communicate with the server.
-         * @param playerList       the player list.
-         * @return                 true if a <code>CHALLENGE_ACCEPTED</code> message is received,
-         *                         false otherwise.
+         * Note that the method does not implement the reception of a <code>PLAYER</code> message
+         * when a pending challenge is found.
+         * @param socket            the socket used to communicate with the server.
+         * @param myselfForServer   the object storing the quantities needed to communicate with the server.
+         * @param playerList        the player list.
+         * @return                  true if a <code>CHALLENGE_ACCEPTED</code> message is received,
+         *                          or a pending <code>CHALLENGE</code> request is accepted;
+         *                          false otherwise.
          * @throws SocketException         if an error occurs while aborting the matchmaking,
          *                                 or the remote socket has been closed.
          * @throws SerializationException  if an error occurs while deserializing the message.

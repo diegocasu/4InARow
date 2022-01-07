@@ -15,7 +15,8 @@ fourinarow::Player::Player()
       clientKeys(nullptr),
       serverKeys(nullptr),
       cipher(nullptr),
-      sequenceNumber(0),
+      sequenceNumberReads(0),
+      sequenceNumberWrites(0),
       matchmakingInitiator(false) {}
 
 const std::string& Player::getUsername() const {
@@ -63,8 +64,12 @@ const AuthenticatedEncryption& Player::getCipher() const {
     return *cipher;
 }
 
-uint32_t Player::getSequenceNumber() const {
-    return sequenceNumber;
+uint32_t Player::getSequenceNumberReads() const {
+    return sequenceNumberReads;
+}
+
+uint32_t Player::getSequenceNumberWrites() const {
+    return sequenceNumberWrites;
 }
 
 bool Player::isMatchmakingInitiator() const {
@@ -250,11 +255,18 @@ void Player::generateFreshnessProofP2P() {
     concatenate(freshnessProof, clientNonce, serverNonce, getClientPublicKey(), getServerPublicKey());
 }
 
-void Player::incrementSequenceNumber() {
-    if (sequenceNumber > UINT_MAX - 1) {
-        throw CryptoException("Max sequence number reached");
+void Player::incrementSequenceNumberReads() {
+    if (sequenceNumberReads == UINT_MAX) {
+        throw CryptoException("Max sequence number for reading messages reached");
     }
-    sequenceNumber++;
+    sequenceNumberReads++;
+}
+
+void Player::incrementSequenceNumberWrites() {
+    if (sequenceNumberWrites == UINT_MAX) {
+        throw CryptoException("Max sequence number for writing messages reached");
+    }
+    sequenceNumberWrites++;
 }
 
 }

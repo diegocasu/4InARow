@@ -165,6 +165,13 @@ void MatchmakingClientHandler::handle(const TcpSocket &socket,
             return;
         }
 
+        if (type == REQ_PLAYER_LIST || type == CHALLENGE) {
+            std::cout << "Ignoring a " << convertMessageType(type) << " message. The client has a pending CHALLENGE";
+            std::cout << std::endl;
+            cleanse(type);
+            return;
+        }
+
         if (isValidChallengeResponse(player, type)) {
             handleChallengeResponse(socket, type, player, playerList, statusList, removalList);
             cleanse(type);

@@ -126,6 +126,26 @@ bool PreGameHandler::parseChallengeRequestAnswer() {
     return false;
 }
 
+bool PreGameHandler::handleResponseToIncomingChallenge(const TcpSocket &socket,
+                                                       const Challenge &challenge,
+                                                       Player &myselfForServer,
+                                                       const std::string &playerList) {
+    printChallengeRequest(challenge.getUsername());
+    auto challengeAccepted = parseChallengeRequestAnswer();
+
+    if (challengeAccepted) {
+        InfoMessage response(CHALLENGE_ACCEPTED);
+        socket.send(encryptAndAuthenticate(&response, myselfForServer));
+        return true;
+    }
+
+    InfoMessage response(CHALLENGE_REFUSED);
+    socket.send(encryptAndAuthenticate(&response, myselfForServer));
+    std::cout << '\n';
+    printAvailableCommands(playerList);
+    return false;
+}
+
 bool PreGameHandler::handleIncomingMessage(const TcpSocket &socket,
                                            const InputMultiplexer &multiplexer,
                                            Player &myselfForServer,
@@ -154,35 +174,27 @@ bool PreGameHandler::handleIncomingMessage(const TcpSocket &socket,
         cleanse(message);
         cleanse(type);
 
-        printChallengeRequest(challenge.getUsername());
-        auto challengeAccepted = parseChallengeRequestAnswer();
-
-        if (challengeAccepted) {
-            InfoMessage response(CHALLENGE_ACCEPTED);
-            socket.send(encryptAndAuthenticate(&response, myselfForServer));
-
-            if (!receivePlayerMessage(socket, myselfForServer, playerList, opponent)) {
-                return false;
-            }
-
-            opponentUsername = std::move(challenge.getUsername());
-            return true;
+        if (!handleResponseToIncomingChallenge(socket, challenge, myselfForServer, playerList)) {
+            return false;
         }
 
-        InfoMessage response(CHALLENGE_REFUSED);
-        socket.send(encryptAndAuthenticate(&response, myselfForServer));
-        std::cout << '\n';
-        printAvailableCommands(playerList);
-        return false;
+        if (!receivePlayerMessage(socket, myselfForServer, playerList, opponent)) {
+            return false;
+        }
+
+        opponentUsername = std::move(challenge.getUsername());
+        return true;
     } catch (const std::exception &exception) {
         std::cerr << "\nCommunication error. " << exception.what() << std::endl;
         throw std::runtime_error("Lost connection with the server");
     }
 }
 
-void PreGameHandler::handlePlayerListRefreshCommand(const TcpSocket &socket,
+bool PreGameHandler::handlePlayerListRefreshCommand(const TcpSocket &socket,
                                                     Player &myselfForServer,
-                                                    std::string &currentPlayerList) {
+                                                    std::string &currentPlayerList,
+                                                    PlayerMessage &opponent,
+                                                    std::string &opponentUsername) {
     try {
         InfoMessage requestPlayerList(REQ_PLAYER_LIST);
         socket.send(encryptAndAuthenticate(&requestPlayerList, myselfForServer));
@@ -191,12 +203,31 @@ void PreGameHandler::handlePlayerListRefreshCommand(const TcpSocket &socket,
         auto message = authenticateAndDecrypt(encryptedMessage, myselfForServer);
         auto type = getMessageType<SerializationException>(message);
 
+        if (type == CHALLENGE) {
+            // The client has a pending CHALLENGE request. REQ_PLAYER_LIST will be ignored by the server.
+            Challenge challenge;
+            challenge.deserialize(message);
+            cleanse(message);
+            cleanse(type);
+
+            if (!handleResponseToIncomingChallenge(socket, challenge, myselfForServer, currentPlayerList)) {
+                return false;
+            }
+
+            if (!receivePlayerMessage(socket, myselfForServer, currentPlayerList, opponent)) {
+                return false;
+            }
+
+            opponentUsername = std::move(challenge.getUsername());
+            return true;
+        }
+
         if (type != PLAYER_LIST) {
             std::cout << "An error occurred while synchronizing the player list. Try again.\n" << std::endl;
             printAvailableCommands(currentPlayerList);
             cleanse(message);
             cleanse(type);
-            return;
+            return false;
         }
 
         PlayerListMessage playerList;
@@ -207,15 +238,11 @@ void PreGameHandler::handlePlayerListRefreshCommand(const TcpSocket &socket,
         currentPlayerList = playerList.getPlayerList();
         printPlayerList(currentPlayerList);
         printAvailableCommands(currentPlayerList);
-    } catch(const CryptoException &exception) {
-        /* In case of a pending incoming challenge, arrived while the user was writing
-         * the username of the opponent, the sequence number of the client could be
-         * temporarily desynchronized from the one of the server, causing a tag mismatch.
-         * In this case, the matchmaking is cancelled for both players and the request is ignored.
-         * The sequence number is synchronized again starting from the next message.
-         */
+        return false;
+    } catch (const CryptoException &exception) {
         std::cout << "An error occurred while synchronizing the player list. Try again.\n" << std::endl;
         printAvailableCommands(currentPlayerList);
+        return false;
 
     } catch (const std::exception &exception) {
         std::cerr << "Impossible to handle the player list refresh. ";
@@ -241,16 +268,37 @@ std::vector<unsigned char> PreGameHandler::receiveMessageOrCancelMatchmaking(con
     } catch (const SocketException &exception) {
         /*
          * If the timeout has expired, the other player is not responding and is causing
-         * this client to hang. Then, the matchmaking is aborted by sending a PLAYER_NOT_AVAILABLE
+         * this client to hang. Then, the matchmaking is aborted by sending an END_GAME
          * message to the server: since this type of message is not expected at this point
          * of the matchmaking, the server will manage it as an error in the protocol and
-         * cancel the matchmaking, forcing both clients in the MATCHMAKING_INTERRUPTED state.
+         * cancel the matchmaking itself, forcing both clients in the MATCHMAKING_INTERRUPTED state.
          * Achieved this result, the client can accept again commands from the user.
          * If the error is due to the remote server socket being closed, the following send()
          * will throw and the resulting exception will be caught in the caller,
          * causing the client to shut down as expected.
+         *
+         * Note that sending END_GAME, instead of another message like PLAYER_NOT_AVAILABLE,
+         * is useful to avoid that this client gets trapped into the PLAYING state due to a
+         * response from the opponent sent near the expiration of the timeout.
+         * Indeed, consider this critical race:
+         * 1) this client is waiting for a CHALLENGE_ACCEPTED/REFUSED;
+         * 2) the opponent sends CHALLENGE_ACCEPTED near the expiration of this client's timeout.
+         *    The server receives CHALLENGE_ACCEPTED from the opponent, and immediately after it receives
+         *    the abort message sent by this client, triggered by the expiration of the timeout;
+         * 3) the server processes the CHALLENGE_ACCEPTED, puts both players in PLAYING state and
+         *    sends the PLAYER messages. This client, when PLAYER is received, believes the matchmaking
+         *    has been aborted and to be in the AVAILABLE state because its timeout has expired,
+         *    and discards the message. The opponent receives PLAYER correctly, tries to establish
+         *    a P2P connection with this client and fails, returning to the AVAILABLE state
+         *    as expected by the protocol;
+         * 4) now, the server processes the abort message previously sent by this client.
+         *    This client is still in the PLAYING state for the server, so any message different
+         *    from END_GAME would result in a protocol violation (see PlayingClientHandler.cpp)
+         *    and the PLAYING state being preserved. A client cannot send an END_GAME message
+         *    when displaying the main menu, so it would never recover from the PLAYING state.
+         *    This is why sending END_GAME to abort the matchmaking is required.
          */
-        InfoMessage abortMatchmaking(PLAYER_NOT_AVAILABLE);
+        InfoMessage abortMatchmaking(END_GAME);
         socket.send(encryptAndAuthenticate(&abortMatchmaking, myselfForServer));
         return std::vector<unsigned char>();
     }
@@ -270,11 +318,21 @@ bool PreGameHandler::receiveChallengeResponse(const TcpSocket &socket,
 
     auto message = authenticateAndDecrypt(challengeResponseMessage, myselfForServer);
     auto type = getMessageType<SerializationException>(message);
-    cleanse(message);
+
+    if (type == CHALLENGE) {
+        // The client has a pending CHALLENGE request. The previous CHALLENGE will be ignored by the server.
+        std::cout << "Your challenge request has been denied, because you have a pending one\n";
+        Challenge challenge;
+        challenge.deserialize(message);
+        cleanse(message);
+        cleanse(type);
+        return handleResponseToIncomingChallenge(socket, challenge, myselfForServer, playerList);
+    }
 
     if (!isChallengeResponseMessage(type) || type == PLAYER_NOT_AVAILABLE) {
         std::cout << "Matchmaking failed. Try to refresh the player list\n" << std::endl;
         printAvailableCommands(playerList);
+        cleanse(message);
         cleanse(type);
         return false;
     }
@@ -282,11 +340,13 @@ bool PreGameHandler::receiveChallengeResponse(const TcpSocket &socket,
     if (type == CHALLENGE_REFUSED) {
         std::cout << "The user has refused your challenge\n" << std::endl;
         printAvailableCommands(playerList);
+        cleanse(message);
         cleanse(type);
         return false;
     }
 
     std::cout << "The user has accepted the challenge!" << std::endl;
+    cleanse(message);
     cleanse(type);
     return true;
 }
@@ -342,21 +402,7 @@ bool PreGameHandler::handleChallengeCommand(const TcpSocket &socket,
 
         opponentUsername = std::move(username);
         return true;
-    } catch(const CryptoException &exception) {
-        /*
-         * Suppose the client and the server have sequence number N at the beginning of this method, and
-         * suppose a challenge request arrives while the user is writing the username of the opponent.
-         * In this case, the pending challenge request has tag generated using N as sequence number,
-         * and the server has moved to sequence number N+1. When the user finishes typing, the client
-         * sends its CHALLENGE message to the server, generating a tag with sequence number N and moving
-         * to sequence number N+1. This means that both the client and the server get a tag mismatch
-         * when parsing the pending messages, since both try to verify a tag generated with sequence number
-         * N using the current sequence number N+1. In this case, the matchmaking fails and the error must
-         * be caught here to avoid a client disconnection. In any case, after the tag mismatch, the sequence
-         * numbers are again synchronized on the value N+1, so the communication can continue: the client
-         * will receive a MALFORMED_MESSAGE due to the tag mismatch caught by the server, and both will
-         * move to the sequence number N+2.
-         */
+    } catch (const CryptoException &exception) {
         std::cout << "Matchmaking failed. Try to refresh the player list\n" << std::endl;
         printAvailableCommands(playerList);
         return false;
@@ -395,7 +441,9 @@ bool PreGameHandler::handle(const TcpSocket &socket,
         }
 
         if (isRefreshPlayerListCommand(command)) {
-            handlePlayerListRefreshCommand(socket, myselfForServer, currentPlayerList);
+            if (handlePlayerListRefreshCommand(socket, myselfForServer, currentPlayerList, opponent, opponentUsername)) {
+                return true;
+            }
             continue;
         }
 

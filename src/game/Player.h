@@ -50,7 +50,8 @@ class Player {
         std::vector<unsigned char> serverPublicKey;
         std::vector<unsigned char> freshnessProof;
         std::unique_ptr<AuthenticatedEncryption> cipher;
-        uint32_t sequenceNumber;
+        uint32_t sequenceNumberReads;
+        uint32_t sequenceNumberWrites;
         std::string matchmakingPlayer;
         bool matchmakingInitiator;
 
@@ -83,7 +84,8 @@ class Player {
         const std::vector<unsigned char>& getServerNonce() const;
         const std::string& getMatchmakingPlayer() const;
         const std::vector<unsigned char>& getFreshnessProof() const;
-        uint32_t getSequenceNumber() const;
+        uint32_t getSequenceNumberReads() const;
+        uint32_t getSequenceNumberWrites() const;
         bool isMatchmakingInitiator() const;
 
         /**
@@ -244,13 +246,22 @@ class Player {
         void generateFreshnessProofP2P();
 
         /**
-         * Increments the sequence number by one, checking for a possible overflow.
+         * Increments by one the sequence number used for reading messages, checking for a possible overflow.
          * The sequence number is big enough to cover the number of messages
          * exchanged during an average communication session.
          * If the maximum sequence number has been reached, the communication must be terminated.
-         * @throws CryptoException  if the maximum sequence number has been reached.
+         * @throws CryptoException  if the maximum sequence number for reading messages has been reached.
          */
-        void incrementSequenceNumber();
+        void incrementSequenceNumberReads();
+
+        /**
+         * Increments by one the sequence number used for writing messages, checking for a possible overflow.
+         * The sequence number is big enough to cover the number of messages
+         * exchanged during an average communication session.
+         * If the maximum sequence number has been reached, the communication must be terminated.
+         * @throws CryptoException  if the maximum sequence number for writing messages has been reached.
+         */
+        void incrementSequenceNumberWrites();
 };
 
 }

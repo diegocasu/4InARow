@@ -8,7 +8,7 @@ namespace fourinarow {
 
 std::vector<unsigned char> Handler::encryptAndAuthenticate(const Message *message, Player &player) {
     // Generate the additional authenticated data using the sequence number.
-    uint32_t sequenceNumber = htonl(player.getSequenceNumber());
+    uint32_t sequenceNumber = htonl(player.getSequenceNumberWrites());
     std::vector<unsigned char> aad(sizeof(sequenceNumber));
     memcpy(aad.data(), &sequenceNumber, sizeof(sequenceNumber));
 
@@ -16,18 +16,18 @@ std::vector<unsigned char> Handler::encryptAndAuthenticate(const Message *messag
     auto authenticatedCiphertext = player.getCipher().encrypt(plaintext, aad);
     cleanse(plaintext);
 
-    player.incrementSequenceNumber();
+    player.incrementSequenceNumberWrites();
     return authenticatedCiphertext;
 }
 
 std::vector<unsigned char> Handler::authenticateAndDecrypt(std::vector<unsigned char> &message, Player &player) {
     // Generate the additional authenticated data using the sequence number.
-    uint32_t sequenceNumber = htonl(player.getSequenceNumber());
+    uint32_t sequenceNumber = htonl(player.getSequenceNumberReads());
     std::vector<unsigned char> aad(sizeof(sequenceNumber));
     memcpy(aad.data(), &sequenceNumber, sizeof(sequenceNumber));
 
     auto plaintext = player.getCipher().decrypt(message, aad);
-    player.incrementSequenceNumber();
+    player.incrementSequenceNumberReads();
 
     return plaintext;
 }
