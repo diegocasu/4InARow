@@ -48,7 +48,8 @@ class Player {
         std::unique_ptr<DiffieHellman> serverKeys;
         std::vector<unsigned char> clientPublicKey;
         std::vector<unsigned char> serverPublicKey;
-        std::vector<unsigned char> freshnessProof;
+        std::vector<unsigned char> clientFreshnessProof;
+        std::vector<unsigned char> serverFreshnessProof;
         std::unique_ptr<AuthenticatedEncryption> cipher;
         uint32_t sequenceNumberReads;
         uint32_t sequenceNumberWrites;
@@ -56,12 +57,30 @@ class Player {
         bool matchmakingInitiator;
 
         /**
-         * Checks if the nonces, the public key of the other party and
-         * the key pair of this party have been initialized.
-         * @throws CryptoException  if at least one of the above quantities has not been initialized
+         * Checks if the client nonce has been initialized.
+         * @throws CryptoException  if the client nonce has not been initialized.
+         */
+        void checkIfClientNonceInitialized() const;
+
+        /**
+         * Checks if the server nonce has been initialized.
+         * @throws CryptoException  if the server nonce has not been initialized.
+         */
+        void checkIfServerNonceInitialized() const;
+
+        /**
+         * Checks if the key pair or the public key of the client has been initialized.
+         * @throws CryptoException  if key pair or the public key of the client has not been initialized,
          *                          or has been destroyed.
          */
-        void checkIfCryptoAttributesInitialized() const;
+        void checkIfClientKeyInitialized() const;
+
+        /**
+         * Checks if the key pair or the public key of the server has been initialized.
+         * @throws CryptoException  if key pair or the public key of the server has not been initialized,
+         *                          or has been destroyed.
+         */
+        void checkIfServerKeyInitialized() const;
     public:
         /**
          * Creates a player object, setting its status to <code>OFFLINE</code>.
@@ -83,7 +102,8 @@ class Player {
         const std::vector<unsigned char>& getClientNonce() const;
         const std::vector<unsigned char>& getServerNonce() const;
         const std::string& getMatchmakingPlayer() const;
-        const std::vector<unsigned char>& getFreshnessProof() const;
+        const std::vector<unsigned char>& getClientFreshnessProof() const;
+        const std::vector<unsigned char>& getServerFreshnessProof() const;
         uint32_t getSequenceNumberReads() const;
         uint32_t getSequenceNumberWrites() const;
         bool isMatchmakingInitiator() const;
@@ -215,35 +235,26 @@ class Player {
         void initCipher();
 
         /**
-         * Generates the proof of freshness characterizing a client-server handshake session.
-         * This method must not be used for P2P communications.
+         * Generates the proof of freshness used by a server.
+         * This method can be used for both client-server and P2P handshakes.
          * The proof is obtained concatenating:
-         * 1) the username;
-         * 2) the client nonce;
-         * 3) the server nonce;
-         * 4) the Elliptic-curve Diffie-Hellman public key of the client;
-         * 5) the Elliptic-curve Diffie-Hellman public key of the server;
-         * 6) the certificate of the server.
-         * @throws CryptoException         if at least one of the above quantities has not been set/generated,
-         *                                 or the certificate is not correctly sized,
-         *                                 or an error occurs while deriving the secret quantities.
+         * 1) the client nonce;
+         * 2) the Elliptic-curve Diffie-Hellman public key of the server;
+         * @throws CryptoException         if at least one of the above quantities has not been set/generated.
          * @throws SerializationException  if an error occurs while retrieving a generated public key.
          */
-        void generateFreshnessProof(const std::vector<unsigned char> &certificate);
+        void generateServerFreshnessProof();
 
         /**
-         * Generates the proof of freshness characterizing a P2P handshake session.
-         * This method must not be used for client-server communications.
+         * Generates the proof of freshness used by a client.
+         * This method can be used for both client-server and P2P handshakes.
          * The proof is obtained concatenating:
-         * 2) the player1 (client) nonce;
-         * 3) the player2 (server) nonce;
-         * 4) the Elliptic-curve Diffie-Hellman public key of the player1 (client);
-         * 5) the Elliptic-curve Diffie-Hellman public key of the player2 (server);
-         * @throws CryptoException         if at least one of the above quantities has not been set/generated,
-         *                                 or an error occurs while deriving the secret quantities.
+         * 1) the server nonce;
+         * 2) the Elliptic-curve Diffie-Hellman public key of the client;
+         * @throws CryptoException         if at least one of the above quantities has not been set/generated.
          * @throws SerializationException  if an error occurs while retrieving a generated public key.
          */
-        void generateFreshnessProofP2P();
+        void generateClientFreshnessProof();
 
         /**
          * Increments by one the sequence number used for reading messages, checking for a possible overflow.

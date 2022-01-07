@@ -25,8 +25,7 @@ bool ConnectedClientHandler::isUsernameRegistered(const std::string &username) {
 
 void ConnectedClientHandler::updatePlayerQuantities(Player &player,
                                                     PlayerStatusList &statusList,
-                                                    const ClientHello &clientHello,
-                                                    const std::vector<unsigned char> &certificate) {
+                                                    const ClientHello &clientHello) {
     player.setUsername(clientHello.getUsername());
     player.setStatus(Player::Status::HANDSHAKE);
     statusList[player.getUsername()] = Player::Status::HANDSHAKE;
@@ -34,9 +33,8 @@ void ConnectedClientHandler::updatePlayerQuantities(Player &player,
     player.generateServerNonce();
     player.generateServerKeys();
     player.setClientNonce(clientHello.getNonce());
-    player.setClientPublicKey(clientHello.getPublicKey());
 
-    player.generateFreshnessProof(certificate);
+    player.generateServerFreshnessProof();
 }
 
 void ConnectedClientHandler::handle(const TcpSocket &socket,
@@ -77,12 +75,12 @@ void ConnectedClientHandler::handle(const TcpSocket &socket,
             return;
         }
 
-        updatePlayerQuantities(player, statusList, clientHello, certificate);
+        updatePlayerQuantities(player, statusList, clientHello);
         std::cout << "Handshake: responding with a SERVER_HELLO message" << std::endl;
         socket.send(ServerHello(certificate,
                                 player.getServerNonce(),
                                 player.getServerPublicKey(),
-                                digitalSignature.sign(player.getFreshnessProof())
+                                digitalSignature.sign(player.getServerFreshnessProof())
                                 ).serialize());
         return;
     } catch (const SocketException &exception) {

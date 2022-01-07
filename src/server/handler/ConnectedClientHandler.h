@@ -34,8 +34,8 @@ class ConnectedClientHandler : public Handler {
          * 1) setting the username;
          * 2) setting the status to <code>HANDSHAKE</code>;
          * 3) generating the server nonce and the server keys;
-         * 4) setting the client nonce and the client's public key;
-         * 5) generating the proof of freshness.
+         * 4) setting the client nonce;
+         * 5) generating the proof of freshness of the server.
          * @param player       the player.
          * @param statusList   the player status list.
          * @param clientHello  the <code>CLIENT_HELLO</code> message.
@@ -46,8 +46,7 @@ class ConnectedClientHandler : public Handler {
          */
         static void updatePlayerQuantities(Player &player,
                                            PlayerStatusList &statusList,
-                                           const ClientHello &clientHello,
-                                           const std::vector<unsigned char> &certificate);
+                                           const ClientHello &clientHello);
     public:
         ConnectedClientHandler() = delete;
         ~ConnectedClientHandler() = delete;

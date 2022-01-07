@@ -12,10 +12,11 @@ namespace fourinarow {
 class EndHandshake : public Message {
     private:
         uint8_t type = END_HANDSHAKE;
+        std::vector<unsigned char> publicKey;
         std::vector<unsigned char> digitalSignature;
     public:
         EndHandshake() = default;
-        explicit EndHandshake(std::vector<unsigned char> digitalSignature);
+        EndHandshake(std::vector<unsigned char> publicKey, std::vector<unsigned char> digitalSignature);
         ~EndHandshake() override = default;
 
         EndHandshake(EndHandshake&&) = default;
@@ -24,6 +25,7 @@ class EndHandshake : public Message {
         EndHandshake& operator=(EndHandshake&&) = default;
 
         uint8_t getType() const;
+        const std::vector<unsigned char>& getPublicKey() const;
         const std::vector<unsigned char>& getDigitalSignature() const;
 
         std::vector<unsigned char> serialize() const override;

@@ -14,10 +14,9 @@ class Player1Hello : public Message {
     private:
         uint8_t type = PLAYER1_HELLO;
         std::vector<unsigned char> nonce;
-        std::vector<unsigned char> publicKey;
     public:
         Player1Hello() = default;
-        Player1Hello(std::vector<unsigned char> nonce, std::vector<unsigned char> publicKey);
+        explicit Player1Hello(std::vector<unsigned char> nonce);
         ~Player1Hello() override = default;
 
         Player1Hello(Player1Hello&&) = default;
@@ -27,7 +26,6 @@ class Player1Hello : public Message {
 
         uint8_t getType() const;
         const std::vector<unsigned char>& getNonce() const;
-        const std::vector<unsigned char>& getPublicKey() const;
 
         std::vector<unsigned char> serialize() const override;
         void deserialize(const std::vector<unsigned char> &message) override;

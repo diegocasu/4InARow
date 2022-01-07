@@ -16,10 +16,9 @@ class ClientHello : public Message {
         uint8_t type = CLIENT_HELLO;
         std::string username;
         std::vector<unsigned char> nonce;
-        std::vector<unsigned char> publicKey;
     public:
         ClientHello() = default;
-        ClientHello(std::string username, std::vector<unsigned char> nonce, std::vector<unsigned char> publicKey);
+        ClientHello(std::string username, std::vector<unsigned char> nonce);
         ~ClientHello() override = default;
 
         ClientHello(ClientHello&&) = default;
@@ -30,7 +29,6 @@ class ClientHello : public Message {
         uint8_t getType() const;
         const std::string& getUsername() const;
         const std::vector<unsigned char>& getNonce() const;
-        const std::vector<unsigned char>& getPublicKey() const;
 
         std::vector<unsigned char> serialize() const override;
         void deserialize(const std::vector<unsigned char> &message) override;

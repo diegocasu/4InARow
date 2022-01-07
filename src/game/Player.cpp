@@ -39,8 +39,12 @@ const std::string& Player::getMatchmakingPlayer() const {
     return matchmakingPlayer;
 }
 
-const std::vector<unsigned char>& Player::getFreshnessProof() const {
-    return freshnessProof;
+const std::vector<unsigned char>& Player::getClientFreshnessProof() const {
+    return clientFreshnessProof;
+}
+
+const std::vector<unsigned char>& Player::getServerFreshnessProof() const {
+    return serverFreshnessProof;
 }
 
 std::vector<unsigned char> Player::getClientPublicKey() const {
@@ -171,20 +175,26 @@ void Player::generateServerKeys() {
     serverKeys = std::make_unique<DiffieHellman>();
 }
 
-void Player::checkIfCryptoAttributesInitialized() const {
+void Player::checkIfClientNonceInitialized() const {
     if (clientNonce.empty()) {
         throw CryptoException("The client nonce has not been set or generated yet");
     }
+}
 
+void Player::checkIfServerNonceInitialized() const {
     if (serverNonce.empty()) {
         throw CryptoException("The server nonce has not been set or generated yet");
     }
+}
 
+void Player::checkIfClientKeyInitialized() const {
     if (clientKeys == nullptr && clientPublicKey.empty()) {
         throw CryptoException("The key pair/public key of the client has not been generated/set yet, "
                               "or the key pair has been destroyed");
     }
+}
 
+void Player::checkIfServerKeyInitialized() const {
     if (serverKeys == nullptr && serverPublicKey.empty()) {
         throw CryptoException("The key pair/public key of the server has not been generated/set yet, "
                               "or the key pair has been destroyed");
@@ -192,7 +202,11 @@ void Player::checkIfCryptoAttributesInitialized() const {
 }
 
 void Player::initCipher() {
-    checkIfCryptoAttributesInitialized();
+    checkIfClientNonceInitialized();
+    checkIfServerNonceInitialized();
+    checkIfClientKeyInitialized();
+    checkIfServerKeyInitialized();
+
     std::vector<unsigned char> sharedSecret;
 
     if (clientKeys != nullptr) {
@@ -233,26 +247,20 @@ void Player::initCipher() {
     cleanse(secretBlock);
 }
 
-void Player::generateFreshnessProof(const std::vector<unsigned char> &certificate) {
-    if (username.empty()) {
-        throw CryptoException("The username has not been set yet");
-    }
+void Player::generateServerFreshnessProof() {
+    checkIfClientNonceInitialized();
+    checkIfServerKeyInitialized();
 
-    checkIfCryptoAttributesInitialized();
-    checkCertificateSize<CryptoException>(certificate);
-
-    std::vector<unsigned char> usernameBytes(username.size());
-    memcpy(usernameBytes.data(), username.data(), username.size());
-
-    freshnessProof.reserve(username.size() + 2*NONCE_SIZE + 2*ECDH_PUBLIC_KEY_SIZE + certificate.size());
-    concatenate(freshnessProof, usernameBytes, clientNonce, serverNonce,
-                getClientPublicKey(), getServerPublicKey(), certificate);
+    serverFreshnessProof.reserve(NONCE_SIZE + ECDH_PUBLIC_KEY_SIZE);
+    concatenate(serverFreshnessProof, clientNonce, getServerPublicKey());
 }
 
-void Player::generateFreshnessProofP2P() {
-    checkIfCryptoAttributesInitialized();
-    freshnessProof.reserve(2*NONCE_SIZE + 2*ECDH_PUBLIC_KEY_SIZE);
-    concatenate(freshnessProof, clientNonce, serverNonce, getClientPublicKey(), getServerPublicKey());
+void Player::generateClientFreshnessProof() {
+    checkIfServerNonceInitialized();
+    checkIfClientKeyInitialized();
+
+    clientFreshnessProof.reserve(NONCE_SIZE + ECDH_PUBLIC_KEY_SIZE);
+    concatenate(clientFreshnessProof, serverNonce, getClientPublicKey());
 }
 
 void Player::incrementSequenceNumberReads() {

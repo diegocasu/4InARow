@@ -24,12 +24,7 @@ void HandshakeHandler::sendClientHello(const TcpSocket &socket, Player &myselfFo
     try {
         myselfForServer.setUsername(username);
         myselfForServer.generateClientNonce();
-        myselfForServer.generateClientKeys();
-
-        socket.send(ClientHello(username,
-                                        myselfForServer.getClientNonce(),
-                                        myselfForServer.getClientPublicKey()
-                                        ).serialize());
+        socket.send(ClientHello(username, myselfForServer.getClientNonce()).serialize());
     }  catch (const std::exception &exception) {
         std::cerr << "Impossible to send the CLIENT_HELLO message. " << exception.what() << std::endl;
         throw std::runtime_error("Handshake with the server failed");
@@ -65,9 +60,9 @@ void HandshakeHandler::receiveServerHello(const TcpSocket &socket,
 
         myselfForServer.setServerNonce(serverHello.getNonce());
         myselfForServer.setServerPublicKey(serverHello.getPublicKey());
-        myselfForServer.generateFreshnessProof(serverHello.getCertificate());
+        myselfForServer.generateServerFreshnessProof();
 
-        if (!DigitalSignature::verify(myselfForServer.getFreshnessProof(),
+        if (!DigitalSignature::verify(myselfForServer.getServerFreshnessProof(),
                                       serverHello.getDigitalSignature(),
                                       serverCertificate.getPublicKey())) {
             throw CryptoException("Invalid signature of the freshness proof");
@@ -84,8 +79,11 @@ std::string HandshakeHandler::endHandshake(const TcpSocket &socket,
     std::cout << "Handshake: sending an END_HANDSHAKE message" << std::endl;
 
     try {
-        auto signature = digitalSignature.sign(myselfForServer.getFreshnessProof());
-        EndHandshake endHandshake(signature);
+        myselfForServer.generateClientKeys();
+        myselfForServer.generateClientFreshnessProof();
+
+        auto signature = digitalSignature.sign(myselfForServer.getClientFreshnessProof());
+        EndHandshake endHandshake(myselfForServer.getClientPublicKey(), signature);
         socket.send(endHandshake.serialize());
 
         // The handshake could fail or succeed: depending on the case, the response of the server is encrypted or not.
@@ -166,11 +164,7 @@ void HandshakeHandler::sendPlayer1Hello(const TcpSocket &socket, Player &myselfF
 
     try {
         myselfForOpponent.generateClientNonce();
-        myselfForOpponent.generateClientKeys();
-
-        socket.send(Player1Hello(myselfForOpponent.getClientNonce(),
-                                 myselfForOpponent.getClientPublicKey()
-                                 ).serialize());
+        socket.send(Player1Hello(myselfForOpponent.getClientNonce()).serialize());
     }  catch (const std::exception &exception) {
         std::cerr << "Impossible to start the handshake. " << exception.what() << std::endl;
         throw std::runtime_error("Handshake with the player failed");
@@ -198,13 +192,12 @@ void HandshakeHandler::handlePlayer1Hello(const TcpSocket &socket,
         opponent.generateServerNonce();
         opponent.generateServerKeys();
         opponent.setClientNonce(player1Hello.getNonce());
-        opponent.setClientPublicKey(player1Hello.getPublicKey());
-        opponent.generateFreshnessProofP2P();
+        opponent.generateServerFreshnessProof();
 
         std::cout << "Handshake: responding with a PLAYER2_HELLO message" << std::endl;
         socket.send(Player2Hello(opponent.getServerNonce(),
                                  opponent.getServerPublicKey(),
-                                 digitalSignature.sign(opponent.getFreshnessProof())
+                                 digitalSignature.sign(opponent.getServerFreshnessProof())
                                  ).serialize());
         return;
     } catch (const SocketException &exception) {
@@ -239,9 +232,9 @@ void HandshakeHandler::receivePlayer2Hello(const TcpSocket &socket,
 
         myselfForOpponent.setServerNonce(player2Hello.getNonce());
         myselfForOpponent.setServerPublicKey(player2Hello.getPublicKey());
-        myselfForOpponent.generateFreshnessProofP2P();
+        myselfForOpponent.generateServerFreshnessProof();
 
-        if (!DigitalSignature::verify(myselfForOpponent.getFreshnessProof(),
+        if (!DigitalSignature::verify(myselfForOpponent.getServerFreshnessProof(),
                                       player2Hello.getDigitalSignature(),
                                       playerMessage.getPublicKey())) {
             throw CryptoException("Invalid signature of the freshness proof");
@@ -270,7 +263,10 @@ void HandshakeHandler::handleEndHandshakeP2P(const TcpSocket &socket,
         EndHandshake endHandshake;
         endHandshake.deserialize(message);
 
-        if (!DigitalSignature::verify(opponent.getFreshnessProof(),
+        opponent.setClientPublicKey(endHandshake.getPublicKey());
+        opponent.generateClientFreshnessProof();
+
+        if (!DigitalSignature::verify(opponent.getClientFreshnessProof(),
                                       endHandshake.getDigitalSignature(),
                                       playerMessage.getPublicKey())) {
             throw CryptoException("Invalid signature of the freshness proof");
@@ -298,8 +294,11 @@ void HandshakeHandler::endHandshakeP2P(const TcpSocket &socket,
     std::cout << "Handshake: sending an END_HANDSHAKE message" << std::endl;
 
     try {
-        auto signature = digitalSignature.sign(myselfForOpponent.getFreshnessProof());
-        EndHandshake endHandshake(signature);
+        myselfForOpponent.generateClientKeys();
+        myselfForOpponent.generateClientFreshnessProof();
+
+        auto signature = digitalSignature.sign(myselfForOpponent.getClientFreshnessProof());
+        EndHandshake endHandshake(myselfForOpponent.getClientPublicKey(), signature);
         socket.send(endHandshake.serialize());
 
         myselfForOpponent.initCipher();

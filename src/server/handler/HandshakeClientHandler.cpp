@@ -29,8 +29,11 @@ bool HandshakeClientHandler::handleEndHandshake(const TcpSocket &socket,
         EndHandshake endHandshake;
         endHandshake.deserialize(message);
 
+        player.setClientPublicKey(endHandshake.getPublicKey());
+        player.generateClientFreshnessProof();
+
         std::string userPublicKeyPath = SERVER_PLAYERS_FOLDER + player.getUsername() + SERVER_PLAYER_KEY_SUFFIX;
-        if (!DigitalSignature::verify(player.getFreshnessProof(), endHandshake.getDigitalSignature(), userPublicKeyPath)) {
+        if (!DigitalSignature::verify(player.getClientFreshnessProof(), endHandshake.getDigitalSignature(), userPublicKeyPath)) {
             std::cerr << "Aborting the handshake: received an invalid proof of freshness" << std::endl;
             socket.send(InfoMessage(MALFORMED_MESSAGE).serialize());
             removalList.insert(player.getUsername());
