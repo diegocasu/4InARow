@@ -100,13 +100,9 @@ class GameHandler : public Handler {
          * Handles a P2P game with another player.
          * @param socket            the socket used to communicate with the opponent.
          * @param opponent          the object storing the quantities derived in the handshake with the player.
-         * @param opponentUsername  the username of the opponent.
          * @param firstToPlay       true if the user has the first turn, false otherwise.
          */
-        static void handle(const TcpSocket &socket,
-                           Player &opponent,
-                           const std::string &opponentUsername,
-                           bool firstToPlay);
+        static void handle(const TcpSocket &socket, Player &opponent, bool firstToPlay);
 
         /**
          * Sends a <code>END_GAME</code> message to the server to notify

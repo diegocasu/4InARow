@@ -185,10 +185,10 @@ int main(int argc, char *argv[]) {
             }
 
             auto handshakeResult = fourinarow::HandshakeHandler::doHandshakeWithPlayer(clientAddress, opponent, digitalSignature);
-            if (std::get<2>(handshakeResult)) {
+            if (std::get<2>(handshakeResult)) { // Handshake succeeded.
+                std::get<1>(handshakeResult)->setUsername(opponentUsername);
                 fourinarow::GameHandler::handle(*(std::get<0>(handshakeResult)),
                                                 *(std::get<1>(handshakeResult)),
-                                                opponentUsername,
                                                 opponent.isFirstToPlay());
             }
             fourinarow::GameHandler::sendEndGame(serverSocket, myselfForServer);

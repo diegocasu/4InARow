@@ -131,12 +131,9 @@ bool GameHandler::receiveOpponentMove(const TcpSocket &socket, Player &opponent,
     return true;
 }
 
-void GameHandler::handle(const TcpSocket &socket,
-                         Player &opponent,
-                         const std::string &opponentUsername,
-                         bool firstToPlay) {
+void GameHandler::handle(const TcpSocket &socket, Player &opponent, bool firstToPlay) {
     try {
-        FourInARow gameBoard(opponentUsername);
+        FourInARow gameBoard(opponent.getUsername());
         clearScreen();
         std::cout << gameBoard.toString() << std::endl;
 
