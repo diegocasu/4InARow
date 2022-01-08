@@ -60,6 +60,7 @@ To execute the application:
   ./client --username Bob --client 127.0.0.3 --server 127.0.0.1
   ```
 - Play!
+  ![Game](images/game.gif)
 
 The application uses the ports 5000 and 5001. If necessary, they can be changed by modifying the
 variables ```SERVER_PORT``` and ```PLAYER_PORT``` in ```src/utils/Constants.cpp```.
